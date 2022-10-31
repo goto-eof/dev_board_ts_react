@@ -23,7 +23,6 @@ export default function InsertColumnForm() {
   const navigate = useNavigate();
 
   const handleInputChange = (e: any) => {
-    console.log(e.target.value);
     setStates({
       ...states,
       [e.target.name]: e.target.value,
@@ -47,12 +46,10 @@ export default function InsertColumnForm() {
 
   const save = (e: any) => {
     e.preventDefault();
-    console.log(e.target);
 
     GenericService.create<ColumnI>('column', {
       name: e.target.elements.name.value,
     }).then((response) => {
-      console.log(response);
       navigate('/board');
     });
   };
@@ -69,6 +66,7 @@ export default function InsertColumnForm() {
               value={states.name}
               name="name"
               onChange={handleInputChange}
+              autoFocus
             />
             <Errors fieldName={'name'} />
 

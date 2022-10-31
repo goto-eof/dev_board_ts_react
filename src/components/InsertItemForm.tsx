@@ -13,8 +13,8 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
-import { Column } from '../core/Column';
 import Result, { ItemI } from '../core/ItemI';
+import { ColumnI } from '../core/ColumnI';
 
 export default function InsertItemForm() {
   const { boardId, itemId } = useParams();
@@ -28,13 +28,13 @@ export default function InsertItemForm() {
     defaultBoard: '',
     error: new Map<string, boolean>(),
     isInvalid: false,
-    columns: Array<Column>(),
+    columns: Array<ColumnI>(),
   });
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    GenericService.getAll<Result<Array<Column>>>('column').then((columns) => {
+    GenericService.getAll<Result<Array<ColumnI>>>('column').then((columns) => {
       setStates({
         ...states,
         defaultBoard: boardId || '',
@@ -46,7 +46,6 @@ export default function InsertItemForm() {
       GenericService.get<Result<ItemI>>('item', Number(itemId)).then(
         (itm: Result<ItemI>) => {
           let item = itm.result;
-          console.log(item);
           setStates({
             ...states,
             name: item.name,
@@ -61,7 +60,6 @@ export default function InsertItemForm() {
   }, []);
 
   const handleInputChange = (e: any) => {
-    console.log(e.target.value);
     setStates({
       ...states,
       [e.target.name]: e.target.value,
@@ -85,7 +83,6 @@ export default function InsertItemForm() {
 
   const save = (e: any) => {
     e.preventDefault();
-    console.log(e.target);
 
     GenericService.create<ItemI>('item', {
       name: e.target.elements.name.value,
@@ -95,7 +92,6 @@ export default function InsertItemForm() {
       description: e.target.elements.description.value,
       status: e.target.elements.status.value,
     }).then((response) => {
-      console.log(response);
       navigate('/board');
     });
   };
@@ -158,7 +154,7 @@ export default function InsertItemForm() {
             >
               {states.columns &&
                 states.columns.map((item: any) => {
-                  let itm = item as Column;
+                  let itm = item as ColumnI;
                   return (
                     <option value={itm.id} key={itm.id}>
                       {itm.name}

@@ -2,28 +2,31 @@ import { Box, Button, HStack } from '@chakra-ui/react';
 import { FC, useEffect, useState } from 'react';
 import GenericService from '../service/GenerciService';
 import Board from './Board';
-import { Column } from '../core/Column';
 import { Link } from 'react-router-dom';
 import Result from '../core/ItemI';
+import { ColumnI } from '../core/ColumnI';
+import { DeleteResultI } from '../core/DeleteResultI';
 
 interface ColumnsProps {}
 
 export const Columns: FC<ColumnsProps> = () => {
-  const [columns, setColumns] = useState<Array<Column> | undefined>();
+  const [columns, setColumns] = useState<Array<ColumnI> | undefined>();
 
   useEffect(() => {
-    GenericService.getAll<Result<Array<Column>>>('column').then((columns) =>
+    GenericService.getAll<Result<Array<ColumnI>>>('column').then((columns) =>
       setColumns(columns.result)
     );
   }, []);
 
   const deleteColumn = (id: number) => {
-    GenericService.delete('column', id).then((result: any) => {
-      console.log(result);
-      if (!result.isError) {
-        setColumns(columns?.filter((column: any) => column.id !== id));
+    GenericService.delete<DeleteResultI>('column', id).then(
+      (result: DeleteResultI) => {
+        console.log(result);
+        if (result.success) {
+          setColumns(columns?.filter((column: any) => column.id !== id));
+        }
       }
-    });
+    );
   };
 
   return (
@@ -34,7 +37,7 @@ export const Columns: FC<ColumnsProps> = () => {
 };
 
 interface BoardProps {
-  columns?: Array<Column>;
+  columns?: Array<ColumnI>;
   deleteColumn: (id: number) => void;
 }
 
@@ -52,7 +55,7 @@ function Boards(props: BoardProps) {
         {props.columns?.map((item) => (
           <Board
             deleteColumn={props.deleteColumn}
-            id={item.id}
+            id={item.id || -1}
             key={item.id}
             title={item.name}
           />

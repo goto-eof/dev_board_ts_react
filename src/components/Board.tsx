@@ -12,12 +12,14 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  HStack,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
 import Item from './Item';
 import Result, { ItemI } from '../core/ItemI';
+import { DeleteResultI } from '../core/DeleteResultI';
 
 interface StatsCardProps {
   title: string;
@@ -35,12 +37,13 @@ export default function Board(props: StatsCardProps) {
   }, []);
 
   const deleteItem = (id: number) => {
-    GenericService.delete('item', id).then((result: any) => {
-      console.log(result);
-      if (!result.isError) {
-        setItems(items?.filter((item: any) => item.id !== id));
+    GenericService.delete<DeleteResultI>('item', id).then(
+      (result: DeleteResultI) => {
+        if (result.success) {
+          setItems(items?.filter((item: any) => item.id !== id));
+        }
       }
-    });
+    );
   };
 
   return (
@@ -52,18 +55,20 @@ export default function Board(props: StatsCardProps) {
           color={useColorModeValue('gray.800', 'white')}
           align={'center'}
         >
-          <Text
-            fontSize={'xl'}
-            fontWeight={500}
-            bg={useColorModeValue('gray.50', 'gray.900')}
-            p={2}
-            px={3}
-            color={'green.500'}
-            rounded={'full'}
-            w={'full'}
-          >
-            <Icon as={EditIcon} mr={2} />
-            {props.title}{' '}
+          <HStack>
+            <Text
+              fontSize={'xl'}
+              fontWeight={500}
+              bg={useColorModeValue('gray.50', 'gray.900')}
+              p={2}
+              px={3}
+              color={'green.500'}
+              rounded={'full'}
+              w={'full'}
+            >
+              <Icon as={EditIcon} mr={2} />
+              {props.title}{' '}
+            </Text>
             <Menu>
               {() => (
                 <>
@@ -83,7 +88,7 @@ export default function Board(props: StatsCardProps) {
                 </>
               )}
             </Menu>
-          </Text>
+          </HStack>
           <Stack direction={'row'} align={'center'} justify={'center'}>
             <SimpleGrid columns={{ base: 1, md: 1 }} spacing={1}>
               {items?.map((itm) => (

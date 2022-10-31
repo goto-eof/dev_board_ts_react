@@ -7,8 +7,6 @@ export default class GenericService {
     return await axios
       .get<Array<T>>(this.baseUrl + modelName)
       .then((result: any) => {
-        console.log(result);
-        console.log('two', result.data);
         if (result.data && result.data.success) {
           return result.data;
         }
@@ -25,8 +23,6 @@ export default class GenericService {
     return await axios
       .get<Array<T>>(this.baseUrl + modelName + '/parent/' + parentId)
       .then((result: any) => {
-        console.log(result);
-        console.log('two', result.data);
         if (result.data && result.data.success) {
           return result.data;
         }
@@ -53,7 +49,6 @@ export default class GenericService {
       .post<T>(`${this.baseUrl}${modelName}`, data)
       .then((result: any) => {
         let data = result.data;
-        console.log('DATA', result);
         if (data && data.success) {
           return data;
         }
