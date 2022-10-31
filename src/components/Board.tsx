@@ -1,4 +1,4 @@
-import { EditIcon } from '@chakra-ui/icons';
+import { ChevronDownIcon, EditIcon } from '@chakra-ui/icons';
 import {
   Box,
   SimpleGrid,
@@ -8,6 +8,10 @@ import {
   Text,
   Icon,
   Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -18,6 +22,7 @@ import { ItemI } from '../core/ItemI';
 interface StatsCardProps {
   title: string;
   id: number;
+  deleteColumn: (id: number) => void;
 }
 interface Item {}
 export default function Board(props: StatsCardProps) {
@@ -58,7 +63,26 @@ export default function Board(props: StatsCardProps) {
             w={'full'}
           >
             <Icon as={EditIcon} mr={2} />
-            {props.title}
+            {props.title}{' '}
+            <Menu>
+              {() => (
+                <>
+                  <MenuButton>
+                    <Icon as={ChevronDownIcon} />
+                  </MenuButton>
+                  <MenuList>
+                    {/* <MenuItem onClick={() => alert('test')}>Edit</MenuItem> */}
+                    <MenuItem
+                      onClick={() => {
+                        props.deleteColumn(props.id || -1);
+                      }}
+                    >
+                      Delete
+                    </MenuItem>
+                  </MenuList>
+                </>
+              )}
+            </Menu>
           </Text>
           <Stack direction={'row'} align={'center'} justify={'center'}>
             <SimpleGrid columns={{ base: 1, md: 1 }} spacing={1}>

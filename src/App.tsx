@@ -2,6 +2,7 @@ import { Box, ChakraProvider, theme } from '@chakra-ui/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Boards from './components/Boards';
 import Footer from './components/Footer';
+import InsertColumnForm from './components/InsertBoardForm';
 import InsertItemForm from './components/InsertItemForm';
 import NavBar from './components/NavBar';
 
@@ -20,6 +21,7 @@ export const App = () => {
           <Routes>
             <Route path="/board" element={<Boards />} />
             <Route path="/new-item/:boardId" element={<InsertItemForm />} />
+            <Route path="/new-board" element={<InsertColumnForm />} />
           </Routes>
           <Footer />
         </Box>

@@ -79,8 +79,8 @@ export default function InsertItemForm() {
       status: e.target.elements.status.value,
     }).then((response) => {
       console.log(response);
+      navigate('/board');
     });
-    navigate('/board');
   };
 
   return (
