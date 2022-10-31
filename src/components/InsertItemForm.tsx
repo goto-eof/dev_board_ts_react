@@ -35,14 +35,9 @@ export default function InsertItemForm() {
 
   useEffect(() => {
     GenericService.getAll<Column>('column').then((columns) => {
-      let defaultBoard = columns.data
-        ? columns.data
-            .filter((item: any) => item.id === Number(boardId))
-            .map((item: any) => item.name)[0]
-        : '';
       setStates({
         ...states,
-        defaultBoard,
+        defaultBoard: boardId || '',
         columns: columns.data,
       });
     });
@@ -138,16 +133,17 @@ export default function InsertItemForm() {
             <Errors fieldName="description" />
 
             <FormLabel>Board</FormLabel>
-            <Select placeholder="Select option" name="board">
+            <Select
+              placeholder="Select option"
+              name="defaultBoard"
+              value={states.defaultBoard}
+              onChange={handleInputChange}
+            >
               {states.columns &&
                 states.columns.map((item: any) => {
                   let itm = item as Column;
                   return (
-                    <option
-                      value={itm.id}
-                      key={itm.id}
-                      selected={states.defaultBoard === item.name}
-                    >
+                    <option value={itm.id} key={itm.id}>
                       {itm.name}
                     </option>
                   );
