@@ -10,6 +10,7 @@ import {
   GridItem,
   Grid,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import { ItemI } from '../core/ItemI';
 
 interface ItemProps {
@@ -18,12 +19,19 @@ interface ItemProps {
 }
 
 export default function Item({ item, deleteItem }: ItemProps) {
+  let navigate = useNavigate();
+
+  const goToEdit = (id: number) => {
+    navigate('/edit-item/boardid/' + item.column_id + '/itemid/' + id);
+  };
+
   return (
     <Grid
       templateColumns="repeat(6, 1fr)"
       templateRows="repeat(2, 1fr)"
       gap={0}
       minW={'100%'}
+      width={'100%'}
       boxShadow={'lg'}
       bg="white"
       p={4}
@@ -51,7 +59,9 @@ export default function Item({ item, deleteItem }: ItemProps) {
                 <Icon as={ChevronDownIcon} />
               </MenuButton>
               <MenuList>
-                {/* <MenuItem onClick={() => alert('test')}>Edit</MenuItem> */}
+                <MenuItem onClick={() => goToEdit(item.id || -1)}>
+                  Edit
+                </MenuItem>
                 <MenuItem
                   onClick={() => {
                     deleteItem(item.id || -1);

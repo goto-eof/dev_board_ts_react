@@ -7,3 +7,8 @@ export interface ItemI {
   description: string;
   column_id: number;
 }
+
+export default interface Result<T> {
+  result: T;
+  success: boolean;
+}

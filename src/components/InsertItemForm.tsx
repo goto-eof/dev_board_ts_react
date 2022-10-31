@@ -14,10 +14,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
 import { Column } from '../core/Column';
-import { ItemI } from '../core/ItemI';
+import Result, { ItemI } from '../core/ItemI';
 
 export default function InsertItemForm() {
-  const { boardId } = useParams();
+  const { boardId, itemId } = useParams();
 
   const [states, setStates] = useState({
     name: '',
@@ -34,13 +34,30 @@ export default function InsertItemForm() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    GenericService.getAll<Column>('column').then((columns) => {
+    GenericService.getAll<Result<Array<Column>>>('column').then((columns) => {
       setStates({
         ...states,
         defaultBoard: boardId || '',
-        columns: columns.data,
+        columns: columns.result,
       });
     });
+
+    if (itemId) {
+      GenericService.get<Result<ItemI>>('item', Number(itemId)).then(
+        (itm: Result<ItemI>) => {
+          let item = itm.result;
+          console.log(item);
+          setStates({
+            ...states,
+            name: item.name,
+            type: item.t_type,
+            status: item.status,
+            code: item.code,
+            description: item.description,
+          });
+        }
+      );
+    }
   }, []);
 
   const handleInputChange = (e: any) => {

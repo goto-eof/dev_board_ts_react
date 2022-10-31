@@ -3,7 +3,8 @@ import { FC, useEffect, useState } from 'react';
 import GenericService from '../service/GenerciService';
 import Board from './Board';
 import { Column } from '../core/Column';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import Result from '../core/ItemI';
 
 interface ColumnsProps {}
 
@@ -11,8 +12,8 @@ export const Columns: FC<ColumnsProps> = () => {
   const [columns, setColumns] = useState<Array<Column> | undefined>();
 
   useEffect(() => {
-    GenericService.getAll<Column>('column').then((columns) =>
-      setColumns(columns.data)
+    GenericService.getAll<Result<Array<Column>>>('column').then((columns) =>
+      setColumns(columns.result)
     );
   }, []);
 

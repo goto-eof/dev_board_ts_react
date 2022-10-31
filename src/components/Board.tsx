@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
 import Item from './Item';
-import { ItemI } from '../core/ItemI';
+import Result, { ItemI } from '../core/ItemI';
 
 interface StatsCardProps {
   title: string;
@@ -29,8 +29,8 @@ export default function Board(props: StatsCardProps) {
   const [items, setItems] = useState<Array<ItemI> | undefined>();
 
   useEffect(() => {
-    GenericService.getByParentId<Item>('item', props.id).then((items: any) =>
-      setItems(items.data as Array<ItemI>)
+    GenericService.getByParentId<Result<Array<ItemI>>>('item', props.id).then(
+      (items: Result<Array<ItemI>>) => setItems(items.result)
     );
   }, []);
 
