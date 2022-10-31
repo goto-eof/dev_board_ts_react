@@ -63,7 +63,7 @@ function Boards(props: BoardProps) {
         {!props.columns && <h3>Unable to reach server</h3>}
         {props.columns && (
           <Link to={'/new-board'}>
-            <Button bg={'green.400'} color={'white'}>
+            <Button bg={'green.400'} color={'white'} mt={'36px'}>
               + Board
             </Button>
           </Link>

@@ -97,11 +97,11 @@ const DesktopNav = () => {
                 <Text
                   p={2}
                   fontSize={'md'}
-                  bgColor={'green.100'}
+                  bgColor={'green.400'}
                   borderRadius={'5%'}
                   border={'none'}
                   fontWeight={500}
-                  color={'gray'}
+                  color={'white'}
                   _hover={{
                     textDecoration: 'none',
                     color: linkHoverColor,
