@@ -96,11 +96,27 @@ export default function InsertItemForm() {
     });
   };
 
+  const update = (e: any) => {
+    e.preventDefault();
+    if (itemId) {
+      GenericService.update<ItemI>('item', Number(itemId), {
+        name: e.target.elements.name.value,
+        t_type: e.target.elements.type.value,
+        code: e.target.elements.code.value,
+        column_id: Number(boardId),
+        description: e.target.elements.description.value,
+        status: e.target.elements.status.value,
+      }).then((response) => {
+        navigate('/board');
+      });
+    }
+  };
+
   return (
     <Center>
       <VStack w="full" width={'50%'}>
         <Heading>Task/Bug/Feature</Heading>
-        <form onSubmit={save} style={{ width: '100%' }}>
+        <form onSubmit={itemId ? update : save} style={{ width: '100%' }}>
           <FormControl isInvalid={states.isInvalid} w={'100%'}>
             <FormLabel>Name</FormLabel>
             <Input
