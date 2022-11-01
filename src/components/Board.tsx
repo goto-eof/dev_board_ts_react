@@ -25,7 +25,7 @@ import GenericService from '../service/GenerciService';
 import Item from './Item';
 import Result from '../core/ResultI';
 import { DeleteResultI } from '../core/DeleteResultI';
-import { ItemIR } from '../core/ItemIRequest';
+import { ItemIR } from '../core/ItemRequestI';
 
 interface StatsCardProps {
   title: string;
@@ -38,11 +38,18 @@ interface Item {}
 export default function Board(props: StatsCardProps) {
   const [items, setItems] = useState<Array<ItemIR> | undefined>();
 
-  useEffect(() => {
-    GenericService.getByParentId<Result<Array<ItemIR>>>('item', props.id).then(
-      (items: Result<Array<ItemIR>>) => setItems(items.result)
-    );
-  }, [props.id]);
+  useEffect(
+    () => {
+      GenericService.getByParentId<Result<Array<ItemIR>>>(
+        'item',
+        props.id
+      ).then((items: Result<Array<ItemIR>>) => setItems(items.result));
+    },
+    // TODO:
+    // we should avoid another api call after board position is changed, but
+    // for now we will make 2 api calls for every move of the board
+    [props.id]
+  );
 
   const deleteItem = (id: number) => {
     GenericService.delete<DeleteResultI>('item', id).then(

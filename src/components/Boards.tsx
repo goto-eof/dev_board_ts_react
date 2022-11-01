@@ -4,7 +4,7 @@ import GenericService from '../service/GenerciService';
 import Board from './Board';
 import { Link } from 'react-router-dom';
 import Result from '../core/ResultI';
-import { ColumnI } from '../core/ColumnI';
+import { ColumnI } from '../core/ColumnResponseI';
 import { DeleteResultI } from '../core/DeleteResultI';
 
 interface ColumnsProps {}

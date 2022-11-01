@@ -11,7 +11,7 @@ import {
   Grid,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { ItemIR } from '../core/ItemIRequest';
+import { ItemIR } from '../core/ItemRequestI';
 
 interface ItemProps {
   item: ItemIR;
