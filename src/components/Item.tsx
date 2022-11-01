@@ -38,7 +38,13 @@ export default function Item({ item, deleteItem }: ItemProps) {
       borderRadius="5%"
     >
       <GridItem w="100%" colSpan={5} h="10">
-        <Text align={'left'} fontWeight={600} fontSize={'sm'}>
+        <Text
+          align={'left'}
+          height={'38px'}
+          overflow={'hidden'}
+          fontWeight={600}
+          fontSize={'sm'}
+        >
           <Icon
             as={ArrowRightIcon}
             fontSize={'10'}
@@ -48,7 +54,9 @@ export default function Item({ item, deleteItem }: ItemProps) {
           <Badge ml="1" colorScheme="green" mr={2}>
             {item.id}
           </Badge>
-          {item.name}
+          {item.name.length > 35
+            ? item.name.substring(0, 35) + '...'
+            : item.name}
         </Text>
       </GridItem>
       <GridItem colSpan={1} w="100%" h="10">
@@ -75,8 +83,10 @@ export default function Item({ item, deleteItem }: ItemProps) {
         </Menu>
       </GridItem>
       <GridItem colSpan={6}>
-        <Text align={'left'} fontSize="sm">
-          {item.description}
+        <Text align={'left'} overflow="hidden" fontSize="sm">
+          {item.description.length > 60
+            ? item.description.substring(0, 60) + '...'
+            : item.description}
         </Text>
       </GridItem>
     </Grid>
