@@ -29,6 +29,8 @@ interface StatsCardProps {
   title: string;
   id: number;
   items: Array<ItemRequestI>;
+  _showLeftArrow: boolean;
+  _showRightArrow: boolean;
   deleteColumn: (id: number) => void;
   moveLeft: (id: number) => void;
   moveRight: (id: number) => void;
@@ -59,13 +61,15 @@ export default function Board(props: StatsCardProps) {
           align={'center'}
         >
           <HStack>
-            <Box as="button" onClick={() => props.moveLeft(props.id)}>
-              <Icon
-                as={ArrowLeftIcon}
-                color={'gray.400'}
-                _hover={{ color: 'green.200' }}
-              />
-            </Box>
+            {props._showLeftArrow && (
+              <Box as="button" onClick={() => props.moveLeft(props.id)}>
+                <Icon
+                  as={ArrowLeftIcon}
+                  color={'gray.400'}
+                  _hover={{ color: 'green.200' }}
+                />
+              </Box>
+            )}
             <Text
               fontSize={'xl'}
               fontWeight={500}
@@ -97,13 +101,15 @@ export default function Board(props: StatsCardProps) {
                 </>
               )}
             </Menu>
-            <Box as="button" onClick={() => props.moveRight(props.id)}>
-              <Icon
-                _hover={{ color: 'green.200' }}
-                as={ArrowRightIcon}
-                color={'gray.400'}
-              />
-            </Box>
+            {props._showRightArrow && (
+              <Box as="button" onClick={() => props.moveRight(props.id)}>
+                <Icon
+                  _hover={{ color: 'green.200' }}
+                  as={ArrowRightIcon}
+                  color={'gray.400'}
+                />
+              </Box>
+            )}
           </HStack>
           <Stack direction={'row'} align={'center'} justify={'center'}>
             <SimpleGrid columns={{ base: 1, md: 1 }} spacing={1}>

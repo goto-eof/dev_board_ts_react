@@ -33,9 +33,14 @@ export const Columns: FC<ColumnsProps> = () => {
         Promise.all(calls).then((arr) => {
           result.forEach((column, index) => {
             let board: BoardI = {
-              board: column,
+              board: {
+                ...column,
+                _showLeftArrow: index !== 0,
+                _showRigthArrow: index !== result.length - 1,
+              },
               items: arr[index].result,
             };
+            console.log('BOARDS', board);
             boards.push(board);
           });
           setBoards(boards);
@@ -58,7 +63,6 @@ export const Columns: FC<ColumnsProps> = () => {
   const moveLeft = (id: number) => {
     swapUiAnBe(id, -1);
   };
-
   const moveRight = (id: number) => {
     swapUiAnBe(id, 1);
   };
@@ -90,10 +94,33 @@ export const Columns: FC<ColumnsProps> = () => {
               i + lorr >= boards.length
             )
           ) {
+            let idB = boards[i + lorr].board.id;
             GenericService.swap<SwapRequestI, boolean>('column', {
               id_a: idA,
-              id_b: boards[i + lorr].board.id,
+              id_b: idB,
             }).then((result) => {
+              if (columnsFinal) {
+                if (columnsFinal.length > 0) {
+                  let boardA = columnsFinal.filter(
+                    (column) => column.board.id === idA
+                  )[0];
+                  boardA.board._showLeftArrow =
+                    columnsFinal[0].board.id !== idA;
+                  boardA.board._showRigthArrow =
+                    columnsFinal.length > 1 &&
+                    columnsFinal[columnsFinal.length - 1].board.id !== idA;
+
+                  let boardB = columnsFinal.filter(
+                    (column) => column.board.id === idB
+                  )[0];
+                  boardB.board._showLeftArrow =
+                    columnsFinal[0].board.id !== idB;
+                  boardB.board._showRigthArrow =
+                    columnsFinal.length > 1 &&
+                    columnsFinal[columnsFinal.length - 1].board.id !== idB;
+                }
+              }
+
               setBoards(columnsFinal);
             });
           }
@@ -168,6 +195,8 @@ function Boards(props: BoardProps) {
             id={item.board.id || -1}
             key={item.board.order}
             title={item.board.name}
+            _showLeftArrow={item.board._showLeftArrow}
+            _showRightArrow={item.board._showRigthArrow}
             items={item.items}
           />
         ))}
