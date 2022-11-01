@@ -18,6 +18,7 @@ import {
   MenuList,
   MenuItem,
   HStack,
+  Flex,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
@@ -54,10 +55,11 @@ export default function Board(props: StatsCardProps) {
 
   return (
     <Center py={6}>
-      <Box w={'300px'} bg={'white.100'} boxShadow={'xl'} rounded={'md'}>
+      <Box w={'300px'} bg={'white'} boxShadow={'xl'} rounded={'md'}>
         <Stack
           textAlign={'center'}
           p={6}
+          pb={2}
           color={useColorModeValue('gray.800', 'white')}
           align={'center'}
         >
@@ -71,40 +73,41 @@ export default function Board(props: StatsCardProps) {
                 />
               </Box>
             )}
-            <Text
-              fontSize={'xl'}
-              fontWeight={500}
-              bg={useColorModeValue('gray.50', 'gray.900')}
-              p={2}
-              px={3}
-              color={'green.500'}
-              rounded={'full'}
-              w={'full'}
-            >
-              <Icon as={EditIcon} mr={2} />
-              {props.title}{' '}
-            </Text>
-            <Menu>
-              {() => (
-                <>
-                  <MenuButton>
-                    <Icon as={ChevronDownIcon} />
-                  </MenuButton>
-                  <MenuList>
-                    <MenuItem onClick={() => props.goToEdit(props.id || -1)}>
-                      Edit
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        props.deleteColumn(props.id || -1);
-                      }}
-                    >
-                      Delete
-                    </MenuItem>
-                  </MenuList>
-                </>
-              )}
-            </Menu>
+            <Flex bg={'gray.100'} rounded={'full'} py={1} px={3}>
+              <Text
+                fontSize={'xl'}
+                fontWeight={500}
+                color={'gray.700'}
+                rounded={'full'}
+                px={2}
+                w={'full'}
+              >
+                <Icon as={EditIcon} mr={2} />
+                {props.title}{' '}
+              </Text>
+              <Menu>
+                {() => (
+                  <>
+                    <MenuButton>
+                      <Icon color={'gray.700'} as={ChevronDownIcon} />
+                    </MenuButton>
+                    <MenuList>
+                      <MenuItem onClick={() => props.goToEdit(props.id || -1)}>
+                        Edit
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          props.deleteColumn(props.id || -1);
+                        }}
+                      >
+                        Delete
+                      </MenuItem>
+                    </MenuList>
+                  </>
+                )}
+              </Menu>
+            </Flex>
+
             {props._showRightArrow && (
               <Box as="button" onClick={() => props.moveRight(props.id)}>
                 <Icon

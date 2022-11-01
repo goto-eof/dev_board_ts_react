@@ -54,16 +54,17 @@ export default function NavBar() {
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-          <Text
-            textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-            fontFamily={'heading'}
-            fontWeight={600}
-            fontSize={'xl'}
-            color={useColorModeValue('green.500', 'black')}
-          >
-            {'{</>} Dev board'}
-          </Text>
-
+          <ReactLink to="/">
+            <Text
+              textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
+              fontFamily={'heading'}
+              fontWeight={600}
+              fontSize={'xl'}
+              color={useColorModeValue('green.500', 'black')}
+            >
+              {'{</>} Dev board'}
+            </Text>
+          </ReactLink>
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
             <DesktopNav />
           </Flex>
