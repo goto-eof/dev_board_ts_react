@@ -72,13 +72,12 @@ export default class GenericService {
       });
   }
 
-  public static async swap<T>(
+  public static async swap<T, R>(
     modelName: string,
-    idA: number,
-    idB: number
-  ): Promise<T> {
+    swapRequest: T
+  ): Promise<R> {
     return await axios
-      .put<T>(`${this.baseUrl}${modelName}/${idA}/${idB}`)
+      .put<T>(`${this.baseUrl}${modelName}/swap`, swapRequest)
       .then((result: any) => {
         let data = result.data;
         return data;

@@ -8,6 +8,7 @@ import { ColumnResponseI } from '../core/ColumnResponseI';
 import { DeleteResultI } from '../core/DeleteResultI';
 import { ItemRequestI } from '../core/ItemRequestI';
 import BoardI from '../core/BoardI';
+import SwapRequestI from '../core/SwapRequestI';
 
 interface ColumnsProps {}
 
@@ -79,11 +80,10 @@ export const Columns: FC<ColumnsProps> = () => {
               i + lorr >= boards.length
             )
           ) {
-            GenericService.swap<boolean>(
-              'column',
-              idA,
-              boards[i + lorr].board.id
-            ).then((result) => {
+            GenericService.swap<SwapRequestI, boolean>('column', {
+              id_a: idA,
+              id_b: boards[i + lorr].board.id,
+            }).then((result) => {
               setBoards(columnsFinal);
             });
           }
