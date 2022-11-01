@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
 import Result from '../core/ResultI';
-import { ColumnI } from '../core/ColumnResponseI';
+import { ColumnResponseI } from '../core/ColumnResponseI';
 import { ItemIR } from '../core/ItemRequestI';
 import { ItemIUpdateRequest } from '../core/ItemUpdateRequestI';
 
@@ -30,7 +30,7 @@ export default function InsertItemForm() {
     defaultBoard: '',
     error: new Map<string, boolean>(),
     isInvalid: false,
-    columns: Array<ColumnI>(),
+    columns: Array<ColumnResponseI>(),
   });
 
   const navigate = useNavigate();
@@ -38,9 +38,9 @@ export default function InsertItemForm() {
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const columns = await GenericService.getAll<Result<Array<ColumnI>>>(
-          'column'
-        );
+        const columns = await GenericService.getAll<
+          Result<Array<ColumnResponseI>>
+        >('column');
         const fields = itemId
           ? await GenericService.get<Result<ItemIR>>('item', Number(itemId))
           : null;
@@ -184,7 +184,7 @@ export default function InsertItemForm() {
             >
               {states.columns &&
                 states.columns.map((item: any) => {
-                  let itm = item as ColumnI;
+                  let itm = item as ColumnResponseI;
                   return (
                     <option value={itm.id} key={itm.id}>
                       {itm.name}

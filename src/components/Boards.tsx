@@ -4,20 +4,45 @@ import GenericService from '../service/GenerciService';
 import Board from './Board';
 import { Link } from 'react-router-dom';
 import Result from '../core/ResultI';
-import { ColumnI } from '../core/ColumnResponseI';
+import { ColumnResponseI } from '../core/ColumnResponseI';
 import { DeleteResultI } from '../core/DeleteResultI';
+import { ItemIR } from '../core/ItemRequestI';
+import BoardI from '../core/BoardI';
 
 interface ColumnsProps {}
 
 export const Columns: FC<ColumnsProps> = () => {
-  const [columns, setColumns] = useState<Array<ColumnI> | undefined>();
+  // const [columns, setColumns] = useState<Array<BoardI> | undefined>();
+  const [boards, setBoards] = useState<Array<BoardI> | undefined>();
 
   useEffect(() => {
-    GenericService.getAll<Result<Array<ColumnI>>>('column').then((columns) => {
-      let result = columns.result;
-      result.forEach((column, index) => (column.order = index));
-      setColumns(result);
-    });
+    GenericService.getAll<Result<Array<ColumnResponseI>>>('column').then(
+      (columns) => {
+        let result = columns.result;
+
+        let boards = new Array<BoardI>();
+        let calls = new Array<Promise<Result<Array<ItemIR>>>>();
+        result.forEach((column) => {
+          calls.push(
+            GenericService.getByParentId<Result<Array<ItemIR>>>(
+              'item',
+              column.id
+            )
+          );
+        });
+
+        Promise.all(calls).then((arr) => {
+          result.forEach((column, index) => {
+            let board: BoardI = {
+              board: column,
+              items: arr[index].result,
+            };
+            boards.push(board);
+          });
+          setBoards(boards);
+        });
+      }
+    );
   }, []);
 
   const deleteColumn = (id: number) => {
@@ -25,7 +50,7 @@ export const Columns: FC<ColumnsProps> = () => {
       (result: DeleteResultI) => {
         console.log(result);
         if (result.success) {
-          setColumns(columns?.filter((column: any) => column.id !== id));
+          setBoards(boards?.filter((column: any) => column.board.id !== id));
         }
       }
     );
@@ -39,26 +64,28 @@ export const Columns: FC<ColumnsProps> = () => {
     swapUiAnBe(id, 1);
   };
 
+  const setItems = () => {};
+
   const swapUiAnBe = (idA: number, lorr: number) => {
-    if (columns) {
-      let columnsFinal = [...columns];
-      for (let i = 0; i < columns.length; i++) {
-        if (columns[i].id === idA) {
+    if (boards) {
+      let columnsFinal = [...boards];
+      for (let i = 0; i < boards.length; i++) {
+        if (boards[i].board?.id === idA) {
           columnsFinal = swapUI(i, i + lorr, columnsFinal);
           if (
             !(
               i < 0 ||
-              i >= columns.length ||
+              i >= boards.length ||
               i + lorr < 0 ||
-              i + lorr >= columns.length
+              i + lorr >= boards.length
             )
           ) {
             GenericService.swap<boolean>(
               'column',
               idA,
-              columns[i + lorr].id
+              boards[i + lorr].board.id
             ).then((result) => {
-              setColumns(columnsFinal);
+              setBoards(columnsFinal);
             });
           }
           break;
@@ -70,25 +97,25 @@ export const Columns: FC<ColumnsProps> = () => {
   const swapUI = (
     indexOfA: number,
     indexOfB: number,
-    columns: Array<ColumnI>
+    boards: Array<BoardI>
   ) => {
-    console.log('swapping', indexOfA, indexOfB, columns);
+    console.log('swapping', indexOfA, indexOfB, boards);
     if (
       indexOfA < 0 ||
-      indexOfA >= columns.length ||
+      indexOfA >= boards.length ||
       indexOfB < 0 ||
-      indexOfB >= columns.length
+      indexOfB >= boards.length
     ) {
-      return columns;
+      return boards;
     }
 
-    columns[indexOfA].order = indexOfB;
-    columns[indexOfB].order = indexOfA;
-    const temp = columns[indexOfA];
-    columns[indexOfA] = columns[indexOfB];
-    columns[indexOfB] = temp;
+    boards[indexOfA].board.order = indexOfB;
+    boards[indexOfB].board.order = indexOfA;
+    const temp = boards[indexOfA];
+    boards[indexOfA] = boards[indexOfB];
+    boards[indexOfB] = temp;
 
-    return columns;
+    return boards;
   };
 
   return (
@@ -97,17 +124,19 @@ export const Columns: FC<ColumnsProps> = () => {
         moveLeft={moveLeft}
         moveRight={moveRight}
         deleteColumn={deleteColumn}
-        columns={columns}
+        setItems={setItems}
+        columns={boards}
       />
     </div>
   );
 };
 
 interface BoardProps {
-  columns?: Array<ColumnI>;
+  columns?: Array<BoardI>;
   deleteColumn: (id: number) => void;
   moveLeft: (id: number) => void;
   moveRight: (id: number) => void;
+  setItems: (items: Array<ItemIR>) => void;
 }
 
 function Boards(props: BoardProps) {
@@ -126,9 +155,11 @@ function Boards(props: BoardProps) {
             moveLeft={props.moveLeft}
             moveRight={props.moveRight}
             deleteColumn={props.deleteColumn}
-            id={item.id || -1}
-            key={item.order}
-            title={item.name}
+            setItems={props.setItems}
+            id={item.board.id || -1}
+            key={item.board.order}
+            title={item.board.name}
+            items={item.items}
           />
         ))}
         {!props.columns && <h3>Unable to reach server</h3>}

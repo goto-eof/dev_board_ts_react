@@ -19,43 +19,28 @@ import {
   MenuItem,
   HStack,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
 import Item from './Item';
-import Result from '../core/ResultI';
 import { DeleteResultI } from '../core/DeleteResultI';
 import { ItemIR } from '../core/ItemRequestI';
 
 interface StatsCardProps {
   title: string;
   id: number;
+  items: Array<ItemIR>;
   deleteColumn: (id: number) => void;
   moveLeft: (id: number) => void;
   moveRight: (id: number) => void;
+  setItems: (items: Array<ItemIR>) => void;
 }
 interface Item {}
 export default function Board(props: StatsCardProps) {
-  const [items, setItems] = useState<Array<ItemIR> | undefined>();
-
-  useEffect(
-    () => {
-      GenericService.getByParentId<Result<Array<ItemIR>>>(
-        'item',
-        props.id
-      ).then((items: Result<Array<ItemIR>>) => setItems(items.result));
-    },
-    // TODO:
-    // we should avoid another api call after board position is changed, but
-    // for now we will make 2 api calls for every move of the board
-    [props.id]
-  );
-
   const deleteItem = (id: number) => {
     GenericService.delete<DeleteResultI>('item', id).then(
       (result: DeleteResultI) => {
         if (result.success) {
-          setItems(items?.filter((item: any) => item.id !== id));
+          props.setItems(props.items.filter((item: any) => item.id !== id));
         }
       }
     );
@@ -119,7 +104,7 @@ export default function Board(props: StatsCardProps) {
           </HStack>
           <Stack direction={'row'} align={'center'} justify={'center'}>
             <SimpleGrid columns={{ base: 1, md: 1 }} spacing={1}>
-              {items?.map((itm) => (
+              {props.items.map((itm) => (
                 <Item
                   deleteItem={deleteItem}
                   item={itm}
