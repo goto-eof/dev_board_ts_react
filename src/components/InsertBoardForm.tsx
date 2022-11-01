@@ -49,6 +49,7 @@ export default function InsertColumnForm() {
 
     GenericService.create<ColumnI>('column', {
       name: e.target.elements.name.value,
+      order: -1,
     }).then((response) => {
       navigate('/board');
     });
