@@ -16,7 +16,7 @@ import GenericService from '../service/GenerciService';
 import Result from '../core/ResultI';
 import { ColumnI } from '../core/ColumnResponseI';
 import { ItemIR } from '../core/ItemRequestI';
-import { ItemIUpdateRequest } from '../core/ItemIUpdateRequest';
+import { ItemIUpdateRequest } from '../core/ItemUpdateRequestI';
 
 export default function InsertItemForm() {
   const { boardId, itemId } = useParams();
