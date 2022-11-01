@@ -1,4 +1,9 @@
-import { ChevronDownIcon, EditIcon } from '@chakra-ui/icons';
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ChevronDownIcon,
+  EditIcon,
+} from '@chakra-ui/icons';
 import {
   Box,
   SimpleGrid,
@@ -18,9 +23,9 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
 import Item from './Item';
-import Result from '../core/ItemI';
+import Result from '../core/ItemIGui';
 import { DeleteResultI } from '../core/DeleteResultI';
-import { ItemIR } from '../core/ItemIR';
+import { ItemIR } from '../core/ItemIRequest';
 
 interface StatsCardProps {
   title: string;
@@ -57,6 +62,7 @@ export default function Board(props: StatsCardProps) {
           align={'center'}
         >
           <HStack>
+            <Icon as={ArrowLeftIcon} color={'gray.400'} />
             <Text
               fontSize={'xl'}
               fontWeight={500}
@@ -88,6 +94,8 @@ export default function Board(props: StatsCardProps) {
                 </>
               )}
             </Menu>
+
+            <Icon as={ArrowRightIcon} color={'gray.400'} />
           </HStack>
           <Stack direction={'row'} align={'center'} justify={'center'}>
             <SimpleGrid columns={{ base: 1, md: 1 }} spacing={1}>

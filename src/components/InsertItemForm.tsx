@@ -13,9 +13,9 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
-import Result, { ItemI } from '../core/ItemI';
+import Result, { ItemI } from '../core/ItemIGui';
 import { ColumnI } from '../core/ColumnI';
-import { ItemIR } from '../core/ItemIR';
+import { ItemIR } from '../core/ItemIRequest';
 
 export default function InsertItemForm() {
   const { boardId, itemId } = useParams();
