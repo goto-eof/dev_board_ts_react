@@ -32,7 +32,7 @@ interface StatsCardProps {
   deleteColumn: (id: number) => void;
   moveLeft: (id: number) => void;
   moveRight: (id: number) => void;
-  setItems: (items: Array<ItemRequestI>) => void;
+  setItems: (boardId: number, items: Array<ItemRequestI>) => void;
 }
 interface Item {}
 export default function Board(props: StatsCardProps) {
@@ -40,7 +40,10 @@ export default function Board(props: StatsCardProps) {
     GenericService.delete<DeleteResultI>('item', id).then(
       (result: DeleteResultI) => {
         if (result.success) {
-          props.setItems(props.items.filter((item: any) => item.id !== id));
+          props.setItems(
+            props.id,
+            props.items.filter((item: any) => item.id !== id)
+          );
         }
       }
     );

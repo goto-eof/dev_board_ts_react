@@ -35,6 +35,7 @@ export const Columns: FC<ColumnsProps> = () => {
             let board: BoardI = {
               board: column,
               items: arr[index].result,
+              _force_update: true,
             };
             boards.push(board);
           });
@@ -63,7 +64,19 @@ export const Columns: FC<ColumnsProps> = () => {
     swapUiAnBe(id, 1);
   };
 
-  const setItems = () => {};
+  const setItems = (boardId: number, items: Array<ItemRequestI>) => {
+    let newBoards = new Array<BoardI>();
+    boards?.forEach((board: BoardI) => {
+      if (board.board.id === boardId) {
+        let newBoard = { ...board, items: items };
+        newBoards = boards.map((board) =>
+          board.board.id === boardId ? newBoard : board
+        );
+        board._force_update = !!!board._force_update;
+      }
+    });
+    setBoards(newBoards);
+  };
 
   const swapUiAnBe = (idA: number, lorr: number) => {
     if (boards) {
@@ -134,7 +147,7 @@ interface BoardProps {
   deleteColumn: (id: number) => void;
   moveLeft: (id: number) => void;
   moveRight: (id: number) => void;
-  setItems: (items: Array<ItemRequestI>) => void;
+  setItems: (boardId: number, items: Array<ItemRequestI>) => void;
 }
 
 function Boards(props: BoardProps) {
