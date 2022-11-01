@@ -61,18 +61,32 @@ export default function InsertColumnForm() {
   }
 
   const hasError = (field: string) => {
-    return !!states.error.get(field);
+    return states.error.get(field);
+  };
+
+  const validate = () => {
+    let map = new Map<string, boolean>(states.error);
+    let isValid = true;
+    if (!states.boardName) {
+      isValid = false;
+    }
+    map.set('boardName', !isValid);
+
+    setStates({ ...states, error: map, isInvalid: !isValid });
+    return isValid;
   };
 
   const save = (e: any) => {
     e.preventDefault();
-
-    GenericService.create<ColumnUpdateI>('column', {
-      name: e.target.elements.boardName.value,
-      order: states.order,
-    }).then((response) => {
-      navigate('/board');
-    });
+    const isValid = validate();
+    if (isValid) {
+      GenericService.create<ColumnUpdateI>('column', {
+        name: e.target.elements.boardName.value,
+        order: states.order,
+      }).then((response) => {
+        navigate('/board');
+      });
+    }
   };
 
   const update = (e: any) => {
@@ -98,6 +112,9 @@ export default function InsertColumnForm() {
           <FormControl isInvalid={states.isInvalid} w={'100%'}>
             <FormLabel>Id</FormLabel>
             <Input
+              formNoValidate
+              borderColor={'gray.800'}
+              _invalid={{ border: 'gray.400' }}
               readOnly={true}
               type="text"
               value={boardId}
