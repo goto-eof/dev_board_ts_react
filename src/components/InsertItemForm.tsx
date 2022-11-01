@@ -13,7 +13,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
-import Result, { ItemI } from '../core/ItemIGui';
+import Result from '../core/ResultI';
 import { ColumnI } from '../core/ColumnI';
 import { ItemIR } from '../core/ItemIRequest';
 

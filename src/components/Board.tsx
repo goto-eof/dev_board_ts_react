@@ -23,7 +23,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
 import Item from './Item';
-import Result from '../core/ItemIGui';
+import Result from '../core/ResultI';
 import { DeleteResultI } from '../core/DeleteResultI';
 import { ItemIR } from '../core/ItemIRequest';
 
