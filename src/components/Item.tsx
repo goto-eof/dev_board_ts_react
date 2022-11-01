@@ -11,10 +11,10 @@ import {
   Grid,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { ItemIR } from '../core/ItemRequestI';
+import { ItemRequestI } from '../core/ItemRequestI';
 
 interface ItemProps {
-  item: ItemIR;
+  item: ItemRequestI;
   deleteItem: (id: number) => void;
 }
 

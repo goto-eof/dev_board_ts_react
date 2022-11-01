@@ -6,13 +6,12 @@ import { Link } from 'react-router-dom';
 import Result from '../core/ResultI';
 import { ColumnResponseI } from '../core/ColumnResponseI';
 import { DeleteResultI } from '../core/DeleteResultI';
-import { ItemIR } from '../core/ItemRequestI';
+import { ItemRequestI } from '../core/ItemRequestI';
 import BoardI from '../core/BoardI';
 
 interface ColumnsProps {}
 
 export const Columns: FC<ColumnsProps> = () => {
-  // const [columns, setColumns] = useState<Array<BoardI> | undefined>();
   const [boards, setBoards] = useState<Array<BoardI> | undefined>();
 
   useEffect(() => {
@@ -21,10 +20,10 @@ export const Columns: FC<ColumnsProps> = () => {
         let result = columns.result;
 
         let boards = new Array<BoardI>();
-        let calls = new Array<Promise<Result<Array<ItemIR>>>>();
+        let calls = new Array<Promise<Result<Array<ItemRequestI>>>>();
         result.forEach((column) => {
           calls.push(
-            GenericService.getByParentId<Result<Array<ItemIR>>>(
+            GenericService.getByParentId<Result<Array<ItemRequestI>>>(
               'item',
               column.id
             )
@@ -136,7 +135,7 @@ interface BoardProps {
   deleteColumn: (id: number) => void;
   moveLeft: (id: number) => void;
   moveRight: (id: number) => void;
-  setItems: (items: Array<ItemIR>) => void;
+  setItems: (items: Array<ItemRequestI>) => void;
 }
 
 function Boards(props: BoardProps) {

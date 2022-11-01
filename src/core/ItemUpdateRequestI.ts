@@ -1,4 +1,4 @@
-export interface ItemIUpdateRequest {
+export interface ItemUpdateRequestI {
   name?: string;
   t_type?: string;
   code?: string;

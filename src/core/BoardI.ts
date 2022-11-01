@@ -1,7 +1,7 @@
 import { ColumnResponseI } from './ColumnResponseI';
-import { ItemIR } from './ItemRequestI';
+import { ItemRequestI } from './ItemRequestI';
 
 export default interface BoardI {
   board: ColumnResponseI;
-  items: Array<ItemIR>;
+  items: Array<ItemRequestI>;
 }

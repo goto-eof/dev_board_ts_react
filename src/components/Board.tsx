@@ -23,16 +23,16 @@ import { Link } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
 import Item from './Item';
 import { DeleteResultI } from '../core/DeleteResultI';
-import { ItemIR } from '../core/ItemRequestI';
+import { ItemRequestI } from '../core/ItemRequestI';
 
 interface StatsCardProps {
   title: string;
   id: number;
-  items: Array<ItemIR>;
+  items: Array<ItemRequestI>;
   deleteColumn: (id: number) => void;
   moveLeft: (id: number) => void;
   moveRight: (id: number) => void;
-  setItems: (items: Array<ItemIR>) => void;
+  setItems: (items: Array<ItemRequestI>) => void;
 }
 interface Item {}
 export default function Board(props: StatsCardProps) {
@@ -108,7 +108,7 @@ export default function Board(props: StatsCardProps) {
                 <Item
                   deleteItem={deleteItem}
                   item={itm}
-                  key={(itm as ItemIR).id}
+                  key={(itm as ItemRequestI).id}
                 />
               ))}
             </SimpleGrid>

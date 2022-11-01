@@ -1,4 +1,4 @@
-export interface ItemIR {
+export interface ItemRequestI {
   id?: number;
   name: string;
   t_type: string;

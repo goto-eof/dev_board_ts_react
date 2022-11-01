@@ -15,8 +15,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
 import Result from '../core/ResultI';
 import { ColumnResponseI } from '../core/ColumnResponseI';
-import { ItemIR } from '../core/ItemRequestI';
-import { ItemIUpdateRequest } from '../core/ItemUpdateRequestI';
+import { ItemRequestI } from '../core/ItemRequestI';
+import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
 
 export default function InsertItemForm() {
   const { boardId, itemId } = useParams();
@@ -42,7 +42,10 @@ export default function InsertItemForm() {
           Result<Array<ColumnResponseI>>
         >('column');
         const fields = itemId
-          ? await GenericService.get<Result<ItemIR>>('item', Number(itemId))
+          ? await GenericService.get<Result<ItemRequestI>>(
+              'item',
+              Number(itemId)
+            )
           : null;
         setStates({
           ...states,
@@ -85,7 +88,7 @@ export default function InsertItemForm() {
 
   const save = (e: any) => {
     e.preventDefault();
-    GenericService.create<ItemIR>('item', {
+    GenericService.create<ItemRequestI>('item', {
       name: e.target.elements.itemName.value,
       t_type: e.target.elements.type.value,
       code: e.target.elements.code.value,
@@ -93,7 +96,7 @@ export default function InsertItemForm() {
       order: 0,
       description: e.target.elements.description.value,
       status: e.target.elements.itemStatus.value,
-    }).then((response: Result<ItemIR>) => {
+    }).then((response: Result<ItemRequestI>) => {
       navigate('/board');
     });
   };
@@ -101,7 +104,7 @@ export default function InsertItemForm() {
   const update = (e: any) => {
     e.preventDefault();
     if (itemId) {
-      GenericService.update<ItemIUpdateRequest, ItemIR>(
+      GenericService.update<ItemUpdateRequestI, ItemRequestI>(
         'item',
         Number(itemId),
         {
