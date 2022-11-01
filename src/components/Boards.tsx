@@ -41,7 +41,6 @@ export const Columns: FC<ColumnsProps> = () => {
               },
               items: arr[index].result,
             };
-            console.log('BOARDS', board);
             boards.push(board);
           });
           setBoards(boards);
