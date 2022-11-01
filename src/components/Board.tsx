@@ -35,6 +35,7 @@ interface StatsCardProps {
   moveLeft: (id: number) => void;
   moveRight: (id: number) => void;
   setItems: (boardId: number, items: Array<ItemRequestI>) => void;
+  goToEdit: (boardId: number) => void;
 }
 interface Item {}
 export default function Board(props: StatsCardProps) {
@@ -90,6 +91,9 @@ export default function Board(props: StatsCardProps) {
                     <Icon as={ChevronDownIcon} />
                   </MenuButton>
                   <MenuList>
+                    <MenuItem onClick={() => props.goToEdit(props.id || -1)}>
+                      Edit
+                    </MenuItem>
                     <MenuItem
                       onClick={() => {
                         props.deleteColumn(props.id || -1);

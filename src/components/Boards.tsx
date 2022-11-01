@@ -2,7 +2,7 @@ import { Box, Button, HStack } from '@chakra-ui/react';
 import { FC, useEffect, useState } from 'react';
 import GenericService from '../service/GenerciService';
 import Board from './Board';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Result from '../core/ResultI';
 import { ColumnResponseI } from '../core/ColumnResponseI';
 import { DeleteResultI } from '../core/DeleteResultI';
@@ -14,6 +14,7 @@ interface ColumnsProps {}
 
 export const Columns: FC<ColumnsProps> = () => {
   const [boards, setBoards] = useState<Array<BoardI> | undefined>();
+  let navigate = useNavigate();
 
   useEffect(() => {
     GenericService.getAll<Result<Array<ColumnResponseI>>>('column').then(
@@ -78,6 +79,10 @@ export const Columns: FC<ColumnsProps> = () => {
       }
     });
     setBoards(newBoards);
+  };
+
+  const goToEdit = (boardId: number) => {
+    navigate('/edit-board/' + boardId);
   };
 
   const swapUiAnBe = (idA: number, lorr: number) => {
@@ -161,6 +166,7 @@ export const Columns: FC<ColumnsProps> = () => {
         moveRight={moveRight}
         deleteColumn={deleteColumn}
         setItems={setItems}
+        goToEdit={goToEdit}
         columns={boards}
       />
     </div>
@@ -171,6 +177,7 @@ interface BoardProps {
   columns?: Array<BoardI>;
   deleteColumn: (id: number) => void;
   moveLeft: (id: number) => void;
+  goToEdit: (boardId: number) => void;
   moveRight: (id: number) => void;
   setItems: (boardId: number, items: Array<ItemRequestI>) => void;
 }
@@ -191,6 +198,7 @@ function Boards(props: BoardProps) {
             moveLeft={props.moveLeft}
             moveRight={props.moveRight}
             deleteColumn={props.deleteColumn}
+            goToEdit={props.goToEdit}
             setItems={props.setItems}
             id={item.board.id || -1}
             key={item.board.order}

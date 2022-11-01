@@ -25,6 +25,7 @@ export const App = () => {
               path="/edit-item/boardid/:boardId/itemid/:itemId"
               element={<InsertItemForm />}
             />
+            <Route path="/edit-board/:boardId" element={<InsertColumnForm />} />
             <Route path="/new-board" element={<InsertColumnForm />} />
           </Routes>
           <Footer />
