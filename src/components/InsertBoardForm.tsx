@@ -11,7 +11,6 @@ import {
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
-import { ColumnResponseI } from '../core/ColumnResponseI';
 import { ColumnUpdateI } from '../core/ColumnUpdateI';
 
 export default function InsertColumnForm() {

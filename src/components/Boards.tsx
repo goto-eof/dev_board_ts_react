@@ -19,7 +19,6 @@ export const Columns: FC<ColumnsProps> = () => {
     GenericService.getAll<Result<Array<ColumnResponseI>>>('column').then(
       (columns) => {
         let result = columns.result;
-
         let boards = new Array<BoardI>();
         let calls = new Array<Promise<Result<Array<ItemRequestI>>>>();
         result.forEach((column) => {
@@ -98,7 +97,6 @@ export const Columns: FC<ColumnsProps> = () => {
     indexOfB: number,
     boards: Array<BoardI>
   ) => {
-    console.log('swapping', indexOfA, indexOfB, boards);
     if (
       indexOfA < 0 ||
       indexOfA >= boards.length ||
@@ -107,9 +105,10 @@ export const Columns: FC<ColumnsProps> = () => {
     ) {
       return boards;
     }
-
-    boards[indexOfA].board.order = indexOfB;
-    boards[indexOfB].board.order = indexOfA;
+    let orderA = boards[indexOfA].board.order;
+    let orderB = boards[indexOfB].board.order;
+    boards[indexOfA].board.order = orderB;
+    boards[indexOfB].board.order = orderA;
     const temp = boards[indexOfA];
     boards[indexOfA] = boards[indexOfB];
     boards[indexOfB] = temp;
