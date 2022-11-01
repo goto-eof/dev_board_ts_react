@@ -16,6 +16,7 @@ import GenericService from '../service/GenerciService';
 import Result from '../core/ResultI';
 import { ColumnI } from '../core/ColumnI';
 import { ItemIR } from '../core/ItemIRequest';
+import { ItemIUpdateRequest } from '../core/ItemIUpdateRequest';
 
 export default function InsertItemForm() {
   const { boardId, itemId } = useParams();
@@ -89,9 +90,10 @@ export default function InsertItemForm() {
       t_type: e.target.elements.type.value,
       code: e.target.elements.code.value,
       column_id: Number(boardId),
+      order: 0,
       description: e.target.elements.description.value,
       status: e.target.elements.itemStatus.value,
-    }).then((response) => {
+    }).then((response: Result<ItemIR>) => {
       navigate('/board');
     });
   };
@@ -99,14 +101,18 @@ export default function InsertItemForm() {
   const update = (e: any) => {
     e.preventDefault();
     if (itemId) {
-      GenericService.update<ItemIR>('item', Number(itemId), {
-        name: e.target.elements.itemName.value,
-        t_type: e.target.elements.type.value,
-        code: e.target.elements.code.value,
-        column_id: Number(e.target.elements.defaultBoard.value),
-        description: e.target.elements.description.value,
-        status: e.target.elements.itemStatus.value,
-      }).then((response) => {
+      GenericService.update<ItemIUpdateRequest, ItemIR>(
+        'item',
+        Number(itemId),
+        {
+          name: e.target.elements.itemName.value,
+          t_type: e.target.elements.type.value,
+          code: e.target.elements.code.value,
+          column_id: Number(e.target.elements.defaultBoard.value),
+          description: e.target.elements.description.value,
+          status: e.target.elements.itemStatus.value,
+        }
+      ).then((response) => {
         navigate('/board');
       });
     }

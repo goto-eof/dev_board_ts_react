@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import Result from '../core/ResultI';
 import { ColumnI } from '../core/ColumnI';
 import { DeleteResultI } from '../core/DeleteResultI';
+import { ColumnUpdateI } from '../core/ColumnUpdateI';
 
 interface ColumnsProps {}
 
@@ -13,9 +14,11 @@ export const Columns: FC<ColumnsProps> = () => {
   const [columns, setColumns] = useState<Array<ColumnI> | undefined>();
 
   useEffect(() => {
-    GenericService.getAll<Result<Array<ColumnI>>>('column').then((columns) =>
-      setColumns(columns.result)
-    );
+    GenericService.getAll<Result<Array<ColumnI>>>('column').then((columns) => {
+      let result = columns.result;
+      result.forEach((column, index) => (column.order = index));
+      setColumns(result);
+    });
   }, []);
 
   const deleteColumn = (id: number) => {
@@ -29,9 +32,86 @@ export const Columns: FC<ColumnsProps> = () => {
     );
   };
 
+  const moveLeft = (id: number) => {
+    swapUiAnBe(id, -1);
+  };
+
+  const moveRight = (id: number) => {
+    swapUiAnBe(id, 1);
+  };
+
+  const swapUiAnBe = (idA: number, lorr: number) => {
+    if (columns) {
+      let columnsFinal = [...columns];
+      for (let i = 0; i < columns.length; i++) {
+        if (columns[i].id === idA) {
+          columnsFinal = swapUI(i, i + lorr, columnsFinal);
+          console.log(
+            'I:',
+            i,
+            i + lorr,
+            columns.length,
+            i < 0 ||
+              i >= columns.length ||
+              i + lorr < 0 ||
+              i + lorr >= columns.length
+          );
+          if (
+            !(
+              i < 0 ||
+              i >= columns.length ||
+              i + lorr < 0 ||
+              i + lorr >= columns.length
+            )
+          ) {
+            console.log('calling be...', idA, columns[i + lorr].id);
+            GenericService.swap<boolean>(
+              'column',
+              idA,
+              columns[i + lorr].id
+            ).then((result) => {
+              console.log('be called', result);
+              setColumns(columnsFinal);
+            });
+          }
+          break;
+        }
+      }
+    }
+  };
+
+  const swapUI = (
+    indexOfA: number,
+    indexOfB: number,
+    columns: Array<ColumnI>
+  ) => {
+    console.log('swapping', indexOfA, indexOfB, columns);
+    if (
+      indexOfA < 0 ||
+      indexOfA >= columns.length ||
+      indexOfB < 0 ||
+      indexOfB >= columns.length
+    ) {
+      return columns;
+    }
+
+    columns[indexOfA].order = indexOfB;
+    columns[indexOfB].order = indexOfA;
+    const temp = columns[indexOfA];
+    columns[indexOfA] = columns[indexOfB];
+    columns[indexOfB] = temp;
+
+    return columns;
+  };
+
   return (
     <div className="Columns">
-      <Boards deleteColumn={deleteColumn} columns={columns} />
+      <Boards
+        moveLeft={moveLeft}
+        moveRight={moveRight}
+        deleteColumn={deleteColumn}
+        columns={columns}
+      />
     </div>
   );
 };
@@ -39,6 +119,8 @@ export const Columns: FC<ColumnsProps> = () => {
 interface BoardProps {
   columns?: Array<ColumnI>;
   deleteColumn: (id: number) => void;
+  moveLeft: (id: number) => void;
+  moveRight: (id: number) => void;
 }
 
 function Boards(props: BoardProps) {
@@ -54,9 +136,11 @@ function Boards(props: BoardProps) {
       >
         {props.columns?.map((item) => (
           <Board
+            moveLeft={props.moveLeft}
+            moveRight={props.moveRight}
             deleteColumn={props.deleteColumn}
             id={item.id || -1}
-            key={item.id}
+            key={item.order}
             title={item.name}
           />
         ))}

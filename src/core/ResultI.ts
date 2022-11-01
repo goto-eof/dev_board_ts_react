@@ -1,4 +1,4 @@
-export default interface Result<T> {
+export default interface ResultI<T> {
   result: T;
   success: boolean;
 }

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import ResultI from '../core/ResultI';
 
 export default class GenericService {
   private static baseUrl: string = 'http://localhost:8013/';
@@ -7,9 +8,7 @@ export default class GenericService {
     return await axios
       .get<Array<T>>(this.baseUrl + modelName)
       .then((result: any) => {
-        if (result.data && result.data.success) {
-          return result.data;
-        }
+        return result.data;
       })
       .catch((err) => {
         throw err;
@@ -23,9 +22,7 @@ export default class GenericService {
     return await axios
       .get<Array<T>>(this.baseUrl + modelName + '/parent/' + parentId)
       .then((result: any) => {
-        if (result.data && result.data.success) {
-          return result.data;
-        }
+        return result.data;
       })
       .catch((err) => {
         throw err;
@@ -44,32 +41,47 @@ export default class GenericService {
       });
   }
 
-  public static async create<T>(modelName: string, data: T): Promise<T> {
-    return axios
+  public static async create<T>(
+    modelName: string,
+    data: T
+  ): Promise<ResultI<T>> {
+    return await axios
       .post<T>(`${this.baseUrl}${modelName}`, data)
       .then((result: any) => {
         let data = result.data;
-        if (data && data.success) {
-          return data;
-        }
+        return data;
       })
       .catch((err) => {
         throw err;
       });
   }
 
-  public static async update<T>(
+  public static async update<T, S>(
     modelName: string,
     id: number,
     data: T
-  ): Promise<T> {
-    return axios
+  ): Promise<ResultI<S>> {
+    return await axios
       .put<T>(`${this.baseUrl}${modelName}/${id}`, data)
       .then((result: any) => {
         let data = result.data;
-        if (data && data.success) {
-          return data;
-        }
+        return data;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  public static async swap<T>(
+    modelName: string,
+    idA: number,
+    idB: number
+  ): Promise<T> {
+    return await axios
+      .put<T>(`${this.baseUrl}${modelName}/${idA}/${idB}`)
+      .then((result: any) => {
+        let data = result.data;
+        return data;
       })
       .catch((err) => {
         throw err;
@@ -77,13 +89,11 @@ export default class GenericService {
   }
 
   public static async delete<T>(modelName: string, id: number): Promise<T> {
-    return axios
+    return await axios
       .delete(`${this.baseUrl}${modelName}/${id}`)
       .then((result: any) => {
         let data = result.data;
-        if (data && data.success) {
-          return data;
-        }
+        return data;
       })
       .catch((err) => {
         throw err;

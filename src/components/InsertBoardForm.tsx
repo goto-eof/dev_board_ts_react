@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
 import { ColumnI } from '../core/ColumnI';
+import { ColumnUpdateI } from '../core/ColumnUpdateI';
 
 export default function InsertColumnForm() {
   const [states, setStates] = useState({
@@ -47,7 +48,7 @@ export default function InsertColumnForm() {
   const save = (e: any) => {
     e.preventDefault();
 
-    GenericService.create<ColumnI>('column', {
+    GenericService.create<ColumnUpdateI>('column', {
       name: e.target.elements.name.value,
       order: -1,
     }).then((response) => {
