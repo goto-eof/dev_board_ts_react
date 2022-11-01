@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import Result from '../core/ResultI';
 import { ColumnI } from '../core/ColumnI';
 import { DeleteResultI } from '../core/DeleteResultI';
-import { ColumnUpdateI } from '../core/ColumnUpdateI';
 
 interface ColumnsProps {}
 
@@ -46,16 +45,6 @@ export const Columns: FC<ColumnsProps> = () => {
       for (let i = 0; i < columns.length; i++) {
         if (columns[i].id === idA) {
           columnsFinal = swapUI(i, i + lorr, columnsFinal);
-          console.log(
-            'I:',
-            i,
-            i + lorr,
-            columns.length,
-            i < 0 ||
-              i >= columns.length ||
-              i + lorr < 0 ||
-              i + lorr >= columns.length
-          );
           if (
             !(
               i < 0 ||
@@ -64,13 +53,11 @@ export const Columns: FC<ColumnsProps> = () => {
               i + lorr >= columns.length
             )
           ) {
-            console.log('calling be...', idA, columns[i + lorr].id);
             GenericService.swap<boolean>(
               'column',
               idA,
               columns[i + lorr].id
             ).then((result) => {
-              console.log('be called', result);
               setColumns(columnsFinal);
             });
           }

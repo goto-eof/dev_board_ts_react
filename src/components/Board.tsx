@@ -42,7 +42,7 @@ export default function Board(props: StatsCardProps) {
     GenericService.getByParentId<Result<Array<ItemIR>>>('item', props.id).then(
       (items: Result<Array<ItemIR>>) => setItems(items.result)
     );
-  }, []);
+  }, [props.id]);
 
   const deleteItem = (id: number) => {
     GenericService.delete<DeleteResultI>('item', id).then(
