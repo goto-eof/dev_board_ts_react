@@ -13,6 +13,7 @@ import {
   useColorModeValue,
   useBreakpointValue,
   useDisclosure,
+  Button,
 } from '@chakra-ui/react';
 import {
   HamburgerIcon,
@@ -73,7 +74,36 @@ export default function NavBar() {
           justify={'flex-end'}
           direction={'row'}
           spacing={6}
-        ></Stack>
+        >
+          <ReactLink to={'/new-item'}>
+            <Button
+              display={{ base: 'none', md: 'inline-flex' }}
+              fontSize={'sm'}
+              fontWeight={600}
+              color={'white'}
+              bg={'blue.500'}
+              _hover={{
+                bg: 'blue.400',
+              }}
+            >
+              + Item
+            </Button>
+          </ReactLink>
+          <ReactLink to={'/new-board'}>
+            <Button
+              display={{ base: 'none', md: 'inline-flex' }}
+              fontSize={'sm'}
+              fontWeight={600}
+              color={'white'}
+              bg={'red.400'}
+              _hover={{
+                bg: 'red.300',
+              }}
+            >
+              + Board
+            </Button>
+          </ReactLink>
+        </Stack>
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
@@ -97,11 +127,10 @@ const DesktopNav = () => {
                 <Text
                   p={2}
                   fontSize={'md'}
-                  bgColor={'green.400'}
                   borderRadius={'5%'}
                   border={'none'}
                   fontWeight={500}
-                  color={'white'}
+                  color={'black.200'}
                   _hover={{
                     textDecoration: 'none',
                     color: linkHoverColor,

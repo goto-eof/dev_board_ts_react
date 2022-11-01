@@ -133,15 +133,14 @@ export default function Board(props: StatsCardProps) {
             <Button
               mt={0}
               w={'full'}
-              bg={'green.400'}
+              bg={'blue.400'}
               color={'white'}
               rounded={'xl'}
-              boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
               _hover={{
-                bg: 'green.500',
+                bg: 'blue.500',
               }}
               _focus={{
-                bg: 'green.500',
+                bg: 'blue.400',
               }}
             >
               + New item

@@ -92,7 +92,7 @@ export default function InsertItemForm() {
       name: e.target.elements.itemName.value,
       t_type: e.target.elements.type.value,
       code: e.target.elements.code.value,
-      column_id: Number(boardId),
+      column_id: Number(e.target.elements.defaultBoard.value),
       order: 0,
       description: e.target.elements.description.value,
       status: e.target.elements.itemStatus.value,

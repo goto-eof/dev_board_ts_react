@@ -211,7 +211,10 @@ function Boards(props: BoardProps) {
         {props.columns && (
           <Link to={'/new-board'}>
             <Button
-              bg={'green.400'}
+              bg={'red.400'}
+              _hover={{
+                bg: 'red.300',
+              }}
               transform={'rotate(90deg)'}
               color={'white'}
               mt={'36px'}
