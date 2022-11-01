@@ -35,7 +35,6 @@ export const Columns: FC<ColumnsProps> = () => {
             let board: BoardI = {
               board: column,
               items: arr[index].result,
-              _force_update: true,
             };
             boards.push(board);
           });
@@ -72,7 +71,6 @@ export const Columns: FC<ColumnsProps> = () => {
         newBoards = boards.map((board) =>
           board.board.id === boardId ? newBoard : board
         );
-        board._force_update = !!!board._force_update;
       }
     });
     setBoards(newBoards);
