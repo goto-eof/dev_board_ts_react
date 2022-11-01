@@ -128,7 +128,7 @@ export default function Board(props: StatsCardProps) {
           </Stack>
         </Stack>
 
-        <Box bg={useColorModeValue('gray.50', 'gray.900')} px={6} py={10}>
+        <Box bg={useColorModeValue('gray.50', 'gray.900')} px={1} py={1}>
           <Link to={'/new-item/' + props.id}>
             <Button
               mt={0}
