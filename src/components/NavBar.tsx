@@ -132,6 +132,8 @@ const DesktopNav = () => {
                   border={'none'}
                   fontWeight={500}
                   color={'black.200'}
+                  boxShadow={'md'}
+                  borderColor={'green.300'}
                   _hover={{
                     textDecoration: 'none',
                     color: linkHoverColor,
