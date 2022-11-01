@@ -1,9 +1,9 @@
 export interface ItemI {
   id?: number;
-  name: string;
+  itemName: string;
   t_type: string;
   code: string;
-  status: string;
+  itemStatus: string;
   description: string;
   column_id: number;
 }

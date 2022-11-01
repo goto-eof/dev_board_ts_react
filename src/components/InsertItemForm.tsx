@@ -15,14 +15,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
 import Result, { ItemI } from '../core/ItemI';
 import { ColumnI } from '../core/ColumnI';
+import { ItemIR } from '../core/ItemIR';
 
 export default function InsertItemForm() {
   const { boardId, itemId } = useParams();
 
   const [states, setStates] = useState({
-    name: '',
+    itemName: '',
     type: '',
-    status: '',
+    itemStatus: '',
     code: '',
     description: '',
     defaultBoard: '',
@@ -34,29 +35,29 @@ export default function InsertItemForm() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    GenericService.getAll<Result<Array<ColumnI>>>('column').then((columns) => {
-      setStates({
-        ...states,
-        defaultBoard: boardId || '',
-        columns: columns.result,
-      });
-    });
-
-    if (itemId) {
-      GenericService.get<Result<ItemI>>('item', Number(itemId)).then(
-        (itm: Result<ItemI>) => {
-          let item = itm.result;
-          setStates({
-            ...states,
-            name: item.name,
-            type: item.t_type,
-            status: item.status,
-            code: item.code,
-            description: item.description,
-          });
-        }
-      );
-    }
+    const fetchDetails = async () => {
+      try {
+        const columns = await GenericService.getAll<Result<Array<ColumnI>>>(
+          'column'
+        );
+        const fields = itemId
+          ? await GenericService.get<Result<ItemIR>>('item', Number(itemId))
+          : null;
+        setStates({
+          ...states,
+          itemName: fields ? fields.result.name : '',
+          type: fields ? fields.result.t_type : '',
+          itemStatus: fields ? fields.result.status : '',
+          code: fields ? fields.result.code : '',
+          description: fields ? fields.result.description : '',
+          defaultBoard: boardId || '',
+          columns: columns.result,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchDetails();
   }, []);
 
   const handleInputChange = (e: any) => {
@@ -83,14 +84,13 @@ export default function InsertItemForm() {
 
   const save = (e: any) => {
     e.preventDefault();
-
-    GenericService.create<ItemI>('item', {
-      name: e.target.elements.name.value,
+    GenericService.create<ItemIR>('item', {
+      name: e.target.elements.itemName.value,
       t_type: e.target.elements.type.value,
       code: e.target.elements.code.value,
       column_id: Number(boardId),
       description: e.target.elements.description.value,
-      status: e.target.elements.status.value,
+      status: e.target.elements.itemStatus.value,
     }).then((response) => {
       navigate('/board');
     });
@@ -99,13 +99,13 @@ export default function InsertItemForm() {
   const update = (e: any) => {
     e.preventDefault();
     if (itemId) {
-      GenericService.update<ItemI>('item', Number(itemId), {
-        name: e.target.elements.name.value,
+      GenericService.update<ItemIR>('item', Number(itemId), {
+        name: e.target.elements.itemName.value,
         t_type: e.target.elements.type.value,
         code: e.target.elements.code.value,
-        column_id: Number(boardId),
+        column_id: Number(e.target.elements.defaultBoard.value),
         description: e.target.elements.description.value,
-        status: e.target.elements.status.value,
+        status: e.target.elements.itemStatus.value,
       }).then((response) => {
         navigate('/board');
       });
@@ -118,11 +118,19 @@ export default function InsertItemForm() {
         <Heading>Task/Bug/Feature</Heading>
         <form onSubmit={itemId ? update : save} style={{ width: '100%' }}>
           <FormControl isInvalid={states.isInvalid} w={'100%'}>
+            <FormLabel>Id</FormLabel>
+            <Input
+              type="text"
+              value={itemId || ''}
+              name="id"
+              readOnly={true}
+              bg={'gray.100'}
+            />
             <FormLabel>Name</FormLabel>
             <Input
               type="text"
-              value={states.name}
-              name="name"
+              value={states.itemName}
+              name="itemName"
               onChange={handleInputChange}
             />
             <Errors fieldName={'name'} />
@@ -146,7 +154,7 @@ export default function InsertItemForm() {
             <Errors fieldName="code" />
 
             <FormLabel>Status</FormLabel>
-            <Select placeholder="Select option" name="status">
+            <Select placeholder="Select option" name="itemStatus">
               <option value="0">To do</option>
               <option value="1">Done</option>
             </Select>

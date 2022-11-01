@@ -18,8 +18,9 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
 import Item from './Item';
-import Result, { ItemI } from '../core/ItemI';
+import Result from '../core/ItemI';
 import { DeleteResultI } from '../core/DeleteResultI';
+import { ItemIR } from '../core/ItemIR';
 
 interface StatsCardProps {
   title: string;
@@ -28,11 +29,11 @@ interface StatsCardProps {
 }
 interface Item {}
 export default function Board(props: StatsCardProps) {
-  const [items, setItems] = useState<Array<ItemI> | undefined>();
+  const [items, setItems] = useState<Array<ItemIR> | undefined>();
 
   useEffect(() => {
-    GenericService.getByParentId<Result<Array<ItemI>>>('item', props.id).then(
-      (items: Result<Array<ItemI>>) => setItems(items.result)
+    GenericService.getByParentId<Result<Array<ItemIR>>>('item', props.id).then(
+      (items: Result<Array<ItemIR>>) => setItems(items.result)
     );
   }, []);
 
@@ -76,7 +77,6 @@ export default function Board(props: StatsCardProps) {
                     <Icon as={ChevronDownIcon} />
                   </MenuButton>
                   <MenuList>
-                    {/* <MenuItem onClick={() => alert('test')}>Edit</MenuItem> */}
                     <MenuItem
                       onClick={() => {
                         props.deleteColumn(props.id || -1);
@@ -95,7 +95,7 @@ export default function Board(props: StatsCardProps) {
                 <Item
                   deleteItem={deleteItem}
                   item={itm}
-                  key={(itm as ItemI).id}
+                  key={(itm as ItemIR).id}
                 />
               ))}
             </SimpleGrid>

@@ -11,10 +11,10 @@ import {
   Grid,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { ItemI } from '../core/ItemI';
+import { ItemIR } from '../core/ItemIR';
 
 interface ItemProps {
-  item: ItemI;
+  item: ItemIR;
   deleteItem: (id: number) => void;
 }
 
@@ -77,7 +77,6 @@ export default function Item({ item, deleteItem }: ItemProps) {
       <GridItem colSpan={6}>
         <Text align={'left'} fontSize="sm">
           {item.description}
-          {' cioa'}
         </Text>
       </GridItem>
     </Grid>
