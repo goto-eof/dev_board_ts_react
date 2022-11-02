@@ -5,7 +5,6 @@ export default class GenericService {
   private static baseUrl: string = 'http://localhost:8013/';
 
   public static async getAll<T>(modelName: string): Promise<T> {
-    console.log('model name', modelName);
     return await axios
       .get<Array<T>>(this.baseUrl + modelName)
       .then((result: any) => {

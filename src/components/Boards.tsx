@@ -21,7 +21,6 @@ export const Columns: FC<ColumnsProps> = () => {
   useEffect(() => {
     const isOneCall = process.env.REACT_APP_ENABLE_ONE_CALL == 'true';
     if (isOneCall) {
-      console.log('ENV: ', process.env.REACT_APP_ENABLE_ONE_CALL);
       GenericService.getAll<Result<ColumnsWithItemsI>>(
         'column/plus-items'
       ).then((result: Result<ColumnsWithItemsI>) => {
@@ -78,7 +77,6 @@ export const Columns: FC<ColumnsProps> = () => {
   const deleteColumn = (id: number) => {
     GenericService.delete<DeleteResultI>('column', id).then(
       (result: DeleteResultI) => {
-        console.log(result);
         if (result.success) {
           let newBoards =
             boards?.filter((column: any) => column.board.id !== id) || [];
