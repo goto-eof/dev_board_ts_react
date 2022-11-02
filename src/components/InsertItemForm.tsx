@@ -26,6 +26,7 @@ export default function InsertItemForm() {
     type: '',
     itemStatus: '',
     code: '',
+    order: 0,
     description: '',
     defaultBoard: '',
     error: new Map<string, boolean>(),
@@ -56,6 +57,7 @@ export default function InsertItemForm() {
           description: fields ? fields.result.description : '',
           defaultBoard: boardId || '',
           columns: columns.result,
+          order: fields ? fields.result.order : 0,
         });
       } catch (error) {
         console.log(error);
@@ -93,7 +95,7 @@ export default function InsertItemForm() {
       t_type: e.target.elements.type.value,
       code: e.target.elements.code.value,
       column_id: Number(e.target.elements.defaultBoard.value),
-      order: 0,
+      order: states.order,
       description: e.target.elements.description.value,
       status: e.target.elements.itemStatus.value,
     }).then((response: Result<ItemRequestI>) => {
@@ -114,6 +116,7 @@ export default function InsertItemForm() {
           column_id: Number(e.target.elements.defaultBoard.value),
           description: e.target.elements.description.value,
           status: e.target.elements.itemStatus.value,
+          order: states.order,
         }
       ).then((response) => {
         navigate('/board');
