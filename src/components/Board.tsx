@@ -25,6 +25,8 @@ import GenericService from '../service/GenerciService';
 import Item from './Item';
 import { DeleteResultI } from '../core/DeleteResultI';
 import { ItemRequestI } from '../core/ItemRequestI';
+import SwapRequestI from '../core/SwapRequestI';
+import ResultI from '../core/ResultI';
 
 interface StatsCardProps {
   title: string;
@@ -37,6 +39,7 @@ interface StatsCardProps {
   moveRight: (id: number) => void;
   setItems: (boardId: number, items: Array<ItemRequestI>) => void;
   goToEdit: (boardId: number) => void;
+  updateBoardItems: (boardId: number, items: Array<ItemRequestI>) => void;
 }
 interface Item {}
 export default function Board(props: StatsCardProps) {
@@ -51,6 +54,73 @@ export default function Board(props: StatsCardProps) {
         }
       }
     );
+  };
+
+  const moveUp = (id?: number) => {
+    if (!id) {
+      return;
+    }
+    swap(id, -1);
+  };
+
+  const swap = (id: number, direction: number) => {
+    let idB = calculateIdB(props.items, id, direction);
+    let swapRequest: SwapRequestI = {
+      id_a: id,
+      id_b: idB,
+    };
+    GenericService.swap<SwapRequestI, ResultI<boolean>>(
+      'item',
+      swapRequest
+    ).then((result) => {
+      console.log(result);
+      if (result.success) {
+        let newItems = swapList(props.items, id, idB);
+        props.updateBoardItems(props.id, newItems);
+      }
+    });
+  };
+
+  const calculateIdB = (
+    list: Array<ItemRequestI>,
+    idA: number,
+    direction: number
+  ): number => {
+    let indexA = list.indexOf(list.filter((item) => item.id === idA)[0]);
+    if (!list[indexA + direction]) {
+      return -1;
+    }
+    return list[indexA + direction].id || -1;
+  };
+
+  function swapList(
+    items: Array<ItemRequestI>,
+    idA: number,
+    idB: number
+  ): Array<ItemRequestI> {
+    let list = [...items];
+    let a = list.filter((item) => item.id === idA)[0];
+    let b = list.filter((item) => item.id === idB)[0];
+    let orderA = a.order;
+    a.order = b.order;
+    b.order = orderA;
+
+    items[items.indexOf(a)] = b;
+    items[items.indexOf(b)] = a;
+
+    return sort(list);
+  }
+
+  const moveDown = (id?: number) => {
+    if (!id) {
+      return;
+    }
+    swap(id, 1);
+  };
+
+  const sort = (items: Array<ItemRequestI>): Array<ItemRequestI> => {
+    items.sort((a, b) => a.order - b.order);
+    return items;
   };
 
   return (
@@ -125,6 +195,8 @@ export default function Board(props: StatsCardProps) {
                   deleteItem={deleteItem}
                   item={itm}
                   key={(itm as ItemRequestI).id}
+                  moveDown={moveDown}
+                  moveUp={moveUp}
                 />
               ))}
             </SimpleGrid>

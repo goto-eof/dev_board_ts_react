@@ -1,4 +1,9 @@
-import { ArrowRightIcon, ChevronDownIcon } from '@chakra-ui/icons';
+import {
+  ArrowDownIcon,
+  ArrowRightIcon,
+  ArrowUpIcon,
+  ChevronDownIcon,
+} from '@chakra-ui/icons';
 import {
   Badge,
   Text,
@@ -9,6 +14,8 @@ import {
   MenuButton,
   GridItem,
   Grid,
+  Box,
+  HStack,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { ItemRequestI } from '../core/ItemRequestI';
@@ -16,9 +23,16 @@ import { ItemRequestI } from '../core/ItemRequestI';
 interface ItemProps {
   item: ItemRequestI;
   deleteItem: (id: number) => void;
+  moveUp: (id?: number) => void;
+  moveDown: (id?: number) => void;
 }
 
-export default function Item({ item, deleteItem }: ItemProps) {
+export default function Item({
+  item,
+  deleteItem,
+  moveUp,
+  moveDown,
+}: ItemProps) {
   let navigate = useNavigate();
 
   const goToEdit = (id: number) => {
@@ -63,7 +77,11 @@ export default function Item({ item, deleteItem }: ItemProps) {
         <Menu>
           {() => (
             <>
-              <MenuButton>
+              <MenuButton
+                color={'gray.800'}
+                fontWeight={900}
+                _hover={{ color: 'green.400' }}
+              >
                 <Icon as={ChevronDownIcon} />
               </MenuButton>
               <MenuList>
@@ -89,6 +107,18 @@ export default function Item({ item, deleteItem }: ItemProps) {
             : item.description}
         </Text>
       </GridItem>
+      <HStack w={'210px'} justifyContent="right">
+        <Box onClick={() => moveDown(item.id)}>
+          <Icon
+            as={ArrowDownIcon}
+            color={'gray.800'}
+            _hover={{ color: 'green.400' }}
+          />
+        </Box>
+        <Box onClick={() => moveUp(item.id)}>
+          <Icon as={ArrowUpIcon} _hover={{ color: 'green.400' }} />
+        </Box>
+      </HStack>
     </Grid>
   );
 }

@@ -197,6 +197,7 @@ function Boards(props: BoardProps) {
             moveLeft={props.moveLeft}
             moveRight={props.moveRight}
             deleteColumn={props.deleteColumn}
+            updateBoardItems={props.setItems}
             goToEdit={props.goToEdit}
             setItems={props.setItems}
             id={item.board.id || -1}
