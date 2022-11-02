@@ -3,6 +3,7 @@ import {
   ArrowRightIcon,
   ArrowUpIcon,
   ChevronDownIcon,
+  ViewIcon,
 } from '@chakra-ui/icons';
 import {
   Badge,
@@ -16,9 +17,11 @@ import {
   Grid,
   Box,
   HStack,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { ItemRequestI } from '../core/ItemRequestI';
+import { ViewItem } from './ViewItem';
 
 interface ItemProps {
   item: ItemRequestI;
@@ -37,6 +40,7 @@ export default function Item({
   canMoveUp,
   canMoveDown,
 }: ItemProps) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   let navigate = useNavigate();
 
   const goToEdit = (id: number) => {
@@ -44,89 +48,93 @@ export default function Item({
   };
 
   return (
-    <Grid
-      templateColumns="repeat(6, 1fr)"
-      templateRows="repeat(2, 1fr)"
-      gap={0}
-      minW={'100%'}
-      width={'100%'}
-      boxShadow={'lg'}
-      bg="white"
-      p={4}
-      borderRadius="5%"
-    >
-      <GridItem w="100%" colSpan={5} h="10">
-        <Text
-          align={'left'}
-          height={'38px'}
-          overflow={'hidden'}
-          fontWeight={600}
-          fontSize={'sm'}
-        >
-          <Icon
-            as={ArrowRightIcon}
-            fontSize={'10'}
-            color={'green.400'}
-            mr={2}
-          />
-          <Badge ml="1" colorScheme="green" mr={2}>
-            {item.id}
-          </Badge>
-          {item.name.length > 35
-            ? item.name.substring(0, 35) + '...'
-            : item.name}
-        </Text>
-      </GridItem>
-      <GridItem colSpan={1} w="100%" h="10">
-        <Menu>
-          {() => (
-            <>
-              <MenuButton
-                color={'gray.800'}
-                fontWeight={900}
-                _hover={{ color: 'green.400' }}
-              >
-                <Icon as={ChevronDownIcon} />
-              </MenuButton>
-              <MenuList>
-                <MenuItem onClick={() => goToEdit(item.id || -1)}>
-                  Edit
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    deleteItem(item.id || -1);
-                  }}
-                >
-                  Delete
-                </MenuItem>
-              </MenuList>
-            </>
-          )}
-        </Menu>
-      </GridItem>
-      <GridItem colSpan={6}>
-        <Text align={'left'} overflow="hidden" fontSize="sm">
-          {item.description.length > 60
-            ? item.description.substring(0, 60) + '...'
-            : item.description}
-        </Text>
-      </GridItem>
-      <HStack w={'210px'} justifyContent="right">
-        {canMoveUp(item.id || -1) && (
-          <Box onClick={() => moveUp(item.id)}>
-            <Icon as={ArrowUpIcon} _hover={{ color: 'green.400' }} />
-          </Box>
-        )}
-        {canMoveDown(item.id || -1) && (
-          <Box onClick={() => moveDown(item.id)}>
+    <>
+      <ViewItem isOpen={isOpen} onClose={onClose} item={item} />
+      <Grid
+        onClick={onOpen}
+        templateColumns="repeat(6, 1fr)"
+        templateRows="repeat(2, 1fr)"
+        gap={0}
+        minW={'100%'}
+        width={'100%'}
+        boxShadow={'lg'}
+        bg="white"
+        p={4}
+        borderRadius="5%"
+      >
+        <GridItem w="100%" colSpan={5} h="10">
+          <Text
+            align={'left'}
+            height={'38px'}
+            overflow={'hidden'}
+            fontWeight={600}
+            fontSize={'sm'}
+          >
             <Icon
-              as={ArrowDownIcon}
-              color={'gray.800'}
-              _hover={{ color: 'green.400' }}
+              as={ArrowRightIcon}
+              fontSize={'10'}
+              color={'green.400'}
+              mr={2}
             />
-          </Box>
-        )}
-      </HStack>
-    </Grid>
+            <Badge ml="1" colorScheme="green" mr={2}>
+              {item.id}
+            </Badge>
+            {item.name.length > 35
+              ? item.name.substring(0, 35) + '...'
+              : item.name}
+          </Text>
+        </GridItem>
+        <GridItem colSpan={1} w="100%" h="10">
+          <Menu>
+            {() => (
+              <>
+                <MenuButton
+                  color={'gray.800'}
+                  fontWeight={900}
+                  _hover={{ color: 'green.400' }}
+                >
+                  <Icon as={ChevronDownIcon} />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={() => goToEdit(item.id || -1)}>
+                    Edit
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      deleteItem(item.id || -1);
+                    }}
+                  >
+                    Delete
+                  </MenuItem>
+                </MenuList>
+              </>
+            )}
+          </Menu>
+        </GridItem>
+        <GridItem colSpan={6}>
+          <Text align={'left'} overflow="hidden" fontSize="sm">
+            {item.description.length > 60
+              ? item.description.substring(0, 60) + '...'
+              : item.description}
+          </Text>
+        </GridItem>
+        <HStack w={'210px'} justifyContent="right">
+          {canMoveUp(item.id || -1) && (
+            <Box onClick={() => moveUp(item.id)}>
+              <Icon as={ArrowUpIcon} _hover={{ color: 'green.400' }} />
+            </Box>
+          )}
+          {canMoveDown(item.id || -1) && (
+            <Box onClick={() => moveDown(item.id)}>
+              <Icon
+                as={ArrowDownIcon}
+                color={'gray.800'}
+                _hover={{ color: 'green.400' }}
+              />
+            </Box>
+          )}
+        </HStack>
+      </Grid>
+    </>
   );
 }

@@ -41,7 +41,6 @@ interface StatsCardProps {
   goToEdit: (boardId: number) => void;
   updateBoardItems: (boardId: number, items: Array<ItemRequestI>) => void;
 }
-interface Item {}
 export default function Board(props: StatsCardProps) {
   const deleteItem = (id: number) => {
     GenericService.delete<DeleteResultI>('item', id).then(
