@@ -51,7 +51,6 @@ export default function Item({
     <>
       <ViewItem isOpen={isOpen} onClose={onClose} item={item} />
       <Grid
-        onClick={onOpen}
         templateColumns="repeat(6, 1fr)"
         templateRows="repeat(2, 1fr)"
         gap={0}
@@ -111,7 +110,7 @@ export default function Item({
             )}
           </Menu>
         </GridItem>
-        <GridItem colSpan={6}>
+        <GridItem colSpan={6} onClick={onOpen}>
           <Text align={'left'} overflow="hidden" fontSize="sm">
             {item.description.length > 60
               ? item.description.substring(0, 60) + '...'
