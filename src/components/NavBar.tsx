@@ -20,8 +20,11 @@ import {
   CloseIcon,
   ChevronDownIcon,
   ChevronRightIcon,
+  SettingsIcon,
 } from '@chakra-ui/icons';
 import { Link as ReactLink } from 'react-router-dom';
+import { IconType } from 'react-icons';
+import { FiHome } from 'react-icons/fi';
 
 export default function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
@@ -134,6 +137,7 @@ const DesktopNav = () => {
                   color={'black.200'}
                   boxShadow={'md'}
                   borderColor={'green.300'}
+                  verticalAlign={'middle'}
                   _hover={{
                     textDecoration: 'none',
                     color: linkHoverColor,
@@ -261,9 +265,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
         >
           {children &&
             children.map((child) => (
-              <Link key={child.label} py={2} href={child.href}>
-                {child.label}
-              </Link>
+              <Link key={child.label} py={2} href={child.href}></Link>
             ))}
         </Stack>
       </Collapse>
@@ -276,11 +278,13 @@ interface NavItem {
   subLabel?: string;
   children?: Array<NavItem>;
   href?: string;
+  icon: IconType;
 }
 
 const NAV_ITEMS: Array<NavItem> = [
   {
     label: 'Dashboard',
     href: '/board',
+    icon: FiHome,
   },
 ];

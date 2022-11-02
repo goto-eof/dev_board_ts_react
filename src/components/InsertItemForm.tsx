@@ -99,7 +99,9 @@ export default function InsertItemForm() {
       description: e.target.elements.description.value,
       status: e.target.elements.itemStatus.value,
     }).then((response: Result<ItemRequestI>) => {
-      navigate('/board');
+      if (response.success) {
+        navigate('/board');
+      }
     });
   };
 
@@ -119,7 +121,9 @@ export default function InsertItemForm() {
           order: states.order,
         }
       ).then((response) => {
-        navigate('/board');
+        if (response.success) {
+          navigate('/board');
+        }
       });
     }
   };

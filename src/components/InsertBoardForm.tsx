@@ -84,7 +84,9 @@ export default function InsertColumnForm() {
         name: e.target.elements.boardName.value,
         order: states.order,
       }).then((response) => {
-        navigate('/board');
+        if (response.success) {
+          navigate('/board');
+        }
       });
     }
   };
@@ -100,7 +102,9 @@ export default function InsertColumnForm() {
         order: states.order,
       }
     ).then((response) => {
-      navigate('/board');
+      if (response.success) {
+        navigate('/board');
+      }
     });
   };
 
