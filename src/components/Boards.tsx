@@ -19,7 +19,9 @@ export const Columns: FC<ColumnsProps> = () => {
   let navigate = useNavigate();
 
   useEffect(() => {
-    if (process.env.REACT_APP_ENABLE_ONE_CALL) {
+    const isOneCall = process.env.REACT_APP_ENABLE_ONE_CALL == 'true';
+    if (isOneCall) {
+      console.log('ENV: ', process.env.REACT_APP_ENABLE_ONE_CALL);
       GenericService.getAll<Result<ColumnsWithItemsI>>(
         'column/plus-items'
       ).then((result: Result<ColumnsWithItemsI>) => {
