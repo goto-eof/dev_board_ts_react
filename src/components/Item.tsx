@@ -3,7 +3,6 @@ import {
   ArrowRightIcon,
   ArrowUpIcon,
   ChevronDownIcon,
-  ViewIcon,
 } from '@chakra-ui/icons';
 import {
   Badge,

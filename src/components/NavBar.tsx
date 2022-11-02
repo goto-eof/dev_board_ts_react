@@ -136,6 +136,8 @@ const DesktopNav = () => {
                   fontWeight={500}
                   color={'black.200'}
                   boxShadow={'md'}
+                  rounded={'full'}
+                  px={4}
                   borderColor={'green.300'}
                   verticalAlign={'middle'}
                   _hover={{

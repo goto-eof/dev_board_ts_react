@@ -223,10 +223,10 @@ export default function Board(props: StatsCardProps) {
               color={'white'}
               rounded={'xl'}
               _hover={{
-                bg: 'blue.500',
+                bg: 'blue.300',
               }}
               _focus={{
-                bg: 'blue.400',
+                bg: 'blue.500',
               }}
             >
               + New item

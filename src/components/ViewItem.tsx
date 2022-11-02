@@ -27,7 +27,7 @@ export function ViewItem({ isOpen, onClose, item }: ViewItemI) {
           <ModalHeader>Issue</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Heading>{item.name}</Heading>
+            <Heading fontSize={'xl'}>{item.name}</Heading>
             <Text>{item.description}</Text>
           </ModalBody>
 

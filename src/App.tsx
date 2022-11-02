@@ -14,6 +14,7 @@ export interface SideBarI {
 }
 
 export const App = () => {
+  console.log('Yahooo', process.env.REACT_APP_ENABLE_UNIQUE_CALL);
   return (
     <ChakraProvider theme={theme}>
       <BrowserRouter>
