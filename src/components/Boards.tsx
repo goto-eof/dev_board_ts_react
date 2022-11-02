@@ -78,10 +78,21 @@ export const Columns: FC<ColumnsProps> = () => {
       (result: DeleteResultI) => {
         console.log(result);
         if (result.success) {
-          setBoards(boards?.filter((column: any) => column.board.id !== id));
+          let newBoards =
+            boards?.filter((column: any) => column.board.id !== id) || [];
+          newBoards = recomputeArrows(newBoards);
+          setBoards(newBoards);
         }
       }
     );
+  };
+
+  const recomputeArrows = (newBoards: Array<BoardI>) => {
+    if (newBoards.length > 0) {
+      newBoards[0].board._showLeftArrow = false;
+      newBoards[newBoards.length - 1].board._showRigthArrow = false;
+    }
+    return newBoards;
   };
 
   const moveLeft = (id: number) => {
