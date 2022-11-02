@@ -61,7 +61,7 @@ export default function Item({
         p={4}
         borderRadius="5%"
       >
-        <GridItem w="100%" colSpan={5} h="10">
+        <GridItem w="100%" colSpan={5} h="10" onClick={onOpen}>
           <Text
             align={'left'}
             height={'38px'}
@@ -110,7 +110,7 @@ export default function Item({
             )}
           </Menu>
         </GridItem>
-        <GridItem colSpan={6} onClick={onOpen}>
+        <GridItem colSpan={6} onClick={onOpen} padding={0}>
           <Text align={'left'} overflow="hidden" fontSize="sm">
             {item.description.length > 60
               ? item.description.substring(0, 60) + '...'
