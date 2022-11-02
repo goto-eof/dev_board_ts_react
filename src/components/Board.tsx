@@ -81,6 +81,16 @@ export default function Board(props: StatsCardProps) {
     });
   };
 
+  const canMoveDown = (id: number) => {
+    let item = props.items.filter((item) => item.id === id)[0];
+    return props.items.indexOf(item) !== props.items.length - 1;
+  };
+
+  const canMoveUp = (id: number) => {
+    let item = props.items.filter((item) => item.id === id)[0];
+    return props.items.indexOf(item) !== 0;
+  };
+
   const calculateIdB = (
     list: Array<ItemRequestI>,
     idA: number,
@@ -197,6 +207,8 @@ export default function Board(props: StatsCardProps) {
                   key={(itm as ItemRequestI).id}
                   moveDown={moveDown}
                   moveUp={moveUp}
+                  canMoveUp={canMoveUp}
+                  canMoveDown={canMoveDown}
                 />
               ))}
             </SimpleGrid>

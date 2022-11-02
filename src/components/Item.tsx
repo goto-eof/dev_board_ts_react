@@ -25,6 +25,8 @@ interface ItemProps {
   deleteItem: (id: number) => void;
   moveUp: (id?: number) => void;
   moveDown: (id?: number) => void;
+  canMoveUp: (id: number) => boolean;
+  canMoveDown: (id: number) => boolean;
 }
 
 export default function Item({
@@ -32,6 +34,8 @@ export default function Item({
   deleteItem,
   moveUp,
   moveDown,
+  canMoveUp,
+  canMoveDown,
 }: ItemProps) {
   let navigate = useNavigate();
 
@@ -108,16 +112,20 @@ export default function Item({
         </Text>
       </GridItem>
       <HStack w={'210px'} justifyContent="right">
-        <Box onClick={() => moveDown(item.id)}>
-          <Icon
-            as={ArrowDownIcon}
-            color={'gray.800'}
-            _hover={{ color: 'green.400' }}
-          />
-        </Box>
-        <Box onClick={() => moveUp(item.id)}>
-          <Icon as={ArrowUpIcon} _hover={{ color: 'green.400' }} />
-        </Box>
+        {canMoveUp(item.id || -1) && (
+          <Box onClick={() => moveUp(item.id)}>
+            <Icon as={ArrowUpIcon} _hover={{ color: 'green.400' }} />
+          </Box>
+        )}
+        {canMoveDown(item.id || -1) && (
+          <Box onClick={() => moveDown(item.id)}>
+            <Icon
+              as={ArrowDownIcon}
+              color={'gray.800'}
+              _hover={{ color: 'green.400' }}
+            />
+          </Box>
+        )}
       </HStack>
     </Grid>
   );

@@ -9,6 +9,7 @@ import { DeleteResultI } from '../core/DeleteResultI';
 import { ItemRequestI } from '../core/ItemRequestI';
 import BoardI from '../core/BoardI';
 import SwapRequestI from '../core/SwapRequestI';
+import ResultI from '../core/ResultI';
 
 interface ColumnsProps {}
 
@@ -99,11 +100,11 @@ export const Columns: FC<ColumnsProps> = () => {
             )
           ) {
             let idB = boards[i + lorr].board.id;
-            GenericService.swap<SwapRequestI, boolean>('column', {
+            GenericService.swap<SwapRequestI, ResultI<boolean>>('column', {
               id_a: idA,
               id_b: idB,
             }).then((result) => {
-              if (columnsFinal) {
+              if (columnsFinal && result.success) {
                 if (columnsFinal.length > 0) {
                   let boardA = columnsFinal.filter(
                     (column) => column.board.id === idA
@@ -123,9 +124,8 @@ export const Columns: FC<ColumnsProps> = () => {
                     columnsFinal.length > 1 &&
                     columnsFinal[columnsFinal.length - 1].board.id !== idB;
                 }
+                setBoards(columnsFinal);
               }
-
-              setBoards(columnsFinal);
             });
           }
           break;
