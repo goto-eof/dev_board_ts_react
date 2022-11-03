@@ -19,7 +19,7 @@ export const Columns: FC<ColumnsProps> = () => {
   let navigate = useNavigate();
 
   useEffect(() => {
-    if (process.env.REACT_APP_ENABLE_MULTIPLE_CALL == 'true') {
+    if (process.env.REACT_APP_ENABLE_MULTIPLE_CALLS == 'true') {
       multipleCalls();
     } else {
       oneCall();
