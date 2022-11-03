@@ -19,11 +19,16 @@ export const Columns: FC<ColumnsProps> = () => {
   let navigate = useNavigate();
 
   useEffect(() => {
-    const isOneCall = process.env.REACT_APP_ENABLE_ONE_CALL == 'true';
-    if (isOneCall) {
-      GenericService.getAll<Result<ColumnsWithItemsI>>(
-        'column/plus-items'
-      ).then((result: Result<ColumnsWithItemsI>) => {
+    if (process.env.REACT_APP_ENABLE_MULTIPLE_CALL == 'true') {
+      multipleCalls();
+    } else {
+      oneCall();
+    }
+  }, []);
+
+  const oneCall = () => {
+    GenericService.getAll<Result<ColumnsWithItemsI>>('column/plus-items').then(
+      (result: Result<ColumnsWithItemsI>) => {
         if (result.success) {
           let boards = new Array<BoardI>();
           result.result.columns.forEach((boardWrapper, index) => {
@@ -39,40 +44,42 @@ export const Columns: FC<ColumnsProps> = () => {
           });
           setBoards(boards);
         }
-      });
-    } else {
-      GenericService.getAll<Result<Array<ColumnResponseI>>>('column').then(
-        (columns) => {
-          let result = columns.result;
-          let boards = new Array<BoardI>();
-          let calls = new Array<Promise<Result<Array<ItemRequestI>>>>();
-          result.forEach((column) => {
-            calls.push(
-              GenericService.getByParentId<Result<Array<ItemRequestI>>>(
-                'item',
-                column.id
-              )
-            );
-          });
+      }
+    );
+  };
 
-          Promise.all(calls).then((arr) => {
-            result.forEach((column, index) => {
-              let board: BoardI = {
-                board: {
-                  ...column,
-                  _showLeftArrow: index !== 0,
-                  _showRigthArrow: index !== result.length - 1,
-                },
-                items: arr[index].result,
-              };
-              boards.push(board);
-            });
-            setBoards(boards);
+  const multipleCalls = () => {
+    GenericService.getAll<Result<Array<ColumnResponseI>>>('column').then(
+      (columns) => {
+        let result = columns.result;
+        let boards = new Array<BoardI>();
+        let calls = new Array<Promise<Result<Array<ItemRequestI>>>>();
+        result.forEach((column) => {
+          calls.push(
+            GenericService.getByParentId<Result<Array<ItemRequestI>>>(
+              'item',
+              column.id
+            )
+          );
+        });
+
+        Promise.all(calls).then((arr) => {
+          result.forEach((column, index) => {
+            let board: BoardI = {
+              board: {
+                ...column,
+                _showLeftArrow: index !== 0,
+                _showRigthArrow: index !== result.length - 1,
+              },
+              items: arr[index].result,
+            };
+            boards.push(board);
           });
-        }
-      );
-    }
-  }, []);
+          setBoards(boards);
+        });
+      }
+    );
+  };
 
   const deleteColumn = (id: number) => {
     GenericService.delete<DeleteResultI>('column', id).then(
