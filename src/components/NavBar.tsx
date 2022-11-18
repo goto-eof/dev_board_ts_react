@@ -79,7 +79,7 @@ export default function NavBar() {
           direction={'row'}
           spacing={6}
         >
-          <ReactLink to={'/new-item'}>
+          <ReactLink to={'/login'}>
             <Button
               display={{ base: 'none', md: 'inline-flex' }}
               fontSize={'sm'}
@@ -90,10 +90,10 @@ export default function NavBar() {
                 bg: 'blue.400',
               }}
             >
-              + Item
+              Login
             </Button>
           </ReactLink>
-          <ReactLink to={'/new-board'}>
+          <ReactLink to={'/register'}>
             <Button
               display={{ base: 'none', md: 'inline-flex' }}
               fontSize={'sm'}
@@ -104,7 +104,7 @@ export default function NavBar() {
                 bg: 'red.300',
               }}
             >
-              + Board
+              Sign in
             </Button>
           </ReactLink>
         </Stack>
