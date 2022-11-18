@@ -5,7 +5,9 @@ import Footer from './components/Footer';
 import Home from './components/Home';
 import InsertColumnForm from './components/InsertBoardForm';
 import InsertItemForm from './components/InsertItemForm';
+import LoginForm from './components/LoginForm';
 import NavBar from './components/NavBar';
+import RegistrationForm from './components/RegistrationForm';
 
 export interface SideBarI {
   isOpen: boolean;
@@ -21,6 +23,8 @@ export const App = () => {
           <NavBar />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/register" element={<RegistrationForm />} />
+            <Route path="/login" element={<LoginForm />} />
             <Route path="/board" element={<Boards />} />
             <Route path="/new-item/:boardId" element={<InsertItemForm />} />
             <Route path="/new-item" element={<InsertItemForm />} />

@@ -6,7 +6,7 @@ export default class GenericService {
 
   public static async getAll<T>(modelName: string): Promise<T> {
     return await axios
-      .get<Array<T>>(this.baseUrl + modelName)
+      .get<Array<T>>(this.baseUrl + modelName, { withCredentials: true })
       .then((result: any) => {
         return result.data;
       })
@@ -20,7 +20,9 @@ export default class GenericService {
     parentId: number
   ): Promise<T> {
     return await axios
-      .get<Array<T>>(this.baseUrl + modelName + '/parent/' + parentId)
+      .get<Array<T>>(this.baseUrl + modelName + '/parent/' + parentId, {
+        withCredentials: true,
+      })
       .then((result: any) => {
         return result.data;
       })
@@ -31,7 +33,9 @@ export default class GenericService {
 
   public static async get<T>(modelName: string, id: number): Promise<T> {
     return await axios
-      .get<Array<T>>(`${this.baseUrl}${modelName}/${id}`)
+      .get<Array<T>>(`${this.baseUrl}${modelName}/${id}`, {
+        withCredentials: true,
+      })
       .then((result: any) => {
         let data = result.data;
         return data;
@@ -46,7 +50,7 @@ export default class GenericService {
     data: T
   ): Promise<ResultI<T>> {
     return await axios
-      .post<T>(`${this.baseUrl}${modelName}`, data)
+      .post<T>(`${this.baseUrl}${modelName}`, data, { withCredentials: true })
       .then((result: any) => {
         let data = result.data;
         return data;
@@ -62,7 +66,9 @@ export default class GenericService {
     data: T
   ): Promise<ResultI<S>> {
     return await axios
-      .put<T>(`${this.baseUrl}${modelName}/${id}`, data)
+      .put<T>(`${this.baseUrl}${modelName}/${id}`, data, {
+        withCredentials: true,
+      })
       .then((result: any) => {
         let data = result.data;
         return data;
@@ -77,7 +83,9 @@ export default class GenericService {
     swapRequest: T
   ): Promise<R> {
     return await axios
-      .put<T>(`${this.baseUrl}${modelName}/swap`, swapRequest)
+      .put<T>(`${this.baseUrl}${modelName}/swap`, swapRequest, {
+        withCredentials: true,
+      })
       .then((result: any) => {
         let data = result.data;
         return data;
@@ -89,7 +97,7 @@ export default class GenericService {
 
   public static async delete<T>(modelName: string, id: number): Promise<T> {
     return await axios
-      .delete(`${this.baseUrl}${modelName}/${id}`)
+      .delete(`${this.baseUrl}${modelName}/${id}`, { withCredentials: true })
       .then((result: any) => {
         let data = result.data;
         return data;
