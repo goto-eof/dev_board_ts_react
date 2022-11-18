@@ -249,7 +249,9 @@ function Boards(props: BoardProps) {
             items={item.items}
           />
         ))}
-        {!props.columns && <h3>Unable to reach server</h3>}
+        {!props.columns && (
+          <h3>Unable to reach server or ou are not authenticated</h3>
+        )}
         {props.columns && (
           <Link to={'/new-board'}>
             <Button
