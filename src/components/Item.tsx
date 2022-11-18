@@ -91,7 +91,11 @@ export default function Item({
                   fontWeight={900}
                   _hover={{ color: 'green.400' }}
                 >
-                  <Icon as={ChevronDownIcon} />
+                  <Icon
+                    color={'blue.400'}
+                    _hover={{ color: 'green.400' }}
+                    as={ChevronDownIcon}
+                  />
                 </MenuButton>
                 <MenuList>
                   <MenuItem onClick={() => goToEdit(item.id || -1)}>
@@ -119,14 +123,18 @@ export default function Item({
         <HStack w={'210px'} justifyContent="right">
           {canMoveUp(item.id || -1) && (
             <Box onClick={() => moveUp(item.id)}>
-              <Icon as={ArrowUpIcon} _hover={{ color: 'green.400' }} />
+              <Icon
+                as={ArrowUpIcon}
+                color={'blue.400'}
+                _hover={{ color: 'green.400' }}
+              />
             </Box>
           )}
           {canMoveDown(item.id || -1) && (
             <Box onClick={() => moveDown(item.id)}>
               <Icon
                 as={ArrowDownIcon}
-                color={'gray.800'}
+                color={'blue.400'}
                 _hover={{ color: 'green.400' }}
               />
             </Box>

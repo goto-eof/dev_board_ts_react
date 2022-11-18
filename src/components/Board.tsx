@@ -152,7 +152,14 @@ export default function Board(props: StatsCardProps) {
                 />
               </Box>
             )}
-            <Flex bg={'gray.100'} rounded={'full'} py={1} px={3}>
+            <Flex
+              bg={'white.100'}
+              border={'1px solid lightgray'}
+              rounded={'full'}
+              _hover={{ bg: 'green.100' }}
+              py={1}
+              px={3}
+            >
               <Text
                 fontSize={'xl'}
                 fontWeight={500}
@@ -197,6 +204,27 @@ export default function Board(props: StatsCardProps) {
               </Box>
             )}
           </HStack>
+          {props && props.items && props.items.length > 3 && (
+            <Box bg={'white'} w={'100%'} px={1} py={1}>
+              <Link to={'/new-item/' + props.id}>
+                <Button
+                  mt={0}
+                  w={'full'}
+                  bg={'blue.400'}
+                  color={'white'}
+                  rounded={'xl'}
+                  _hover={{
+                    bg: 'blue.300',
+                  }}
+                  _focus={{
+                    bg: 'blue.500',
+                  }}
+                >
+                  + New item
+                </Button>
+              </Link>
+            </Box>
+          )}
           <Stack direction={'row'} align={'center'} justify={'center'}>
             <SimpleGrid columns={{ base: 1, md: 1 }} spacing={1}>
               {props.items.map((itm) => (
