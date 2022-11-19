@@ -87,7 +87,7 @@ export default function LoginForm() {
             <Errors fieldName={'password'} />
 
             <Button type="submit" mt={3} w={'100%'} colorScheme="green">
-              Save
+              Login
             </Button>
           </FormControl>
         </form>
