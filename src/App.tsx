@@ -1,5 +1,5 @@
 import { Box, ChakraProvider, theme } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Boards from './components/Boards';
 import Footer from './components/Footer';
@@ -10,6 +10,8 @@ import LoginForm from './components/LoginForm';
 import NavBar from './components/NavBar';
 import { NavigateFunctionComponent } from './components/NavigateFunctionComponent';
 import RegistrationForm from './components/RegistrationForm';
+import ResultI from './core/ResultI';
+import GenericService from './service/GenerciService';
 export interface SideBarI {
   isOpen: boolean;
   onOpen: () => void;
@@ -23,8 +25,34 @@ export interface SideBarI {
 export const App = () => {
   const [changedLocalStorage, setChangedLocalStorage] =
     useState<boolean>(false);
+  const [checkIsLoggedIn, setCheckIsLoggedIn] = useState<boolean>(true);
+
+  useEffect(() => {
+    let interval: string | number | NodeJS.Timeout | undefined;
+    if (checkIsLoggedIn) {
+      interval = setInterval(() => {
+        GenericService.simple_get('user/check_is_logged_in').then(
+          (res: any) => {
+            console.log('check_is_logged_in', res, res.status);
+          },
+          (err) => {
+            console.log('STATUS', err.response.status);
+            let res = err.response;
+            if (res.status === 401) {
+              setCheckIsLoggedIn(false);
+              console.log('check KO');
+              clearInterval(interval);
+            } else {
+              console.log('check OK');
+            }
+          }
+        );
+      }, 1000 * 10);
+    }
+  }, [checkIsLoggedIn]);
 
   const toggleChangedLocalStorage = () => {
+    setCheckIsLoggedIn(true);
     setChangedLocalStorage(!changedLocalStorage);
   };
   return (

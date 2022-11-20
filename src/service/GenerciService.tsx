@@ -45,6 +45,20 @@ export default class GenericService {
       });
   }
 
+  public static async simple_get<T>(modelName: string): Promise<T> {
+    return await customAxios
+      .get<Array<T>>(`${this.baseUrl}${modelName}`, {
+        withCredentials: true,
+      })
+      .then((result: any) => {
+        let data = result.data;
+        return data;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
   public static async create<T>(
     modelName: string,
     data: T
