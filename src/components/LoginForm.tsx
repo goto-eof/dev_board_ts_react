@@ -15,7 +15,12 @@ import Result from '../core/ResultI';
 import { ColumnResponseI } from '../core/ColumnResponseI';
 import { LoginRequestI } from '../core/LoginRequestI';
 
-export default function LoginForm() {
+interface LoginFormProps {
+  toggleChangedLocalStorage: () => void;
+}
+export default function LoginForm({
+  toggleChangedLocalStorage,
+}: LoginFormProps) {
   const [states, setStates] = useState({
     username: 'admin',
     password: 'password',
@@ -25,8 +30,6 @@ export default function LoginForm() {
   });
 
   const navigate = useNavigate();
-
-  useEffect(() => {}, []);
 
   const handleInputChange = (e: any) => {
     setStates({
@@ -57,6 +60,8 @@ export default function LoginForm() {
       password: e.target.elements.password.value,
     }).then((response: Result<LoginRequestI>) => {
       if (response.success) {
+        localStorage.setItem('user', JSON.stringify(response.result));
+        toggleChangedLocalStorage();
         navigate('/board');
       }
     });

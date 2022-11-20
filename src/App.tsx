@@ -21,16 +21,41 @@ export interface SideBarI {
  * - show logout button if user is logged in
  */
 export const App = () => {
+  const [changedLocalStorage, setChangedLocalStorage] =
+    useState<boolean>(false);
+
+  const toggleChangedLocalStorage = () => {
+    setChangedLocalStorage(!changedLocalStorage);
+  };
   return (
     <ChakraProvider theme={theme}>
       <BrowserRouter>
-        <NavigateFunctionComponent />
+        <NavigateFunctionComponent
+          toggleChangedLocalStorage={toggleChangedLocalStorage}
+        />
         <Box h="full">
-          <NavBar />
+          <NavBar
+            toggleChangedLocalStorage={toggleChangedLocalStorage}
+            changedLocalStorage={changedLocalStorage}
+          />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/register" element={<RegistrationForm />} />
-            <Route path="/login" element={<LoginForm />} />
+            <Route
+              path="/register"
+              element={
+                <RegistrationForm
+                  toggleChangedLocalStorage={toggleChangedLocalStorage}
+                />
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <LoginForm
+                  toggleChangedLocalStorage={toggleChangedLocalStorage}
+                />
+              }
+            />
             <Route path="/board" element={<Boards />} />
             <Route path="/new-item/:boardId" element={<InsertItemForm />} />
             <Route path="/new-item" element={<InsertItemForm />} />

@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import customAxios from '../core/LoginInterceptor';
 import ResultI from '../core/ResultI';
 
@@ -52,6 +51,17 @@ export default class GenericService {
   ): Promise<ResultI<T>> {
     return await customAxios
       .post<T>(`${this.baseUrl}${modelName}`, data, { withCredentials: true })
+      .then((result: any) => {
+        let data = result.data;
+        return data;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+  public static async post<T>(modelName: string): Promise<ResultI<T>> {
+    return await customAxios
+      .post<T>(`${this.baseUrl}${modelName}`, '', { withCredentials: true })
       .then((result: any) => {
         let data = result.data;
         return data;

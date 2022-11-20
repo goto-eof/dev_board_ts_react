@@ -15,7 +15,13 @@ import Result from '../core/ResultI';
 import { ColumnResponseI } from '../core/ColumnResponseI';
 import { RegisterRequestI } from '../core/RegisterRequestI';
 
-export default function RegistrationForm() {
+interface RegistrationFormProps {
+  toggleChangedLocalStorage: () => void;
+}
+
+export default function RegistrationForm({
+  toggleChangedLocalStorage,
+}: RegistrationFormProps) {
   const [states, setStates] = useState({
     username: '',
     password: '',
@@ -64,6 +70,8 @@ export default function RegistrationForm() {
       last_name: e.target.elements.lastName.value,
     }).then((response: Result<RegisterRequestI>) => {
       if (response.success) {
+        localStorage.setItem('user', JSON.stringify(response.result));
+        toggleChangedLocalStorage();
         navigate('/board');
       }
     });

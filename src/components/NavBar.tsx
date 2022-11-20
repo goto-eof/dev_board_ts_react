@@ -21,12 +21,50 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from '@chakra-ui/icons';
-import { Link as ReactLink } from 'react-router-dom';
+import { Link as ReactLink, useNavigate } from 'react-router-dom';
 import { IconType } from 'react-icons';
 import { FiHome } from 'react-icons/fi';
+import { useEffect, useState } from 'react';
+import { LoginRequestI } from '../core/LoginRequestI';
+import GenericService from '../service/GenerciService';
+import Result from '../core/ResultI';
+import { LogoutResultI } from '../core/LogoutResultI';
 
-export default function NavBar() {
+interface NavBarProps {
+  changedLocalStorage: boolean;
+  toggleChangedLocalStorage: () => void;
+}
+
+export default function NavBar({
+  toggleChangedLocalStorage,
+  changedLocalStorage,
+}: NavBarProps) {
   const { isOpen, onToggle } = useDisclosure();
+  const [user, setUser] = useState<LoginRequestI>();
+
+  useEffect(() => {
+    let json_str = localStorage.getItem('user');
+    if (json_str) {
+      let json = JSON.parse(json_str);
+      setUser(json);
+    } else {
+      setUser(undefined);
+    }
+  }, [changedLocalStorage]);
+
+  const navigate = useNavigate();
+  const logout = () => {
+    GenericService.post<LogoutResultI>('user/invalidate_token').then(
+      (response: Result<LogoutResultI>) => {
+        if (response.success) {
+          localStorage.removeItem('user');
+          toggleChangedLocalStorage();
+          window.location.reload();
+          navigate('/login');
+        }
+      }
+    );
+  };
 
   return (
     <Box>
@@ -78,7 +116,7 @@ export default function NavBar() {
           direction={'row'}
           spacing={6}
         >
-          {
+          {!user && (
             <>
               <ReactLink to={'/login'}>
                 <Button
@@ -109,7 +147,22 @@ export default function NavBar() {
                 </Button>
               </ReactLink>
             </>
-          }
+          )}
+          {user && (
+            <Button
+              display={{ base: 'none', md: 'inline-flex' }}
+              fontSize={'sm'}
+              fontWeight={600}
+              color={'white'}
+              bg={'red.500'}
+              onClick={logout}
+              _hover={{
+                bg: 'blue.400',
+              }}
+            >
+              Logout
+            </Button>
+          )}
         </Stack>
       </Flex>
 
