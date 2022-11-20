@@ -15,32 +15,22 @@ export interface SideBarI {
   onOpen: () => void;
   onClose: () => void;
 }
-
+/*
+ * TODO load user profile in local storage and
+ *  -hide login/register buttons if user is logged in
+ * - show logout button if user is logged in
+ */
 export const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-
-  const setLoggedIn = (value: boolean): void => {
-    console.log('value', value);
-    setIsLoggedIn(value);
-  };
   return (
     <ChakraProvider theme={theme}>
       <BrowserRouter>
         <NavigateFunctionComponent />
         <Box h="full">
-          <NavBar isLoggedIn={isLoggedIn} />
+          <NavBar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<RegistrationForm />} />
-            <Route
-              path="/login"
-              element={
-                <LoginForm
-                  setIsLoggedIn={setLoggedIn}
-                  isLoggedIn={isLoggedIn}
-                />
-              }
-            />
+            <Route path="/login" element={<LoginForm />} />
             <Route path="/board" element={<Boards />} />
             <Route path="/new-item/:boardId" element={<InsertItemForm />} />
             <Route path="/new-item" element={<InsertItemForm />} />

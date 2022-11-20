@@ -15,11 +15,7 @@ import Result from '../core/ResultI';
 import { ColumnResponseI } from '../core/ColumnResponseI';
 import { LoginRequestI } from '../core/LoginRequestI';
 
-interface ItemProps {
-  isLoggedIn: boolean;
-  setIsLoggedIn: (isLoggedIn: boolean) => void;
-}
-export default function LoginForm({ isLoggedIn, setIsLoggedIn }: ItemProps) {
+export default function LoginForm() {
   const [states, setStates] = useState({
     username: 'admin',
     password: 'password',
@@ -61,7 +57,6 @@ export default function LoginForm({ isLoggedIn, setIsLoggedIn }: ItemProps) {
       password: e.target.elements.password.value,
     }).then((response: Result<LoginRequestI>) => {
       if (response.success) {
-        setIsLoggedIn(true);
         navigate('/board');
       }
     });

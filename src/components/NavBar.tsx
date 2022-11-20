@@ -25,11 +25,7 @@ import { Link as ReactLink } from 'react-router-dom';
 import { IconType } from 'react-icons';
 import { FiHome } from 'react-icons/fi';
 
-interface ItemProps {
-  isLoggedIn: boolean;
-}
-
-export default function NavBar({ isLoggedIn }: ItemProps) {
+export default function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
@@ -82,7 +78,7 @@ export default function NavBar({ isLoggedIn }: ItemProps) {
           direction={'row'}
           spacing={6}
         >
-          {!isLoggedIn && (
+          {
             <>
               <ReactLink to={'/login'}>
                 <Button
@@ -113,7 +109,7 @@ export default function NavBar({ isLoggedIn }: ItemProps) {
                 </Button>
               </ReactLink>
             </>
-          )}
+          }
         </Stack>
       </Flex>
 
