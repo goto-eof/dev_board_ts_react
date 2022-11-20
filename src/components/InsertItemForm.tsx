@@ -41,7 +41,7 @@ export default function InsertItemForm() {
       try {
         const columns = await GenericService.getAll<
           Result<Array<ColumnResponseI>>
-        >('column');
+        >('column/all');
         const fields = itemId
           ? await GenericService.get<Result<ItemRequestI>>(
               'item',
