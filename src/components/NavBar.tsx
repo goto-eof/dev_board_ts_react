@@ -90,7 +90,7 @@ export default function NavBar() {
                 bg: 'blue.400',
               }}
             >
-              Login
+              Sign in
             </Button>
           </ReactLink>
           <ReactLink to={'/register'}>
@@ -104,7 +104,7 @@ export default function NavBar() {
                 bg: 'red.300',
               }}
             >
-              Sign in
+              Sign up
             </Button>
           </ReactLink>
         </Stack>

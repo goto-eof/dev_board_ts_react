@@ -121,7 +121,7 @@ export default function RegistrationForm() {
             <Errors fieldName={'password'} />
 
             <Button type="submit" mt={3} w={'100%'} colorScheme="green">
-              Sign in
+              Sign up
             </Button>
           </FormControl>
         </form>
