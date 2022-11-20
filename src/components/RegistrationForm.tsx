@@ -63,9 +63,9 @@ export default function RegistrationForm() {
       first_name: e.target.elements.firstName.value,
       last_name: e.target.elements.lastName.value,
     }).then((response: Result<RegisterRequestI>) => {
-      // if (response.success) {
-      navigate('/board');
-      // }
+      if (response.success) {
+        navigate('/board');
+      }
     });
   };
 

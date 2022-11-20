@@ -1,11 +1,12 @@
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import customAxios from '../core/LoginInterceptor';
 import ResultI from '../core/ResultI';
 
 export default class GenericService {
   private static baseUrl: string = 'http://localhost:8013/';
 
   public static async getAll<T>(modelName: string): Promise<T> {
-    return await axios
+    return await customAxios
       .get<Array<T>>(this.baseUrl + modelName, { withCredentials: true })
       .then((result: any) => {
         return result.data;
@@ -19,7 +20,7 @@ export default class GenericService {
     modelName: string,
     parentId: number
   ): Promise<T> {
-    return await axios
+    return await customAxios
       .get<Array<T>>(this.baseUrl + modelName + '/parent/' + parentId, {
         withCredentials: true,
       })
@@ -32,7 +33,7 @@ export default class GenericService {
   }
 
   public static async get<T>(modelName: string, id: number): Promise<T> {
-    return await axios
+    return await customAxios
       .get<Array<T>>(`${this.baseUrl}${modelName}/${id}`, {
         withCredentials: true,
       })
@@ -49,7 +50,7 @@ export default class GenericService {
     modelName: string,
     data: T
   ): Promise<ResultI<T>> {
-    return await axios
+    return await customAxios
       .post<T>(`${this.baseUrl}${modelName}`, data, { withCredentials: true })
       .then((result: any) => {
         let data = result.data;
@@ -65,7 +66,7 @@ export default class GenericService {
     id: number,
     data: T
   ): Promise<ResultI<S>> {
-    return await axios
+    return await customAxios
       .put<T>(`${this.baseUrl}${modelName}/${id}`, data, {
         withCredentials: true,
       })
@@ -82,7 +83,7 @@ export default class GenericService {
     modelName: string,
     swapRequest: T
   ): Promise<R> {
-    return await axios
+    return await customAxios
       .put<T>(`${this.baseUrl}${modelName}/swap`, swapRequest, {
         withCredentials: true,
       })
@@ -96,7 +97,7 @@ export default class GenericService {
   }
 
   public static async delete<T>(modelName: string, id: number): Promise<T> {
-    return await axios
+    return await customAxios
       .delete(`${this.baseUrl}${modelName}/${id}`, { withCredentials: true })
       .then((result: any) => {
         let data = result.data;

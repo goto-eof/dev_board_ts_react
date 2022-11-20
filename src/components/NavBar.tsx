@@ -20,13 +20,16 @@ import {
   CloseIcon,
   ChevronDownIcon,
   ChevronRightIcon,
-  SettingsIcon,
 } from '@chakra-ui/icons';
 import { Link as ReactLink } from 'react-router-dom';
 import { IconType } from 'react-icons';
 import { FiHome } from 'react-icons/fi';
 
-export default function NavBar() {
+interface ItemProps {
+  isLoggedIn: boolean;
+}
+
+export default function NavBar({ isLoggedIn }: ItemProps) {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
@@ -79,34 +82,38 @@ export default function NavBar() {
           direction={'row'}
           spacing={6}
         >
-          <ReactLink to={'/login'}>
-            <Button
-              display={{ base: 'none', md: 'inline-flex' }}
-              fontSize={'sm'}
-              fontWeight={600}
-              color={'white'}
-              bg={'blue.500'}
-              _hover={{
-                bg: 'blue.400',
-              }}
-            >
-              Sign in
-            </Button>
-          </ReactLink>
-          <ReactLink to={'/register'}>
-            <Button
-              display={{ base: 'none', md: 'inline-flex' }}
-              fontSize={'sm'}
-              fontWeight={600}
-              color={'white'}
-              bg={'red.400'}
-              _hover={{
-                bg: 'red.300',
-              }}
-            >
-              Sign up
-            </Button>
-          </ReactLink>
+          {!isLoggedIn && (
+            <>
+              <ReactLink to={'/login'}>
+                <Button
+                  display={{ base: 'none', md: 'inline-flex' }}
+                  fontSize={'sm'}
+                  fontWeight={600}
+                  color={'white'}
+                  bg={'blue.500'}
+                  _hover={{
+                    bg: 'blue.400',
+                  }}
+                >
+                  Sign in
+                </Button>
+              </ReactLink>
+              <ReactLink to={'/register'}>
+                <Button
+                  display={{ base: 'none', md: 'inline-flex' }}
+                  fontSize={'sm'}
+                  fontWeight={600}
+                  color={'white'}
+                  bg={'red.400'}
+                  _hover={{
+                    bg: 'red.300',
+                  }}
+                >
+                  Sign up
+                </Button>
+              </ReactLink>
+            </>
+          )}
         </Stack>
       </Flex>
 

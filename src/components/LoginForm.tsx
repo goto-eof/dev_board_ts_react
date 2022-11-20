@@ -15,7 +15,11 @@ import Result from '../core/ResultI';
 import { ColumnResponseI } from '../core/ColumnResponseI';
 import { LoginRequestI } from '../core/LoginRequestI';
 
-export default function LoginForm() {
+interface ItemProps {
+  isLoggedIn: boolean;
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
+}
+export default function LoginForm({ isLoggedIn, setIsLoggedIn }: ItemProps) {
   const [states, setStates] = useState({
     username: 'admin',
     password: 'password',
@@ -50,15 +54,16 @@ export default function LoginForm() {
     return !!states.error.get(field);
   };
 
-  const save = (e: any) => {
+  const login = (e: any) => {
     e.preventDefault();
     GenericService.create<LoginRequestI>('user/login', {
       username: e.target.elements.username.value,
       password: e.target.elements.password.value,
     }).then((response: Result<LoginRequestI>) => {
-      // if (response.success) {
-      navigate('/board');
-      // }
+      if (response.success) {
+        setIsLoggedIn(true);
+        navigate('/board');
+      }
     });
   };
 
@@ -66,7 +71,7 @@ export default function LoginForm() {
     <Center>
       <VStack w="full" width={'50%'}>
         <Heading>Login</Heading>
-        <form onSubmit={save} style={{ width: '100%' }}>
+        <form onSubmit={login} style={{ width: '100%' }}>
           <FormControl isInvalid={states.isInvalid} w={'100%'}>
             <FormLabel>username</FormLabel>
             <Input
