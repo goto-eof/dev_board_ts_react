@@ -17,8 +17,8 @@ export interface SideBarI {
 }
 /*
  * TODO load user profile in local storage and
- *  -hide login/register buttons if user is logged in
- * - show logout button if user is logged in
+ *  - hide login/register buttons if user is logged in
+ *  - show logout button if user is logged in
  */
 export const App = () => {
   const [changedLocalStorage, setChangedLocalStorage] =

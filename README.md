@@ -1,4 +1,4 @@
-![header](header1.png)
+![header](kanban.png)
 
 ### Dev Board (React)
 
@@ -15,3 +15,12 @@ npm install
 ```sh
 npm run start
 ```
+
+
+### Login
+
+![header](login.png)
+
+### Registration
+
+![header](register.png)
