@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Columns } from './components/Columns';
 import Dashboard from './components/Dashboards';
 import Footer from './components/Footer';
-import Home from './components/Home';
 import InsertColumnForm from './components/InsertColumnForm';
 import InsertDashboard from './components/InsertDashboard';
 import InsertItemForm from './components/InsertItemForm';
@@ -60,7 +59,6 @@ export const App = () => {
               }
             />
             <Route path="/board/:boardId" element={<Columns />} />
-            <Route path="/board" element={<Columns />} />
             <Route
               path="/new-item/:boardId/:columnId"
               element={<InsertItemForm />}

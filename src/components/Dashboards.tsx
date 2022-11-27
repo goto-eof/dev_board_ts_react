@@ -1,4 +1,12 @@
-import { Box, Button, Heading, Stack, Text, HStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Heading,
+  Stack,
+  Text,
+  HStack,
+  SimpleGrid,
+} from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BoardResponseI } from '../core/BoardResponseI';
@@ -44,7 +52,7 @@ export default function Dashboard() {
   };
 
   return (
-    <HStack>
+    <SimpleGrid columns={{ base: 1, md: 3, lg: 6 }} p={0} spacing={10} pt={30}>
       {boards.map((item: any) => {
         return (
           <Item
@@ -69,7 +77,7 @@ export default function Dashboard() {
           + Dashboard
         </Button>
       </Link>
-    </HStack>
+    </SimpleGrid>
   );
 }
 
@@ -88,7 +96,7 @@ function Item({
 }: ItemPropsI) {
   return (
     <Box
-      maxW={'245px'}
+      maxW={'400  px'}
       w={'full'}
       boxShadow={'2xl'}
       rounded={'md'}
@@ -114,6 +122,19 @@ function Item({
           <Text color={'gray.500'}>{item.description}</Text>
         </Stack>
         <Button
+          onClick={() => {
+            clickHandlerGoToDashboard(item.id);
+          }}
+          bg={'green.400'}
+          _hover={{
+            bg: 'green.300',
+          }}
+          color={'white'}
+          mt={'36px'}
+        >
+          View
+        </Button>
+        <Button
           onClick={(e) => {
             clickHandlerDeleteDashboard(item.id);
           }}
@@ -127,7 +148,7 @@ function Item({
           Delete
         </Button>
         <Button
-          onClick={(e) => {
+          onClick={() => {
             clickHandlerGoToUpdate(item.id);
           }}
           bg={'blue.400'}

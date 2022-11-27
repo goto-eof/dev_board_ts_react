@@ -340,9 +340,9 @@ interface NavItem {
 }
 
 const NAV_ITEMS: Array<NavItem> = [
-  {
-    label: 'Dashboard',
-    href: '/board',
-    icon: FiHome,
-  },
+  // {
+  //   label: 'Dashboard',
+  //   href: '/board',
+  //   icon: FiHome,
+  // },
 ];

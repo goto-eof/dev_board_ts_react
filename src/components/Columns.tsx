@@ -1,10 +1,9 @@
-import { Box, Button, Center, Heading, HStack, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Heading, HStack } from '@chakra-ui/react';
 import { FC, useEffect, useState } from 'react';
 import GenericService from '../service/GenerciService';
 import Board from './Column';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Result from '../core/ResultI';
-import { ColumnResponseI } from '../core/ColumnResponseI';
 import { DeleteResultI } from '../core/DeleteResultI';
 import { ItemRequestI } from '../core/ItemRequestI';
 import ColumnI from '../core/Column';
@@ -222,9 +221,7 @@ function Boards(props: BoardProps) {
             items={item.items}
           />
         ))}
-        {!props.columns && (
-          <h3>Unable to reach server or ou are not authenticated</h3>
-        )}
+        {!props.columns && <h3>Unable to reach server</h3>}
         {props.columns && (
           <Link to={'/new-column/' + props.boardId}>
             <Button
