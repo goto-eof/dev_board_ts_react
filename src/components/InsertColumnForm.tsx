@@ -11,7 +11,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
-import { ColumnUpdateI } from '../core/ColumnUpdateI';
+import { DashboardUpdateI } from '../core/DashboardUpdateI';
 import ResultI from '../core/ResultI';
 import { ColumnResponseI } from '../core/ColumnResponseI';
 
@@ -23,7 +23,7 @@ export default function InsertColumnForm() {
     isInvalid: false,
   });
 
-  const { boardId } = useParams();
+  const { columnId, boardId } = useParams();
 
   const navigate = useNavigate();
 
@@ -35,10 +35,10 @@ export default function InsertColumnForm() {
   };
 
   useEffect(() => {
-    if (boardId) {
+    if (columnId) {
       GenericService.get<ResultI<ColumnResponseI>>(
         'column',
-        Number(boardId)
+        Number(columnId)
       ).then((result) => {
         setStates({
           ...states,
@@ -80,12 +80,12 @@ export default function InsertColumnForm() {
     e.preventDefault();
     const isValid = validate();
     if (isValid) {
-      GenericService.create<ColumnUpdateI>('column', {
+      GenericService.create<DashboardUpdateI>('column/' + boardId, {
         name: e.target.elements.boardName.value,
         order: states.order,
       }).then((response) => {
         if (response.success) {
-          navigate('/board');
+          navigate('/board/' + boardId);
         }
       });
     }
@@ -94,9 +94,9 @@ export default function InsertColumnForm() {
   const update = (e: any) => {
     e.preventDefault();
 
-    GenericService.update<ColumnUpdateI, ColumnResponseI>(
+    GenericService.update<DashboardUpdateI, ColumnResponseI>(
       'column',
-      Number(boardId),
+      Number(columnId),
       {
         name: e.target.elements.boardName.value,
         order: states.order,
@@ -112,7 +112,7 @@ export default function InsertColumnForm() {
     <Center>
       <VStack w="full" width={'50%'}>
         <Heading>Board</Heading>
-        <form onSubmit={boardId ? update : save} style={{ width: '100%' }}>
+        <form onSubmit={columnId ? update : save} style={{ width: '100%' }}>
           <FormControl isInvalid={states.isInvalid} w={'100%'}>
             <FormLabel>Id</FormLabel>
             <Input
@@ -121,7 +121,7 @@ export default function InsertColumnForm() {
               _invalid={{ border: 'gray.400' }}
               readOnly={true}
               type="text"
-              value={boardId}
+              value={columnId}
               bg={'gray.200'}
               name="id"
               onChange={handleInputChange}

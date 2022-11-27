@@ -19,7 +19,7 @@ import { ItemRequestI } from '../core/ItemRequestI';
 import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
 
 export default function InsertItemForm() {
-  const { boardId, itemId } = useParams();
+  const { columnId, itemId } = useParams();
 
   const [states, setStates] = useState({
     itemName: '',
@@ -55,7 +55,7 @@ export default function InsertItemForm() {
           itemStatus: fields ? fields.result.status : '',
           code: fields ? fields.result.code : '',
           description: fields ? fields.result.description : '',
-          defaultBoard: boardId || '',
+          defaultBoard: columnId || '',
           columns: columns.result,
           order: fields ? fields.result.order : 0,
         });

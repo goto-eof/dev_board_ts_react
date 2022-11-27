@@ -1,4 +1,4 @@
-export interface ColumnUpdateI {
+export interface DashboardUpdateI {
   name?: string;
   order?: number;
 }

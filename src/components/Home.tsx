@@ -5,7 +5,7 @@ export default function () {
   return (
     <Center height={'80vh'}>
       <VStack>
-        <Link to="/board">
+        <Link to="/dashboards">
           <Button bg={'green.500'} _hover={{ bg: 'green.400' }} color={'white'}>
             Go to dashboard
           </Button>
