@@ -19,7 +19,7 @@ import { ItemRequestI } from '../core/ItemRequestI';
 import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
 
 export default function InsertItemForm() {
-  const { columnId, itemId } = useParams();
+  const { boardId, columnId, itemId } = useParams();
 
   const [states, setStates] = useState({
     itemName: '',
@@ -100,7 +100,7 @@ export default function InsertItemForm() {
       status: e.target.elements.itemStatus.value,
     }).then((response: Result<ItemRequestI>) => {
       if (response.success) {
-        navigate('/board');
+        navigate('/board/' + boardId);
       }
     });
   };
@@ -122,7 +122,7 @@ export default function InsertItemForm() {
         }
       ).then((response) => {
         if (response.success) {
-          navigate('/board');
+          navigate('/board/' + boardId);
         }
       });
     }

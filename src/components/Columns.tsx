@@ -52,8 +52,9 @@ export const Columns: FC<ColumnsProps> = () => {
     GenericService.delete<DeleteResultI>('column', id).then(
       (result: DeleteResultI) => {
         if (result.success) {
+          console.log(columns);
           let newBoards =
-            columns?.filter((column: any) => column.board.id !== id) || [];
+            columns?.filter((column: any) => column.column.id !== id) || [];
           newBoards = recomputeArrows(newBoards);
           setColumns(newBoards);
         }
@@ -89,8 +90,8 @@ export const Columns: FC<ColumnsProps> = () => {
     setColumns(newBoards);
   };
 
-  const goToEdit = (boardId: number) => {
-    navigate('/edit-board/' + boardId);
+  const goToEdit = (columnId: number) => {
+    navigate('/edit-column/' + boardId + '/' + columnId);
   };
 
   const swapUiAnBe = (idA: number, lorr: number) => {
@@ -219,6 +220,7 @@ function Boards(props: BoardProps) {
             _showLeftArrow={item.column._showLeftArrow}
             _showRightArrow={item.column._showRigthArrow}
             items={item.items}
+            boardId={props.boardId}
           />
         ))}
         {!props.columns && <h3>Unable to reach server</h3>}

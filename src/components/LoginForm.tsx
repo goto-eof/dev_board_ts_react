@@ -62,7 +62,7 @@ export default function LoginForm({
       if (response.success) {
         localStorage.setItem('user', JSON.stringify(response.result));
         toggleChangedLocalStorage();
-        navigate('/board');
+        navigate('/');
       }
     });
   };

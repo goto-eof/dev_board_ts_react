@@ -37,9 +37,10 @@ export default function InsertColumnForm() {
   useEffect(() => {
     if (boardId) {
       GenericService.get<ResultI<DashboardResponseI>>(
-        'column',
+        'board',
         Number(boardId)
       ).then((result) => {
+        console.log(result, boardId);
         setStates({
           ...states,
           boardName: result.result.name,

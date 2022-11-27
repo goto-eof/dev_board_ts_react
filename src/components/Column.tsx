@@ -28,9 +28,10 @@ import { ItemRequestI } from '../core/ItemRequestI';
 import SwapRequestI from '../core/SwapRequestI';
 import ResultI from '../core/ResultI';
 
-interface StatsCardProps {
+interface ColumnProps {
   title: string;
   id: number;
+  boardId: string | undefined;
   items: Array<ItemRequestI>;
   _showLeftArrow: boolean;
   _showRightArrow: boolean;
@@ -41,7 +42,7 @@ interface StatsCardProps {
   goToEdit: (boardId: number) => void;
   updateBoardItems: (boardId: number, items: Array<ItemRequestI>) => void;
 }
-export default function Board(props: StatsCardProps) {
+export default function Board(props: ColumnProps) {
   const deleteItem = (id: number) => {
     GenericService.delete<DeleteResultI>('item', id).then(
       (result: DeleteResultI) => {
@@ -206,7 +207,7 @@ export default function Board(props: StatsCardProps) {
           </HStack>
           {props && props.items && props.items.length > 3 && (
             <Box bg={'white'} w={'100%'} px={1} py={1}>
-              <Link to={'/new-item/' + props.id}>
+              <Link to={'/new-item/' + props.boardId + '/' + props.id}>
                 <Button
                   mt={0}
                   w={'full'}
@@ -229,6 +230,7 @@ export default function Board(props: StatsCardProps) {
             <SimpleGrid columns={{ base: 1, md: 1 }} spacing={1}>
               {props.items.map((itm) => (
                 <Item
+                  boardId={props.boardId}
                   deleteItem={deleteItem}
                   item={itm}
                   key={(itm as ItemRequestI).id}
@@ -243,7 +245,7 @@ export default function Board(props: StatsCardProps) {
         </Stack>
 
         <Box bg={useColorModeValue('gray.50', 'gray.900')} px={1} py={1}>
-          <Link to={'/new-item/' + props.id}>
+          <Link to={'/new-item/' + props.boardId + '/' + props.id}>
             <Button
               mt={0}
               w={'full'}

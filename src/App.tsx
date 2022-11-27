@@ -59,17 +59,17 @@ export const App = () => {
               }
             />
             <Route path="/board/:boardId" element={<Columns />} />
+            <Route path="/new-item/:boardId" element={<InsertItemForm />} />
             <Route
               path="/new-item/:boardId/:columnId"
               element={<InsertItemForm />}
             />
-            <Route path="/new-item/:columnId" element={<InsertItemForm />} />
             <Route
-              path="/edit-item/boardid/:boardId/itemid/:itemId"
+              path="/edit-item/boardId/:boardId/columnId/:columnId/itemid/:itemId"
               element={<InsertItemForm />}
             />
             <Route
-              path="/edit-column/:boardId"
+              path="/edit-column/:boardId/:columnId"
               element={<InsertColumnForm />}
             />
             <Route path="/new-column/:boardId" element={<InsertColumnForm />} />

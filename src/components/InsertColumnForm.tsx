@@ -103,7 +103,7 @@ export default function InsertColumnForm() {
       }
     ).then((response) => {
       if (response.success) {
-        navigate('/board');
+        navigate('/board/' + boardId);
       }
     });
   };

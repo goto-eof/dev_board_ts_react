@@ -23,6 +23,7 @@ import { ItemRequestI } from '../core/ItemRequestI';
 import { ViewItem } from './ViewItem';
 
 interface ItemProps {
+  boardId: string | undefined;
   item: ItemRequestI;
   deleteItem: (id: number) => void;
   moveUp: (id?: number) => void;
@@ -32,6 +33,7 @@ interface ItemProps {
 }
 
 export default function Item({
+  boardId,
   item,
   deleteItem,
   moveUp,
@@ -43,7 +45,14 @@ export default function Item({
   let navigate = useNavigate();
 
   const goToEdit = (id: number) => {
-    navigate('/edit-item/boardid/' + item.column_id + '/itemid/' + id);
+    navigate(
+      '/edit-item/boardId/' +
+        boardId +
+        '/columnId/' +
+        item.column_id +
+        '/itemid/' +
+        id
+    );
   };
 
   return (

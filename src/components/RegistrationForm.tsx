@@ -72,7 +72,7 @@ export default function RegistrationForm({
       if (response.success) {
         localStorage.setItem('user', JSON.stringify(response.result));
         toggleChangedLocalStorage();
-        navigate('/board');
+        navigate('/');
       }
     });
   };
