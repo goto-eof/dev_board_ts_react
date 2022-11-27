@@ -44,6 +44,10 @@ export default function Dashboard() {
   const goToBoard = (dashboardId: number) => {
     navigate('/board/' + dashboardId);
   };
+
+  const goToShare = (dashboardId: number) => {
+    navigate('/board/share/' + dashboardId);
+  };
   const goToUpdate = (dashboardId: number) => {
     navigate('/edit-dashboard/' + dashboardId);
   };
@@ -70,6 +74,7 @@ export default function Dashboard() {
             clickHandlerGoToDashboard={goToBoard}
             clickHandlerDeleteDashboard={deleteDashboard}
             clickHandlerGoToUpdate={goToUpdate}
+            clickHandlerGoToShare={goToShare}
           />
         );
       })}
@@ -95,6 +100,7 @@ interface ItemPropsI {
   clickHandlerGoToDashboard: (dashboardId: number) => void;
   clickHandlerDeleteDashboard: (dashboardId: number) => void;
   clickHandlerGoToUpdate: (dashboardId: number) => void;
+  clickHandlerGoToShare: (dashboardId: number) => void;
 }
 
 function Item({
@@ -102,6 +108,7 @@ function Item({
   clickHandlerGoToDashboard,
   clickHandlerDeleteDashboard,
   clickHandlerGoToUpdate,
+  clickHandlerGoToShare,
 }: ItemPropsI) {
   return (
     <Box
@@ -151,6 +158,9 @@ function Item({
                 <MenuList>
                   <MenuItem onClick={() => clickHandlerGoToUpdate(item.id)}>
                     Edit
+                  </MenuItem>
+                  <MenuItem onClick={() => clickHandlerGoToShare(item.id)}>
+                    Share
                   </MenuItem>
                   <MenuItem
                     onClick={() => {

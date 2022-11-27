@@ -11,6 +11,7 @@ import LoginForm from './components/LoginForm';
 import NavBar from './components/NavBar';
 import { NavigateFunctionComponent } from './components/NavigateFunctionComponent';
 import RegistrationForm from './components/RegistrationForm';
+import ShareDashboard from './components/ShareDashboard';
 export interface SideBarI {
   isOpen: boolean;
   onOpen: () => void;
@@ -56,6 +57,7 @@ export const App = () => {
               }
             />
             <Route path="/board/:boardId" element={<Columns />} />
+            <Route path="/board/share/:boardId" element={<ShareDashboard />} />
             <Route path="/new-item/:boardId" element={<InsertItemForm />} />
             <Route
               path="/new-item/:boardId/:columnId"
