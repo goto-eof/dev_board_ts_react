@@ -24,3 +24,11 @@ npm run start
 ### Registration
 
 ![header](register.png)
+
+### Dashboards
+
+![header](dashboards.png)
+
+### Kanban board
+
+![header](kanban.png)
