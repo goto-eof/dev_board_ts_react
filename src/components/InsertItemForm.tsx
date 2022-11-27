@@ -148,6 +148,7 @@ export default function InsertItemForm() {
               value={states.itemName}
               name="itemName"
               onChange={handleInputChange}
+              autoFocus
             />
             <Errors fieldName={'name'} />
 

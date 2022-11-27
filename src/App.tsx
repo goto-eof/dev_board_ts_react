@@ -18,8 +18,6 @@ export interface SideBarI {
 }
 /*
  * TODO load user profile in local storage and
- *  - hide login/register buttons if user is logged in
- *  - show logout button if user is logged in
  */
 export const App = () => {
   const [changedLocalStorage, setChangedLocalStorage] =
@@ -40,7 +38,6 @@ export const App = () => {
             changedLocalStorage={changedLocalStorage}
           />
           <Routes>
-            {/* <Route path="/" element={<Home />} /> */}
             <Route path="/" element={<Dashboard />} />
             <Route
               path="/register"

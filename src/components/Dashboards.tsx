@@ -1,3 +1,4 @@
+import { ChevronDownIcon, EditIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -6,6 +7,14 @@ import {
   Text,
   HStack,
   SimpleGrid,
+  Flex,
+  Icon,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  VStack,
+  Center,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -52,7 +61,7 @@ export default function Dashboard() {
   };
 
   return (
-    <SimpleGrid columns={{ base: 1, md: 3, lg: 6 }} p={0} spacing={10} pt={30}>
+    <SimpleGrid columns={{ base: 1, md: 3, lg: 4 }} p={0} spacing={10} pt={30}>
       {boards.map((item: any) => {
         return (
           <Item
@@ -96,71 +105,83 @@ function Item({
 }: ItemPropsI) {
   return (
     <Box
-      maxW={'400  px'}
+      maxW={'400px'}
       w={'full'}
       boxShadow={'2xl'}
       rounded={'md'}
       p={6}
       overflow={'hidden'}
     >
-      <Stack>
-        <Stack
-          onClick={(e) => {
-            clickHandlerGoToDashboard(item.id);
-          }}
+      <HStack>
+        <Flex
+          width={'full'}
+          bg={'white.100'}
+          border={'1px solid lightgray'}
+          _hover={{ bg: 'green.100' }}
+          py={1}
+          px={3}
         >
-          <Text
-            color={'green.500'}
-            textTransform={'uppercase'}
-            fontWeight={800}
-            fontSize={'sm'}
-            letterSpacing={1.1}
-          ></Text>
-          <Heading fontSize={'2xl'} fontFamily={'body'}>
-            {item.name}
-          </Heading>
-          <Text color={'gray.500'}>{item.description}</Text>
-        </Stack>
+          <Box
+            width={'full'}
+            display={'block'}
+            onClick={() => {
+              clickHandlerGoToDashboard(item.id);
+            }}
+          >
+            <Text
+              textAlign={'center'}
+              fontSize={'xl'}
+              fontWeight={500}
+              color={'gray.700'}
+              rounded={'full'}
+              px={2}
+              w={'full'}
+            >
+              <Icon as={EditIcon} mr={2} />
+              {item.name}
+            </Text>
+          </Box>
+
+          <Menu>
+            {() => (
+              <>
+                <MenuButton>
+                  <Icon color={'gray.700'} as={ChevronDownIcon} />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={() => clickHandlerGoToUpdate(item.id)}>
+                    Edit
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      clickHandlerDeleteDashboard(item.id);
+                    }}
+                  >
+                    Delete
+                  </MenuItem>
+                </MenuList>
+              </>
+            )}
+          </Menu>
+        </Flex>
+      </HStack>
+      <VStack
+        onClick={() => {
+          clickHandlerGoToDashboard(item.id);
+        }}
+      >
+        <Text align={'center'}>{item.description}</Text>
         <Button
+          bg={'green.400'}
+          color={'white'}
+          _hover={{ bg: 'green.300' }}
           onClick={() => {
             clickHandlerGoToDashboard(item.id);
           }}
-          bg={'green.400'}
-          _hover={{
-            bg: 'green.300',
-          }}
-          color={'white'}
-          mt={'36px'}
         >
           View
         </Button>
-        <Button
-          onClick={(e) => {
-            clickHandlerDeleteDashboard(item.id);
-          }}
-          bg={'red.400'}
-          _hover={{
-            bg: 'red.300',
-          }}
-          color={'white'}
-          mt={'36px'}
-        >
-          Delete
-        </Button>
-        <Button
-          onClick={() => {
-            clickHandlerGoToUpdate(item.id);
-          }}
-          bg={'blue.400'}
-          _hover={{
-            bg: 'blue.300',
-          }}
-          color={'white'}
-          mt={'36px'}
-        >
-          Update
-        </Button>
-      </Stack>
+      </VStack>
     </Box>
   );
 }

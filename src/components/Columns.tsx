@@ -217,6 +217,7 @@ function Boards(props: BoardProps) {
             id={item.column.id || -1}
             key={item.column.order}
             title={item.column.name}
+            description={item.column.description}
             _showLeftArrow={item.column._showLeftArrow}
             _showRightArrow={item.column._showRigthArrow}
             items={item.items}

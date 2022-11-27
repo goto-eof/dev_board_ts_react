@@ -7,6 +7,7 @@ import {
   VStack,
   Heading,
   Button,
+  Textarea,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -18,6 +19,7 @@ import { DashboardResponseI } from '../core/DashboardResponseI';
 export default function InsertColumnForm() {
   const [states, setStates] = useState({
     boardName: '',
+    boardDescription: '',
     order: -1,
     error: new Map<string, boolean>(),
     isInvalid: false,
@@ -44,6 +46,7 @@ export default function InsertColumnForm() {
         setStates({
           ...states,
           boardName: result.result.name,
+          boardDescription: result.result.description,
           order: result.result.order,
         });
       });
@@ -83,6 +86,7 @@ export default function InsertColumnForm() {
     if (isValid) {
       GenericService.create<DashboardUpdateI>('board', {
         name: e.target.elements.boardName.value,
+        description: e.target.elements.boardDescription.value,
         order: states.order,
       }).then((response) => {
         if (response.success) {
@@ -100,6 +104,7 @@ export default function InsertColumnForm() {
       Number(boardId),
       {
         name: e.target.elements.boardName.value,
+        description: e.target.elements.boardDescription.value,
         order: states.order,
       }
     ).then((response) => {
@@ -137,6 +142,14 @@ export default function InsertColumnForm() {
               autoFocus
             />
             <Errors fieldName={'boardName'} />
+
+            <FormLabel>Description</FormLabel>
+            <Textarea
+              value={states.boardDescription}
+              name="boardDescription"
+              onChange={handleInputChange}
+            />
+            <Errors fieldName={'boardDescription'} />
 
             <Button type="submit" mt={3} w={'100%'} colorScheme="green">
               Save

@@ -30,6 +30,7 @@ import ResultI from '../core/ResultI';
 
 interface ColumnProps {
   title: string;
+  description: string;
   id: number;
   boardId: string | undefined;
   items: Array<ItemRequestI>;
@@ -161,17 +162,20 @@ export default function Board(props: ColumnProps) {
               py={1}
               px={3}
             >
-              <Text
-                fontSize={'xl'}
-                fontWeight={500}
-                color={'gray.700'}
-                rounded={'full'}
-                px={2}
-                w={'full'}
-              >
-                <Icon as={EditIcon} mr={2} />
-                {props.title}{' '}
-              </Text>
+              <Box display={'block'}>
+                <Text
+                  fontSize={'xl'}
+                  fontWeight={500}
+                  color={'gray.700'}
+                  rounded={'full'}
+                  px={2}
+                  w={'full'}
+                >
+                  <Icon as={EditIcon} mr={2} />
+                  {props.title}{' '}
+                </Text>
+              </Box>
+
               <Menu>
                 {() => (
                   <>
@@ -205,6 +209,19 @@ export default function Board(props: ColumnProps) {
               </Box>
             )}
           </HStack>
+
+          <Box display={'block'} w={'full'}>
+            <Text
+              fontSize={'md'}
+              fontWeight={500}
+              color={'gray.700'}
+              rounded={'full'}
+              px={2}
+              w={'full'}
+            >
+              {props.description}
+            </Text>
+          </Box>
           {props && props.items && props.items.length > 3 && (
             <Box bg={'white'} w={'100%'} px={1} py={1}>
               <Link to={'/new-item/' + props.boardId + '/' + props.id}>
