@@ -32,3 +32,5 @@ npm run start
 ### Kanban board
 
 ![header](kanban.png)
+
+if any problems arise, feel free to [contact me](https://andre-i.dev/#contactme).
