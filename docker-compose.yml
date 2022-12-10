@@ -6,4 +6,4 @@ services:
       context: .
     image: andre-i.dev-new
     ports:
-      - '3000:80'
+      - '8081:80'
