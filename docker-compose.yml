@@ -4,6 +4,6 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
-    image: andre-i.dev-new
+    image: dev-boar-ts-react
     ports:
-      - '8081:80'
+      - '8082:80'
