@@ -2,8 +2,6 @@ import { ChevronDownIcon, EditIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
-  Heading,
-  Stack,
   Text,
   HStack,
   SimpleGrid,
@@ -14,7 +12,6 @@ import {
   MenuItem,
   MenuList,
   VStack,
-  Center,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -131,6 +128,7 @@ function Item({
           <Box
             width={'full'}
             display={'block'}
+            minHeight={'60px'}
             onClick={() => {
               clickHandlerGoToDashboard(item.id);
             }}
@@ -180,10 +178,13 @@ function Item({
           clickHandlerGoToDashboard(item.id);
         }}
       >
-        <Text align={'center'}>{item.description}</Text>
+        <Box borderRadius={'10%'} p={4} minHeight={'200px'}>
+          <Text align={'left'}>{item.description}</Text>
+        </Box>
         <Button
           bg={'green.400'}
           color={'white'}
+          w={'100%'}
           _hover={{ bg: 'green.300' }}
           onClick={() => {
             clickHandlerGoToDashboard(item.id);
