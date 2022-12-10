@@ -1,0 +1,9 @@
+version: '3'
+services:
+  andre-i.dev:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    image: andre-i.dev-new
+    ports:
+      - '3000:80'
