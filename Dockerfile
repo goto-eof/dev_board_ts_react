@@ -7,6 +7,7 @@ WORKDIR /app
 # Copy our node module specification
 COPY package.json package.json
 COPY yarn.lock yarn.lock
+COPY .env.production .env.production
 
 # install node modules and build assets
 RUN yarn install --production
@@ -29,6 +30,7 @@ RUN rm -rf *
 
 # Copy static assets from builder stage
 COPY --from=builder /app/build .
+COPY --from=builder /app/.env.production .env
 
 # Entry point when Docker container has started
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

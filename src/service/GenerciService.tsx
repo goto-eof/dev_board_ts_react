@@ -2,7 +2,8 @@ import customAxios from '../core/LoginInterceptor';
 import ResultI from '../core/ResultI';
 
 export default class GenericService {
-  private static baseUrl: string = 'http://localhost:8013/';
+  private static baseUrl: string =
+    'http://' + process.env.REACT_APP_URI + ':8013/';
 
   public static async getAll<T>(modelName: string): Promise<T> {
     return await customAxios
