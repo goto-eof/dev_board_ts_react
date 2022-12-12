@@ -10,6 +10,7 @@ import ColumnI from '../core/Column';
 import SwapRequestI from '../core/SwapRequestI';
 import ResultI from '../core/ResultI';
 import ColumnsWithItemsI from '../core/ColumnsWithItemsI';
+import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
 
 interface ColumnsProps {}
 
@@ -22,10 +23,10 @@ export const Columns: FC<ColumnsProps> = () => {
   const { boardId } = useParams();
 
   useEffect(() => {
-    oneCall();
-  }, []);
+    oneCalll();
+  });
 
-  const oneCall = () => {
+  const oneCalll = () => {
     GenericService.getAll<Result<ColumnsWithItemsI>>(
       boardId ? 'board/get_board_with_all_data/' + boardId : 'column/plus-items'
     ).then((result: Result<ColumnsWithItemsI>) => {
@@ -52,7 +53,6 @@ export const Columns: FC<ColumnsProps> = () => {
     GenericService.delete<DeleteResultI>('column', id).then(
       (result: DeleteResultI) => {
         if (result.success) {
-          console.log(columns);
           let newBoards =
             columns?.filter((column: any) => column.column.id !== id) || [];
           newBoards = recomputeArrows(newBoards);
@@ -60,6 +60,71 @@ export const Columns: FC<ColumnsProps> = () => {
         }
       }
     );
+  };
+
+  const moveItem = (
+    itemId: number | undefined | null,
+    boardIdFrom: number,
+    boardIdTo: number
+  ) => {
+    if (!itemId) {
+      return;
+    }
+    columns?.forEach((column) => {
+      if (column.column.id === boardIdFrom) {
+        let item = column.items.filter((item) => item.id === itemId)[0];
+        GenericService.update<ItemUpdateRequestI, ItemRequestI>(
+          'item',
+          itemId,
+          {
+            ...item,
+            column_id: boardIdTo,
+          }
+        ).then((response: Result<ItemRequestI>) => {
+          if (response.success) {
+            moveItemUI(boardIdFrom, boardIdTo, response.result.id);
+          }
+        });
+      }
+    });
+  };
+
+  const moveItemUI = (
+    boardIdFrom: number,
+    boardIdTo: number,
+    itemId?: number
+  ): void => {
+    if (!itemId) {
+      return;
+    }
+    let newColumns = [...(columns || [])];
+    // searching item
+    let item: ItemRequestI | null = null;
+    newColumns?.forEach((column) => {
+      if (column.column.id === boardIdFrom) {
+        let items = column.items;
+        item = items.filter((item) => item.id === itemId)[0];
+      }
+    });
+    // adding item
+    newColumns?.forEach((column) => {
+      if (column.column.id === boardIdTo && item) {
+        let newItems = [...column.items];
+        item.column_id = boardIdTo;
+        newItems.push(item);
+        column.items = newItems;
+      }
+    });
+    // removing item
+    newColumns?.forEach((column) => {
+      if (column.column.id === boardIdFrom) {
+        let items = column.items;
+        items = items.filter((item) => item.id !== itemId);
+        column.items = items;
+      }
+    });
+
+    setColumns(newColumns);
   };
 
   const recomputeArrows = (newBoards: Array<ColumnI>) => {
@@ -189,6 +254,7 @@ export const Columns: FC<ColumnsProps> = () => {
         goToEdit={goToEdit}
         columns={columns}
         boardId={boardId}
+        moveItem={moveItem}
       />
     </div>
   );
@@ -202,6 +268,11 @@ interface BoardProps {
   moveRight: (id: number) => void;
   setItems: (boardId: number, items: Array<ItemRequestI>) => void;
   boardId: string | undefined;
+  moveItem: (
+    itemId: number | undefined | null,
+    boardIdFrom: number,
+    boardIdTo: number
+  ) => void;
 }
 
 function Boards(props: BoardProps) {
@@ -231,6 +302,8 @@ function Boards(props: BoardProps) {
             _showRightArrow={item.column._showRigthArrow}
             items={item.items}
             boardId={props.boardId}
+            boards={props.columns}
+            moveItem={props.moveItem}
           />
         ))}
         {/* {!props.columns && <h3>Unable to reach server</h3>} */}
@@ -242,7 +315,7 @@ function Boards(props: BoardProps) {
                 bg: 'red.300',
               }}
               transform={'rotate(90deg)'}
-              color={'green.100'}
+              color={'white'}
               mt={'36px'}
             >
               + Column

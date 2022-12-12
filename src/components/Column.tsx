@@ -19,6 +19,7 @@ import {
   MenuItem,
   HStack,
   Flex,
+  MenuDivider,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
@@ -27,6 +28,7 @@ import { DeleteResultI } from '../core/DeleteResultI';
 import { ItemRequestI } from '../core/ItemRequestI';
 import SwapRequestI from '../core/SwapRequestI';
 import ResultI from '../core/ResultI';
+import ColumnI from '../core/Column';
 
 interface ColumnProps {
   title: string;
@@ -36,12 +38,18 @@ interface ColumnProps {
   items: Array<ItemRequestI>;
   _showLeftArrow: boolean;
   _showRightArrow: boolean;
+  boards?: Array<ColumnI>;
   deleteColumn: (id: number) => void;
   moveLeft: (id: number) => void;
   moveRight: (id: number) => void;
   setItems: (boardId: number, items: Array<ItemRequestI>) => void;
   goToEdit: (boardId: number) => void;
   updateBoardItems: (boardId: number, items: Array<ItemRequestI>) => void;
+  moveItem: (
+    itemId: number | undefined | null,
+    boardIdFrom: number,
+    boardIdTo: number
+  ) => void;
 }
 export default function Board(props: ColumnProps) {
   const deleteItem = (id: number) => {
@@ -74,7 +82,6 @@ export default function Board(props: ColumnProps) {
       'item',
       swapRequest
     ).then((result) => {
-      console.log(result);
       if (result.success) {
         let newItems = swapList(props.items, id, idB);
         props.updateBoardItems(props.id, newItems);
@@ -180,16 +187,21 @@ export default function Board(props: ColumnProps) {
                       <Icon color={'black.100'} as={ChevronDownIcon} />
                     </MenuButton>
                     <MenuList>
-                      <MenuItem onClick={() => props.goToEdit(props.id || -1)}>
-                        Edit
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => {
-                          props.deleteColumn(props.id || -1);
-                        }}
-                      >
-                        Delete
-                      </MenuItem>
+                      <>
+                        <MenuItem
+                          onClick={() => props.goToEdit(props.id || -1)}
+                        >
+                          Edit
+                        </MenuItem>
+                        <MenuDivider />
+                        <MenuItem
+                          onClick={() => {
+                            props.deleteColumn(props.id || -1);
+                          }}
+                        >
+                          Delete
+                        </MenuItem>
+                      </>
                     </MenuList>
                   </>
                 )}
@@ -220,13 +232,13 @@ export default function Board(props: ColumnProps) {
             </Text>
           </Box>
           {props && props.items && props.items.length > 3 && (
-            <Box bg={'green.100'} w={'100%'} px={1} py={1}>
+            <Box w={'100%'} px={1} py={1}>
               <Link to={'/new-item/' + props.boardId + '/' + props.id}>
                 <Button
                   mt={0}
                   w={'full'}
                   bg={'blue.400'}
-                  color={'green.100'}
+                  color={'white'}
                   rounded={'xl'}
                   _hover={{
                     bg: 'blue.300',
@@ -252,6 +264,8 @@ export default function Board(props: ColumnProps) {
                   moveUp={moveUp}
                   canMoveUp={canMoveUp}
                   canMoveDown={canMoveDown}
+                  boards={props.boards}
+                  moveItem={props.moveItem}
                 />
               ))}
             </SimpleGrid>

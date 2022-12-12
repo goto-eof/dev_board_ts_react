@@ -14,10 +14,11 @@ import {
   MenuDivider,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import ColumnI from '../core/Column';
 import { ItemRequestI } from '../core/ItemRequestI';
 import { ViewItem } from './ViewItem';
-
 interface ItemProps {
+  boards?: Array<ColumnI>;
   boardId: string | undefined;
   item: ItemRequestI;
   deleteItem: (id: number) => void;
@@ -25,6 +26,11 @@ interface ItemProps {
   moveDown: (id?: number) => void;
   canMoveUp: (id: number) => boolean;
   canMoveDown: (id: number) => boolean;
+  moveItem: (
+    itemId: number | undefined | null,
+    boardIdFrom: number,
+    boardIdTo: number
+  ) => void;
 }
 
 export default function Item({
@@ -35,9 +41,15 @@ export default function Item({
   moveDown,
   canMoveUp,
   canMoveDown,
+  moveItem,
+  boards,
 }: ItemProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   let navigate = useNavigate();
+
+  const tryMoveItem = (boardIdTo: number) => {
+    moveItem(item.id, Number(item.column_id), boardIdTo);
+  };
 
   const goToEdit = (id: number) => {
     navigate(
@@ -84,11 +96,29 @@ export default function Item({
                 </Text>
               </MenuButton>
               <MenuList>
-                <MenuItem onClick={() => goToEdit(item.id || -1)}>
+                <MenuItem key={'edit'} onClick={() => goToEdit(item.id || -1)}>
                   Edit
                 </MenuItem>
                 <MenuDivider />
+                {boards &&
+                  boards.length > 0 &&
+                  boards.map((board) => {
+                    return board.column.id !== item.column_id ? (
+                      <MenuItem
+                        key={board.column.id}
+                        onClick={() => tryMoveItem(board.column.id)}
+                      >
+                        Move to {board.column.name}
+                      </MenuItem>
+                    ) : (
+                      <MenuItem key={board.column.id}>
+                        Move to {board.column.name}
+                      </MenuItem>
+                    );
+                  })}
+                <MenuDivider />
                 <MenuItem
+                  key={'delete'}
                   onClick={() => {
                     deleteItem(item.id || -1);
                   }}
