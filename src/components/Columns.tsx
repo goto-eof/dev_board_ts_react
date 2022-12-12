@@ -24,7 +24,7 @@ export const Columns: FC<ColumnsProps> = () => {
 
   useEffect(() => {
     oneCalll();
-  });
+  }, []);
 
   const oneCalll = () => {
     GenericService.getAll<Result<ColumnsWithItemsI>>(
