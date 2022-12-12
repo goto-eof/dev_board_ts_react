@@ -1,9 +1,11 @@
 version: '3'
 services:
-  andre-i.dev:
+  dev-board-fe:
+    container_name: dev_boar_fe
     build:
       dockerfile: Dockerfile
       context: .
-    image: dev-boar-ts-react
+    image: dev_board_fe
+    restart: always
     ports:
       - '8082:80'

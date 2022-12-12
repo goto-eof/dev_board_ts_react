@@ -2,6 +2,7 @@ import { Box, ChakraProvider, theme } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Columns } from './components/Columns';
+import { ControlPanel } from './components/ControlPanel';
 import Dashboard from './components/Dashboards';
 import Footer from './components/Footer';
 import InsertColumnForm from './components/InsertColumnForm';
@@ -81,6 +82,7 @@ export const App = () => {
               path="/edit-dashboard/:dashboardId"
               element={<InsertDashboard />}
             />
+            <Route path="/cp" element={<ControlPanel />} />
           </Routes>
           <Footer />
         </Box>

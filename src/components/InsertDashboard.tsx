@@ -38,7 +38,7 @@ export default function InsertColumnForm() {
 
   useEffect(() => {
     if (boardId) {
-      GenericService.get<ResultI<DashboardResponseI>>(
+      GenericService.getById<ResultI<DashboardResponseI>>(
         'board',
         Number(boardId)
       ).then((result) => {

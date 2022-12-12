@@ -136,12 +136,12 @@ export default function Board(props: ColumnProps) {
 
   return (
     <Center py={6}>
-      <Box w={'300px'} bg={'white'} boxShadow={'xl'} rounded={'md'}>
+      <Box w={'260px'} bg={'black.50'} boxShadow={'xl'} rounded={'md'} p={1}>
         <Stack
           textAlign={'center'}
-          p={6}
+          p={4}
           pb={2}
-          color={useColorModeValue('gray.800', 'white')}
+          color={useColorModeValue('gray.800', 'black.50')}
           align={'center'}
         >
           <HStack>
@@ -155,32 +155,29 @@ export default function Board(props: ColumnProps) {
               </Box>
             )}
             <Flex
-              bg={'white.100'}
+              bg={'black.100'}
               border={'1px solid lightgray'}
               rounded={'full'}
-              _hover={{ bg: 'green.100' }}
+              _hover={{ bg: 'green.400' }}
               py={1}
               px={3}
             >
-              <Box display={'block'}>
-                <Text
-                  fontSize={'xl'}
-                  fontWeight={500}
-                  color={'gray.700'}
-                  rounded={'full'}
-                  px={2}
-                  w={'full'}
-                >
-                  <Icon as={EditIcon} mr={2} />
-                  {props.title}{' '}
-                </Text>
-              </Box>
-
               <Menu>
                 {() => (
                   <>
                     <MenuButton>
-                      <Icon color={'gray.700'} as={ChevronDownIcon} />
+                      <Text
+                        fontSize={'xl'}
+                        fontWeight={500}
+                        color={'black.100'}
+                        rounded={'full'}
+                        px={2}
+                        w={'full'}
+                      >
+                        <Icon as={EditIcon} mr={2} />
+                        {props.title}{' '}
+                      </Text>
+                      <Icon color={'black.100'} as={ChevronDownIcon} />
                     </MenuButton>
                     <MenuList>
                       <MenuItem onClick={() => props.goToEdit(props.id || -1)}>
@@ -223,13 +220,13 @@ export default function Board(props: ColumnProps) {
             </Text>
           </Box>
           {props && props.items && props.items.length > 3 && (
-            <Box bg={'white'} w={'100%'} px={1} py={1}>
+            <Box bg={'green.100'} w={'100%'} px={1} py={1}>
               <Link to={'/new-item/' + props.boardId + '/' + props.id}>
                 <Button
                   mt={0}
                   w={'full'}
                   bg={'blue.400'}
-                  color={'white'}
+                  color={'green.100'}
                   rounded={'xl'}
                   _hover={{
                     bg: 'blue.300',

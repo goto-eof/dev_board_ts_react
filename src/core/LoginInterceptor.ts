@@ -1,4 +1,5 @@
 import axios from 'axios';
+import GenericService from '../service/GenerciService';
 
 const customAxios = axios.create();
 export const customInterceptor = (
@@ -6,13 +7,14 @@ export const customInterceptor = (
   toggleChangedLocalStorage: any
 ) => {
   customAxios.interceptors.response.use(
-    function (response) {
+    async function (response) {
+      GenericService.refreshToken(response.data);
       return response;
     },
     function (error) {
       if (error.response.status === 401) {
         console.log('Unauthorized');
-        localStorage.clear();
+        // localStorage.clear();
         toggleChangedLocalStorage();
         navigate('/login');
       }
@@ -20,4 +22,16 @@ export const customInterceptor = (
     }
   );
 };
+
+customAxios.interceptors.request.use(
+  (config: any) => {
+    let tokensData = localStorage.getItem('token');
+    config.headers['Authorization'] = `${tokensData}`;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error.message);
+  }
+);
+
 export default customAxios;

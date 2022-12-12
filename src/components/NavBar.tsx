@@ -23,12 +23,8 @@ import {
 } from '@chakra-ui/icons';
 import { Link as ReactLink, useNavigate } from 'react-router-dom';
 import { IconType } from 'react-icons';
-import { FiHome } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
-import { LoginRequestI } from '../core/LoginRequestI';
-import GenericService from '../service/GenerciService';
-import Result from '../core/ResultI';
-import { LogoutResultI } from '../core/LogoutResultI';
+import { UserResponseI } from '../core/UserResponseI';
 
 interface NavBarProps {
   changedLocalStorage: boolean;
@@ -40,36 +36,45 @@ export default function NavBar({
   changedLocalStorage,
 }: NavBarProps) {
   const { isOpen, onToggle } = useDisclosure();
-  const [user, setUser] = useState<LoginRequestI>();
+  const [token, setToken] = useState<String | null>(
+    localStorage.getItem('token')
+  );
+  const [user, setUser] = useState<UserResponseI>(
+    JSON.parse(localStorage.getItem('user') || '{}')
+  );
+  const [username, setUsername] = useState<String | null>(
+    JSON.parse(localStorage.getItem('user') || '{}').username
+  );
 
   useEffect(() => {
     let json_str = localStorage.getItem('user');
+    let token = localStorage.getItem('token');
+    setToken(token);
     if (json_str) {
       let json = JSON.parse(json_str);
       setUser(json);
+      setUsername(json.username);
     } else {
-      setUser(undefined);
     }
   }, [changedLocalStorage]);
 
   const navigate = useNavigate();
   const logout = () => {
-    GenericService.post<LogoutResultI>('user/invalidate_token').then(
-      (response: Result<LogoutResultI>) => {
-        if (response.success) {
-          localStorage.removeItem('user');
-          toggleChangedLocalStorage();
-          window.location.reload();
-          navigate('/login');
-        }
-      }
-    );
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.reload();
+    toggleChangedLocalStorage();
+    navigate('/');
+  };
+
+  const goToContrlPanel = () => {
+    navigate('/cp');
   };
 
   return (
     <Box>
       <Flex
-        bg={useColorModeValue('white', 'gray.800')}
+        bg={'black.50'}
         color={useColorModeValue('gray.600', 'white')}
         minH={'60px'}
         py={{ base: 2 }}
@@ -100,7 +105,7 @@ export default function NavBar({
               fontFamily={'heading'}
               fontWeight={600}
               fontSize={'xl'}
-              color={useColorModeValue('green.500', 'black')}
+              color={useColorModeValue('green.500', 'green')}
             >
               {'{</>} Dev board'}
             </Text>
@@ -116,7 +121,7 @@ export default function NavBar({
           direction={'row'}
           spacing={6}
         >
-          {!user && (
+          {!token && (
             <>
               <ReactLink to={'/login'}>
                 <Button
@@ -148,20 +153,37 @@ export default function NavBar({
               </ReactLink>
             </>
           )}
-          {user && (
-            <Button
-              display={{ base: 'none', md: 'inline-flex' }}
-              fontSize={'sm'}
-              fontWeight={600}
-              color={'white'}
-              bg={'red.500'}
-              onClick={logout}
-              _hover={{
-                bg: 'blue.400',
-              }}
-            >
-              Logout
-            </Button>
+          {token && (
+            <>
+              <Button
+                display={{ base: 'none', md: 'inline-flex' }}
+                fontSize={'sm'}
+                fontWeight={600}
+                color={'white'}
+                bg={'blue.500'}
+                onClick={goToContrlPanel}
+                _hover={{
+                  bg: 'blue.400',
+                }}
+              >
+                Control panel
+              </Button>
+              <Button
+                display={{ base: 'none', md: 'inline-flex' }}
+                fontSize={'sm'}
+                fontWeight={600}
+                color={'white'}
+                bg={'red.500'}
+                onClick={logout}
+                _hover={{
+                  bg: 'blue.400',
+                }}
+              >
+                Logout {'('}
+                {username}
+                {')'}
+              </Button>
+            </>
           )}
         </Stack>
       </Flex>

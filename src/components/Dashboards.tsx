@@ -12,6 +12,8 @@ import {
   MenuItem,
   MenuList,
   VStack,
+  Heading,
+  Center,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -62,33 +64,54 @@ export default function Dashboard() {
   };
 
   return (
-    <SimpleGrid columns={{ base: 1, md: 3, lg: 4 }} p={0} spacing={10} pt={30}>
-      {boards.map((item: any) => {
-        return (
-          <Item
-            item={item}
-            key={item.id}
-            clickHandlerGoToDashboard={goToBoard}
-            clickHandlerDeleteDashboard={deleteDashboard}
-            clickHandlerGoToUpdate={goToUpdate}
-            clickHandlerGoToShare={goToShare}
-          />
-        );
-      })}
-      <Link to={'/new-dashboard'}>
-        <Button
-          bg={'red.400'}
-          _hover={{
-            bg: 'red.300',
-          }}
-          transform={'rotate(90deg)'}
-          color={'white'}
-          mt={'36px'}
+    <>
+      <Center>
+        <Heading
+          color={'green.400'}
+          borderBottomRightRadius="25%"
+          borderBottomLeftRadius="25%"
+          textShadow={'1px 1px lightgray'}
+          p={5}
+          boxShadow={'md'}
         >
-          + Dashboard
-        </Button>
-      </Link>
-    </SimpleGrid>
+          Projects
+        </Heading>
+      </Center>
+      <SimpleGrid
+        columns={{ base: 1, md: 3, lg: 4 }}
+        p={0}
+        spacing={10}
+        pt={30}
+      >
+        {boards.map((item: any) => {
+          return (
+            <Item
+              item={item}
+              key={item.id}
+              clickHandlerGoToDashboard={goToBoard}
+              clickHandlerDeleteDashboard={deleteDashboard}
+              clickHandlerGoToUpdate={goToUpdate}
+              clickHandlerGoToShare={goToShare}
+            />
+          );
+        })}
+        {boards.length >= 0 && (
+          <Link to={'/new-dashboard'}>
+            <Button
+              bg={'red.400'}
+              _hover={{
+                bg: 'red.300',
+              }}
+              transform={'rotate(90deg)'}
+              color={'white'}
+              mt={'36px'}
+            >
+              + Dashboard
+            </Button>
+          </Link>
+        )}
+      </SimpleGrid>
+    </>
   );
 }
 
@@ -109,6 +132,7 @@ function Item({
 }: ItemPropsI) {
   return (
     <Box
+      cursor={'pointer'}
       maxW={'400px'}
       w={'full'}
       boxShadow={'2xl'}
@@ -119,39 +143,31 @@ function Item({
       <HStack>
         <Flex
           width={'full'}
-          bg={'white.100'}
+          bg={'black.50'}
           border={'1px solid lightgray'}
-          _hover={{ bg: 'green.100' }}
+          _hover={{ bg: 'green.400' }}
+          borderRadius="5px"
           py={1}
           px={3}
         >
-          <Box
-            width={'full'}
-            display={'block'}
-            minHeight={'60px'}
-            onClick={() => {
-              clickHandlerGoToDashboard(item.id);
-            }}
-          >
-            <Text
-              textAlign={'center'}
-              fontSize={'xl'}
-              fontWeight={500}
-              color={'gray.700'}
-              rounded={'full'}
-              px={2}
-              w={'full'}
-            >
-              <Icon as={EditIcon} mr={2} />
-              {item.name}
-            </Text>
-          </Box>
-
           <Menu>
             {() => (
               <>
-                <MenuButton>
-                  <Icon color={'gray.700'} as={ChevronDownIcon} />
+                <MenuButton alignContent={'center'} w={'full'}>
+                  {' '}
+                  <Text
+                    textAlign={'center'}
+                    fontSize={'xl'}
+                    fontWeight={500}
+                    color={'black.700'}
+                    rounded={'full'}
+                    px={2}
+                    w={'full'}
+                  >
+                    <Icon as={EditIcon} mr={2} />
+                    {item.name}
+                  </Text>
+                  <Icon color={'black.700'} as={ChevronDownIcon} />
                 </MenuButton>
                 <MenuList>
                   <MenuItem onClick={() => clickHandlerGoToUpdate(item.id)}>

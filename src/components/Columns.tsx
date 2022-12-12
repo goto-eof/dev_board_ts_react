@@ -170,7 +170,16 @@ export const Columns: FC<ColumnsProps> = () => {
   return (
     <div className="Columns">
       <Center>
-        <Heading>{dashboardTitle}</Heading>
+        <Heading
+          color={'green.400'}
+          borderBottomRightRadius="25%"
+          borderBottomLeftRadius="25%"
+          textShadow={'1px 1px lightgray'}
+          p={5}
+          boxShadow={'md'}
+        >
+          {dashboardTitle}
+        </Heading>
       </Center>
       <Boards
         moveLeft={moveLeft}
@@ -224,7 +233,7 @@ function Boards(props: BoardProps) {
             boardId={props.boardId}
           />
         ))}
-        {!props.columns && <h3>Unable to reach server</h3>}
+        {/* {!props.columns && <h3>Unable to reach server</h3>} */}
         {props.columns && (
           <Link to={'/new-column/' + props.boardId}>
             <Button
@@ -233,7 +242,7 @@ function Boards(props: BoardProps) {
                 bg: 'red.300',
               }}
               transform={'rotate(90deg)'}
-              color={'white'}
+              color={'green.100'}
               mt={'36px'}
             >
               + Column

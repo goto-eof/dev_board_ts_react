@@ -14,6 +14,8 @@ import GenericService from '../service/GenerciService';
 import Result from '../core/ResultI';
 import { ColumnResponseI } from '../core/ColumnResponseI';
 import { LoginRequestI } from '../core/LoginRequestI';
+import { JwtI } from '../core/JwtI';
+import { UserResponseI } from '../core/UserResponseI';
 
 interface LoginFormProps {
   toggleChangedLocalStorage: () => void;
@@ -55,14 +57,21 @@ export default function LoginForm({
 
   const login = (e: any) => {
     e.preventDefault();
-    GenericService.create<LoginRequestI>('user/login', {
+    GenericService.createDifResponse<LoginRequestI, JwtI>('user/login', {
       username: e.target.elements.username.value,
       password: e.target.elements.password.value,
-    }).then((response: Result<LoginRequestI>) => {
+    }).then((response: Result<JwtI>) => {
       if (response.success) {
-        localStorage.setItem('user', JSON.stringify(response.result));
-        toggleChangedLocalStorage();
-        navigate('/');
+        localStorage.setItem('token', response.result.jwt);
+        GenericService.get<Result<UserResponseI>>('user/get_user').then(
+          (response) => {
+            if (response.success) {
+              localStorage.setItem('user', JSON.stringify(response.result));
+              toggleChangedLocalStorage();
+              navigate('/');
+            }
+          }
+        );
       }
     });
   };

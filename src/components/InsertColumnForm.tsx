@@ -38,7 +38,7 @@ export default function InsertColumnForm() {
 
   useEffect(() => {
     if (columnId) {
-      GenericService.get<ResultI<ColumnResponseI>>(
+      GenericService.getById<ResultI<ColumnResponseI>>(
         'column',
         Number(columnId)
       ).then((result) => {
