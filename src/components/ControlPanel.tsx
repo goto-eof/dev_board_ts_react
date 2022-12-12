@@ -18,6 +18,7 @@ export const ControlPanel = () => {
     localStorage.setItem('chakra-ui-color-mode', theme);
     setDarkTheme(localStorage.getItem('chakra-ui-color-mode') === 'dark');
     navigate('/');
+    window.location.reload();
   };
 
   return (

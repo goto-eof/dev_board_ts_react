@@ -22,6 +22,8 @@ RUN yarn build
 # Choose NGINX as our base Docker image
 FROM nginx:alpine
 
+COPY nginx.conf /etc/nginx/nginx.conf
+
 # Set working directory to nginx asset directory
 WORKDIR /usr/share/nginx/html
 
