@@ -142,30 +142,38 @@ export default function Board(props: ColumnProps) {
   };
 
   return (
-    <Center py={6}>
+    <Center py={6} as="div">
       <Box w={'260px'} bg={'black.50'} boxShadow={'xl'} rounded={'md'} p={1}>
         <Stack
           textAlign={'center'}
-          p={4}
-          pb={2}
           color={useColorModeValue('gray.800', 'black.50')}
           align={'center'}
         >
-          <HStack>
-            {props._showLeftArrow && (
-              <Box as="button" onClick={() => props.moveLeft(props.id)}>
+          <Box
+            as={HStack}
+            p={3}
+            borderRadius={'5%'}
+            boxShadow={'base'}
+            width={'full'}
+            justify={'space-between'}
+          >
+            {
+              <Box
+                as="button"
+                onClick={() => props._showLeftArrow && props.moveLeft(props.id)}
+              >
                 <Icon
                   as={ArrowLeftIcon}
-                  color={'gray.400'}
+                  color={props._showLeftArrow ? 'gray.700' : 'gray.200'}
                   _hover={{ color: 'green.200' }}
                 />
               </Box>
-            )}
+            }
             <Flex
-              bg={'black.100'}
-              border={'1px solid lightgray'}
-              rounded={'full'}
-              _hover={{ bg: 'green.400' }}
+              // border={'1px solid lightgray'}
+              // rounded={'full'}
+              borderRadius={'md'}
+              _hover={{ bg: 'green.100' }}
               py={1}
               px={3}
             >
@@ -182,7 +190,7 @@ export default function Board(props: ColumnProps) {
                         w={'full'}
                       >
                         <Icon as={EditIcon} mr={2} />
-                        {props.title}{' '}
+                        {props.title}
                       </Text>
                       <Icon color={'black.100'} as={ChevronDownIcon} />
                     </MenuButton>
@@ -208,24 +216,29 @@ export default function Board(props: ColumnProps) {
               </Menu>
             </Flex>
 
-            {props._showRightArrow && (
-              <Box as="button" onClick={() => props.moveRight(props.id)}>
+            {
+              <Box
+                as="button"
+                onClick={() =>
+                  props._showRightArrow && props.moveRight(props.id)
+                }
+              >
                 <Icon
                   _hover={{ color: 'green.200' }}
                   as={ArrowRightIcon}
-                  color={'gray.400'}
+                  color={props._showRightArrow ? 'gray.700' : 'gray.200'}
                 />
               </Box>
-            )}
-          </HStack>
+            }
+          </Box>
 
           <Box display={'block'} w={'full'}>
             <Text
               fontSize={'md'}
-              fontWeight={500}
-              color={'gray.700'}
+              color={'gray.400'}
               rounded={'full'}
               px={2}
+              py={2}
               w={'full'}
             >
               {props.description}

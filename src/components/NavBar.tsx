@@ -108,11 +108,11 @@ export default function NavBar({
               color={useColorModeValue('green.500', 'green')}
             >
               {'{</>} Dev board'}
-              {process.env.REACT_APP_ENV === 'prod' ? (
-                <Text color={'red'}>{process.env.REACT_APP_ENV}</Text>
-              ) : (
-                <Text color={'lightgray'}> {process.env.REACT_APP_ENV}</Text>
-              )}
+            </Text>
+            <Text
+              color={process.env.REACT_APP_ENV === 'prod' ? 'red' : 'lightgray'}
+            >
+              {process.env.REACT_APP_ENV}
             </Text>
           </ReactLink>
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>

@@ -9,6 +9,7 @@ import {
   VStack,
   Heading,
   Button,
+  Icon,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -17,6 +18,7 @@ import Result from '../core/ResultI';
 import { ColumnResponseI } from '../core/ColumnResponseI';
 import { ItemRequestI } from '../core/ItemRequestI';
 import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 
 export default function InsertItemForm() {
   const { boardId, columnId, itemId } = useParams();
@@ -105,6 +107,10 @@ export default function InsertItemForm() {
     });
   };
 
+  const goBack = () => {
+    navigate('/board/' + boardId);
+  };
+
   const update = (e: any) => {
     e.preventDefault();
     if (itemId) {
@@ -131,7 +137,16 @@ export default function InsertItemForm() {
   return (
     <Center>
       <VStack w="full" width={'50%'}>
-        <Heading>Task/Bug/Feature</Heading>
+        <Heading>
+          <Icon
+            fontSize={'2xl'}
+            as={ArrowBackIcon}
+            color={'gray.400'}
+            _hover={{ color: 'green.200' }}
+            onClick={goBack}
+          />
+          Task/Bug/Feature
+        </Heading>
         <form onSubmit={itemId ? update : save} style={{ width: '100%' }}>
           <FormControl isInvalid={states.isInvalid} w={'100%'}>
             <FormLabel>Id</FormLabel>

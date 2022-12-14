@@ -76,8 +76,8 @@ export default function Item({
                 transition="all 0.2s"
                 borderRadius="md"
                 borderWidth="1px"
-                _hover={{ bg: 'green.400' }}
-                _expanded={{ bg: 'green.400' }}
+                _hover={{ bg: 'green.100' }}
+                _expanded={{ bg: 'green.100' }}
                 _focus={{ boxShadow: 'outline' }}
               >
                 <Text
@@ -129,7 +129,7 @@ export default function Item({
             </Menu>
           </Flex>
         </CardHeader>
-        <CardBody cursor="pointer" onClick={onOpen}>
+        <CardBody cursor="pointer" onClick={onOpen} _hover={{ color: 'gray' }}>
           <Text p={2} align={'left'} overflow="hidden" fontSize="sm">
             {item.description.length > 60
               ? item.description.substring(0, 60) + '...'

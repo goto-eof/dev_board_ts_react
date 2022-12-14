@@ -4,7 +4,11 @@ import ResultI from '../core/ResultI';
 
 export default class GenericService {
   private static baseUrl: string =
-    'http://' + process.env.REACT_APP_URI + ':8013/';
+    'http://' +
+    process.env.REACT_APP_URI +
+    ':' +
+    process.env.REACT_APP_PORT +
+    '/';
 
   public static async getAll<T>(modelName: string): Promise<T> {
     return await customAxios

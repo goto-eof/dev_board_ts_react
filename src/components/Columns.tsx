@@ -1,4 +1,12 @@
-import { Box, Button, Center, Heading, HStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Heading,
+  HStack,
+  Icon,
+  Skeleton,
+} from '@chakra-ui/react';
 import { FC, useEffect, useState } from 'react';
 import GenericService from '../service/GenerciService';
 import Board from './Column';
@@ -11,6 +19,7 @@ import SwapRequestI from '../core/SwapRequestI';
 import ResultI from '../core/ResultI';
 import ColumnsWithItemsI from '../core/ColumnsWithItemsI';
 import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
+import { ArrowBackIcon, ArrowLeftIcon } from '@chakra-ui/icons';
 
 interface ColumnsProps {}
 
@@ -159,6 +168,10 @@ export const Columns: FC<ColumnsProps> = () => {
     navigate('/edit-column/' + boardId + '/' + columnId);
   };
 
+  const goBack = () => {
+    navigate('/');
+  };
+
   const swapUiAnBe = (idA: number, lorr: number) => {
     if (columns) {
       let columnsFinal = [...columns];
@@ -235,6 +248,13 @@ export const Columns: FC<ColumnsProps> = () => {
   return (
     <div className="Columns">
       <Center>
+        <Icon
+          onClick={() => goBack()}
+          fontSize={'2xl'}
+          as={ArrowBackIcon}
+          color={'gray.400'}
+          _hover={{ color: 'green.200' }}
+        />
         <Heading
           color={'green.400'}
           borderBottomRightRadius="25%"
@@ -278,13 +298,25 @@ interface BoardProps {
 function Boards(props: BoardProps) {
   return (
     <Box mx={'auto'} pt={0}>
-      <HStack
+      {/* <HStack
         spacing={{ base: 5, lg: 2 }}
         alignItems={'start'}
         overflowX="scroll"
         overflowY={'scroll'}
         align="flex-start"
         h={'80vh'}
+      > */}
+      <Skeleton
+        spacing={{ base: 5, lg: 2 }}
+        as={HStack}
+        alignItems={'start'}
+        overflowX="scroll"
+        overflowY={'scroll'}
+        align="flex-start"
+        h={'80vh'}
+        w="full"
+        isLoaded={!!props.columns}
+        fadeDuration={1}
       >
         {props.columns?.map((item) => (
           <Board
@@ -322,7 +354,7 @@ function Boards(props: BoardProps) {
             </Button>
           </Link>
         )}
-      </HStack>
+      </Skeleton>
     </Box>
   );
 }

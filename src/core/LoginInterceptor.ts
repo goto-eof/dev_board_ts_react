@@ -14,7 +14,7 @@ export const customInterceptor = (
     function (error) {
       if (error.response.status === 401) {
         console.log('Unauthorized');
-        // localStorage.clear();
+        localStorage.clear();
         toggleChangedLocalStorage();
         navigate('/login');
       }

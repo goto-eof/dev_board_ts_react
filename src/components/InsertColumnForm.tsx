@@ -8,6 +8,7 @@ import {
   Heading,
   Button,
   Textarea,
+  Icon,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -15,6 +16,7 @@ import GenericService from '../service/GenerciService';
 import { DashboardUpdateI } from '../core/DashboardUpdateI';
 import ResultI from '../core/ResultI';
 import { ColumnResponseI } from '../core/ColumnResponseI';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 
 export default function InsertColumnForm() {
   const [states, setStates] = useState({
@@ -51,6 +53,10 @@ export default function InsertColumnForm() {
       });
     }
   }, []);
+
+  const goBack = () => {
+    navigate('/board/' + boardId);
+  };
 
   interface ErrorsProps {
     fieldName: string;
@@ -116,7 +122,16 @@ export default function InsertColumnForm() {
   return (
     <Center>
       <VStack w="full" width={'50%'}>
-        <Heading>Board</Heading>
+        <Heading>
+          <Icon
+            fontSize={'2xl'}
+            as={ArrowBackIcon}
+            color={'gray.400'}
+            _hover={{ color: 'green.200' }}
+            onClick={goBack}
+          />
+          Board
+        </Heading>
         <form onSubmit={columnId ? update : save} style={{ width: '100%' }}>
           <FormControl isInvalid={states.isInvalid} w={'100%'}>
             <FormLabel>Id</FormLabel>

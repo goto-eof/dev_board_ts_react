@@ -14,6 +14,7 @@ import {
   VStack,
   Heading,
   Center,
+  Skeleton,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -77,11 +78,14 @@ export default function Dashboard() {
           Projects
         </Heading>
       </Center>
-      <SimpleGrid
-        columns={{ base: 1, md: 3, lg: 4 }}
+      <Skeleton
+        as={SimpleGrid}
+        columns={{ base: 1, md: 3, lg: 5 }}
         p={0}
-        spacing={10}
+        spacing={2}
         pt={30}
+        isLoaded={!!boards}
+        fadeDuration={3}
       >
         {boards.map((item: any) => {
           return (
@@ -104,13 +108,13 @@ export default function Dashboard() {
               }}
               transform={'rotate(90deg)'}
               color={'white'}
-              mt={'36px'}
+              mt={'56px'}
             >
               + Dashboard
             </Button>
           </Link>
         )}
-      </SimpleGrid>
+      </Skeleton>
     </>
   );
 }
@@ -133,20 +137,19 @@ function Item({
   return (
     <Box
       cursor={'pointer'}
-      maxW={'400px'}
       w={'full'}
-      boxShadow={'2xl'}
+      boxShadow={'md'}
       rounded={'md'}
-      p={6}
+      p={2}
       overflow={'hidden'}
     >
       <HStack>
         <Flex
           width={'full'}
           bg={'black.50'}
-          border={'1px solid lightgray'}
-          _hover={{ bg: 'green.400' }}
+          _hover={{ bg: 'green.100' }}
           borderRadius="5px"
+          boxShadow={'base'}
           py={1}
           px={3}
         >
@@ -190,6 +193,8 @@ function Item({
         </Flex>
       </HStack>
       <VStack
+        _hover={{ color: 'gray' }}
+        color={'black.900'}
         onClick={() => {
           clickHandlerGoToDashboard(item.id);
         }}
