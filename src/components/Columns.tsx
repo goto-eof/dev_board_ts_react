@@ -2,9 +2,12 @@ import {
   Box,
   Button,
   Center,
+  Grid,
+  GridItem,
   Heading,
   HStack,
   Icon,
+  Input,
   Skeleton,
 } from '@chakra-ui/react';
 import { FC, useEffect, useState } from 'react';
@@ -19,15 +22,18 @@ import SwapRequestI from '../core/SwapRequestI';
 import ResultI from '../core/ResultI';
 import ColumnsWithItemsI from '../core/ColumnsWithItemsI';
 import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
-import { ArrowBackIcon, ArrowLeftIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon } from '@chakra-ui/icons';
+import { classicNameResolver } from 'typescript';
 
 interface ColumnsProps {}
 
-export const Columns: FC<ColumnsProps> = () => {
-  const [columns, setColumns] = useState<Array<ColumnI> | undefined>();
+export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
+  const [columns, setColumns] = useState<Array<ColumnI> | []>();
+  const [filteredColumns, setFilteredColumns] = useState<Array<ColumnI> | []>();
 
   const [dashboardTitle, setDashboardTitle] = useState<string>();
   let navigate = useNavigate();
+  const [filter, setFilter] = useState<string>('');
 
   const { boardId } = useParams();
 
@@ -53,6 +59,7 @@ export const Columns: FC<ColumnsProps> = () => {
           boards.push(board);
         });
         setColumns(boards);
+        setFilteredColumns([...boards]);
         setDashboardTitle(result.result.board.name);
       }
     });
@@ -134,6 +141,7 @@ export const Columns: FC<ColumnsProps> = () => {
     });
 
     setColumns(newColumns);
+    handleInputChangeFilter(null, newColumns);
   };
 
   const recomputeArrows = (newBoards: Array<ColumnI>) => {
@@ -162,6 +170,55 @@ export const Columns: FC<ColumnsProps> = () => {
       }
     });
     setColumns(newBoards);
+    handleInputChangeFilter(null, newBoards);
+  };
+
+  const handleInputChangeFilter = (
+    filterIn?: string | null,
+    newColumns?: Array<ColumnI>
+  ) => {
+    if (
+      ((filterIn != filter && filterIn !== undefined) ||
+        (filterIn && filterIn.length > 0)) &&
+      (newColumns || columns)
+    ) {
+      let filteredColumns: Array<ColumnI> = [];
+      (newColumns || columns || []).forEach((column) => {
+        filteredColumns.push({
+          column: { ...column.column },
+          items: [...column.items].filter(
+            (item) =>
+              item.name.indexOf(filterIn || '') > -1 ||
+              item.description.indexOf(filterIn || '') > -1
+          ),
+        });
+      });
+
+      setFilteredColumns(filteredColumns);
+    } else {
+      let filteredColumns: Array<ColumnI> = [];
+      columns?.forEach((column) => {
+        filteredColumns.push({
+          column: { ...column.column },
+          items: [...column.items],
+        });
+      });
+      console.log(filteredColumns, columns);
+      setFilteredColumns(filteredColumns);
+    }
+    if (filterIn != filter) {
+      setFilter(filterIn || '');
+    }
+  };
+
+  const searchBox = () => {
+    return (
+      <Input
+        placeholder="filter"
+        value={filter}
+        onChange={(e) => handleInputChangeFilter(e.target.value)}
+      />
+    );
   };
 
   const goToEdit = (columnId: number) => {
@@ -212,6 +269,7 @@ export const Columns: FC<ColumnsProps> = () => {
                     columnsFinal[columnsFinal.length - 1].column.id !== idB;
                 }
                 setColumns(columnsFinal);
+                handleInputChangeFilter(null, columnsFinal);
               }
             });
           }
@@ -266,6 +324,13 @@ export const Columns: FC<ColumnsProps> = () => {
           {dashboardTitle}
         </Heading>
       </Center>
+      <Grid templateColumns="repeat(5, 1fr)" gap={4}>
+        <GridItem colSpan={2} h="10"></GridItem>
+        <GridItem colStart={4} colEnd={6} h="10">
+          {searchBox()}
+        </GridItem>
+      </Grid>
+
       <Boards
         moveLeft={moveLeft}
         moveRight={moveRight}
@@ -273,6 +338,7 @@ export const Columns: FC<ColumnsProps> = () => {
         setItems={setItems}
         goToEdit={goToEdit}
         columns={columns}
+        filteredColumns={filteredColumns}
         boardId={boardId}
         moveItem={moveItem}
       />
@@ -282,6 +348,7 @@ export const Columns: FC<ColumnsProps> = () => {
 
 interface BoardProps {
   columns?: Array<ColumnI>;
+  filteredColumns?: Array<ColumnI>;
   deleteColumn: (id: number) => void;
   moveLeft: (id: number) => void;
   goToEdit: (boardId: number) => void;
@@ -318,7 +385,7 @@ function Boards(props: BoardProps) {
         isLoaded={!!props.columns}
         fadeDuration={1}
       >
-        {props.columns?.map((item) => (
+        {props.filteredColumns?.map((item) => (
           <Board
             moveLeft={props.moveLeft}
             moveRight={props.moveRight}

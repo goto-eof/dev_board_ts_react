@@ -195,11 +195,11 @@ export default function Board(props: ColumnProps) {
                       >
                         <Icon as={EditIcon} mr={2} />
                         {props.title}
-                        <Text fontSize={'sm'}>
-                          {' ('}
-                          {props.items.length}
-                          {')'}
-                        </Text>
+                      </Text>
+                      <Text fontSize={'sm'}>
+                        {' ('}
+                        {props.items.length}
+                        {')'}
                       </Text>
                       <Icon color={'black.100'} as={ChevronDownIcon} />
                     </MenuButton>
