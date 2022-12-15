@@ -26,7 +26,7 @@ export default function InsertItemForm() {
   const [states, setStates] = useState({
     itemName: '',
     type: '',
-    itemStatus: '',
+    itemPriority: '',
     code: '',
     order: 0,
     description: '',
@@ -54,7 +54,7 @@ export default function InsertItemForm() {
           ...states,
           itemName: fields ? fields.result.name : '',
           type: fields ? fields.result.t_type : '',
-          itemStatus: fields ? fields.result.status : '',
+          itemPriority: fields ? '' + fields.result.priority : '',
           code: fields ? fields.result.code : '',
           description: fields ? fields.result.description : '',
           defaultBoard: columnId || '',
@@ -99,7 +99,7 @@ export default function InsertItemForm() {
       column_id: Number(e.target.elements.defaultBoard.value),
       order: states.order,
       description: e.target.elements.description.value,
-      status: e.target.elements.itemStatus.value,
+      priority: Number(e.target.elements.itemPriority.value),
     }).then((response: Result<ItemRequestI>) => {
       if (response.success) {
         navigate('/board/' + boardId);
@@ -123,7 +123,7 @@ export default function InsertItemForm() {
           code: e.target.elements.code.value,
           column_id: Number(e.target.elements.defaultBoard.value),
           description: e.target.elements.description.value,
-          status: e.target.elements.itemStatus.value,
+          priority: Number(e.target.elements.itemPriority.value),
           order: states.order,
         }
       ).then((response) => {
@@ -185,12 +185,20 @@ export default function InsertItemForm() {
             />
             <Errors fieldName="code" />
 
-            <FormLabel>Status</FormLabel>
-            <Select placeholder="Select option" name="itemStatus">
-              <option value="0">To do</option>
-              <option value="1">Done</option>
+            <FormLabel>Priority</FormLabel>
+            <Select
+              placeholder="Select option"
+              name="itemPriority"
+              value={states.itemPriority}
+              onChange={handleInputChange}
+            >
+              <option value="1">Highest</option>
+              <option value="2">Hight</option>
+              <option value="3">Medium</option>
+              <option value="4">Low</option>
+              <option value="5">Lowest</option>
             </Select>
-            <Errors fieldName="status" />
+            <Errors fieldName="itemPriority" />
 
             <FormLabel>Description</FormLabel>
             <Textarea

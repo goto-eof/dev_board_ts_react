@@ -4,7 +4,7 @@ export interface ItemRequestI {
   t_type: string;
   code: string;
   order: number;
-  status: string;
+  priority: number;
   description: string;
   column_id: number;
 }

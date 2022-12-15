@@ -3,7 +3,7 @@ export interface ItemUpdateRequestI {
   t_type?: string;
   code?: string;
   order?: number;
-  status?: string;
+  priority?: number;
   description?: string;
   column_id?: number;
 }
