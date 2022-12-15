@@ -15,6 +15,8 @@ import {
   Heading,
   Center,
   Skeleton,
+  Grid,
+  GridItem,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -66,18 +68,20 @@ export default function Dashboard() {
 
   return (
     <>
-      <Center>
-        <Heading
-          color={'green.400'}
-          borderBottomRightRadius="25%"
-          borderBottomLeftRadius="25%"
-          textShadow={'1px 1px lightgray'}
-          p={5}
-          boxShadow={'md'}
-        >
-          Projects
-        </Heading>
-      </Center>
+      <Grid
+        as={Box}
+        templateColumns="repeat(5, 1fr)"
+        gap={4}
+        boxShadow={'md'}
+        height={'44px'}
+      >
+        {' '}
+        <GridItem colSpan={1} colStart={3} colEnd={4} h="10" pb={6}>
+          <Text fontWeight={'bold'} fontSize={'2xl'} color={'green.400'}>
+            Projects
+          </Text>
+        </GridItem>
+      </Grid>
       <Skeleton
         as={SimpleGrid}
         columns={{ base: 1, md: 3, lg: 5 }}
