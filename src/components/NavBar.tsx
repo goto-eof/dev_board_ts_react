@@ -79,7 +79,7 @@ export default function NavBar({
         minH={'60px'}
         py={{ base: 2 }}
         px={{ base: 4 }}
-        borderBottom={1}
+        // borderBottom={1}
         borderStyle={'solid'}
         borderColor={useColorModeValue('gray.200', 'gray.900')}
         align={'center'}
@@ -107,12 +107,9 @@ export default function NavBar({
               fontSize={'xl'}
               color={useColorModeValue('green.500', 'green')}
             >
-              {'{</>} Dev board'}
-            </Text>
-            <Text
-              color={process.env.REACT_APP_ENV === 'prod' ? 'red' : 'lightgray'}
-            >
+              {'{</>} Dev board'} {' ('}
               {process.env.REACT_APP_ENV}
+              {')'}
             </Text>
           </ReactLink>
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>

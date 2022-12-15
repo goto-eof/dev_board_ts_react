@@ -1,14 +1,15 @@
 import {
   Box,
   Button,
-  Center,
+  FormLabel,
   Grid,
   GridItem,
-  Heading,
+  Text,
   HStack,
   Icon,
   Input,
   Skeleton,
+  VStack,
 } from '@chakra-ui/react';
 import { FC, useEffect, useState } from 'react';
 import GenericService from '../service/GenerciService';
@@ -23,7 +24,6 @@ import ResultI from '../core/ResultI';
 import ColumnsWithItemsI from '../core/ColumnsWithItemsI';
 import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { classicNameResolver } from 'typescript';
 
 interface ColumnsProps {}
 
@@ -73,6 +73,7 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
             columns?.filter((column: any) => column.column.id !== id) || [];
           newBoards = recomputeArrows(newBoards);
           setColumns(newBoards);
+          handleInputChangeFilter(null, newBoards);
         }
       }
     );
@@ -213,11 +214,13 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
 
   const searchBox = () => {
     return (
-      <Input
-        placeholder="filter"
-        value={filter}
-        onChange={(e) => handleInputChangeFilter(e.target.value)}
-      />
+      <>
+        <Input
+          placeholder="filter"
+          value={filter}
+          onChange={(e) => handleInputChangeFilter(e.target.value)}
+        />
+      </>
     );
   };
 
@@ -304,45 +307,46 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
   };
 
   return (
-    <div className="Columns">
-      <Center>
-        <Icon
-          onClick={() => goBack()}
-          fontSize={'2xl'}
-          as={ArrowBackIcon}
-          color={'gray.400'}
-          _hover={{ color: 'green.200' }}
-        />
-        <Heading
-          color={'green.400'}
-          borderBottomRightRadius="25%"
-          borderBottomLeftRadius="25%"
-          textShadow={'1px 1px lightgray'}
-          p={5}
-          boxShadow={'md'}
-        >
-          {dashboardTitle}
-        </Heading>
-      </Center>
-      <Grid templateColumns="repeat(5, 1fr)" gap={4}>
-        <GridItem colSpan={2} h="10"></GridItem>
-        <GridItem colStart={4} colEnd={6} h="10">
+    <Box className="Columns">
+      <Grid
+        as={Box}
+        templateColumns="repeat(5, 1fr)"
+        gap={4}
+        boxShadow={'md'}
+        height={'44px'}
+      >
+        <GridItem colSpan={1} colStart={3} colEnd={4} h="10" pb={6}>
+          <Text fontWeight={'bold'} fontSize={'2xl'} color={'green.400'}>
+            <Icon
+              onClick={() => goBack()}
+              fontSize={'2xl'}
+              as={ArrowBackIcon}
+              color={'gray.400'}
+              _hover={{ color: 'green.200' }}
+            />
+            {dashboardTitle}
+          </Text>
+        </GridItem>
+        <GridItem colSpan={1} h="10"></GridItem>
+
+        <GridItem colStart={5} colEnd={6} h="10">
           {searchBox()}
         </GridItem>
       </Grid>
-
-      <Boards
-        moveLeft={moveLeft}
-        moveRight={moveRight}
-        deleteColumn={deleteColumn}
-        setItems={setItems}
-        goToEdit={goToEdit}
-        columns={columns}
-        filteredColumns={filteredColumns}
-        boardId={boardId}
-        moveItem={moveItem}
-      />
-    </div>
+      <Box position={'relative'} mt={8}>
+        <Boards
+          moveLeft={moveLeft}
+          moveRight={moveRight}
+          deleteColumn={deleteColumn}
+          setItems={setItems}
+          goToEdit={goToEdit}
+          columns={columns}
+          filteredColumns={filteredColumns}
+          boardId={boardId}
+          moveItem={moveItem}
+        />
+      </Box>
+    </Box>
   );
 };
 
@@ -364,15 +368,7 @@ interface BoardProps {
 
 function Boards(props: BoardProps) {
   return (
-    <Box mx={'auto'} pt={0}>
-      {/* <HStack
-        spacing={{ base: 5, lg: 2 }}
-        alignItems={'start'}
-        overflowX="scroll"
-        overflowY={'scroll'}
-        align="flex-start"
-        h={'80vh'}
-      > */}
+    <Box mx={'auto'} pt={0} mt={0}>
       <Skeleton
         spacing={{ base: 5, lg: 2 }}
         as={HStack}
@@ -380,7 +376,7 @@ function Boards(props: BoardProps) {
         overflowX="scroll"
         overflowY={'scroll'}
         align="flex-start"
-        h={'80vh'}
+        h={'83vh'}
         w="full"
         isLoaded={!!props.columns}
         fadeDuration={1}
@@ -405,7 +401,6 @@ function Boards(props: BoardProps) {
             moveItem={props.moveItem}
           />
         ))}
-        {/* {!props.columns && <h3>Unable to reach server</h3>} */}
         {props.columns && (
           <Link to={'/new-column/' + props.boardId}>
             <Button

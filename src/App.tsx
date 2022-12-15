@@ -84,7 +84,7 @@ export const App = () => {
             />
             <Route path="/cp" element={<ControlPanel />} />
           </Routes>
-          <Footer />
+          {/* <Footer /> */}
         </Box>
       </BrowserRouter>
     </ChakraProvider>
