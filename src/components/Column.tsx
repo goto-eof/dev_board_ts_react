@@ -148,18 +148,22 @@ export default function Board(props: ColumnProps) {
           textAlign={'center'}
           color={useColorModeValue('gray.800', 'black.50')}
           align={'center'}
+          p={0}
         >
           <Box
             as={HStack}
-            p={3}
             borderRadius={'5%'}
             boxShadow={'base'}
             width={'full'}
             justify={'space-between'}
+            p={0}
           >
             {
               <Box
+                py={3}
+                p={0}
                 as="button"
+                m={0}
                 onClick={() => props._showLeftArrow && props.moveLeft(props.id)}
               >
                 <Icon
@@ -191,6 +195,11 @@ export default function Board(props: ColumnProps) {
                       >
                         <Icon as={EditIcon} mr={2} />
                         {props.title}
+                        <Text fontSize={'sm'}>
+                          {' ('}
+                          {props.items.length}
+                          {')'}
+                        </Text>
                       </Text>
                       <Icon color={'black.100'} as={ChevronDownIcon} />
                     </MenuButton>
@@ -218,6 +227,8 @@ export default function Board(props: ColumnProps) {
 
             {
               <Box
+                py={3}
+                px={1}
                 as="button"
                 onClick={() =>
                   props._showRightArrow && props.moveRight(props.id)
