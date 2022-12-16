@@ -1,6 +1,6 @@
 export interface ItemUpdateRequestI {
   name?: string;
-  t_type?: string;
+  environment?: string;
   code?: string;
   order?: number;
   priority?: number;

@@ -1,7 +1,7 @@
 export interface ItemRequestI {
   id?: number;
   name: string;
-  t_type: string;
+  environment: string;
   code: string;
   order: number;
   priority: number;

@@ -25,7 +25,7 @@ export default function InsertItemForm() {
 
   const [states, setStates] = useState({
     itemName: '',
-    type: '',
+    environment: '',
     itemPriority: '',
     code: '',
     order: 0,
@@ -53,7 +53,7 @@ export default function InsertItemForm() {
         setStates({
           ...states,
           itemName: fields ? fields.result.name : '',
-          type: fields ? fields.result.t_type : '',
+          environment: fields ? fields.result.environment : '',
           itemPriority: fields ? '' + fields.result.priority : '',
           code: fields ? fields.result.code : '',
           description: fields ? fields.result.description : '',
@@ -94,7 +94,7 @@ export default function InsertItemForm() {
     e.preventDefault();
     GenericService.create<ItemRequestI>('item', {
       name: e.target.elements.itemName.value,
-      t_type: e.target.elements.type.value,
+      environment: e.target.elements.environment.value,
       code: e.target.elements.code.value,
       column_id: Number(e.target.elements.defaultBoard.value),
       order: states.order,
@@ -119,7 +119,7 @@ export default function InsertItemForm() {
         Number(itemId),
         {
           name: e.target.elements.itemName.value,
-          t_type: e.target.elements.type.value,
+          environment: e.target.elements.environment.value,
           code: e.target.elements.code.value,
           column_id: Number(e.target.elements.defaultBoard.value),
           description: e.target.elements.description.value,
@@ -167,14 +167,14 @@ export default function InsertItemForm() {
             />
             <Errors fieldName={'name'} />
 
-            <FormLabel>Type</FormLabel>
+            <FormLabel>Environment</FormLabel>
             <Input
               type="text"
-              value={states.type}
-              name="type"
+              value={states.environment}
+              name="environment"
               onChange={handleInputChange}
             />
-            <Errors fieldName="type" />
+            <Errors fieldName="environment" />
 
             <FormLabel>Code</FormLabel>
             <Input
