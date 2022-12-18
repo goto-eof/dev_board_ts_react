@@ -10,6 +10,13 @@ import {
   Input,
   Skeleton,
   VStack,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
+  Popover,
 } from '@chakra-ui/react';
 import { FC, useEffect, useState } from 'react';
 import GenericService from '../service/GenerciService';
@@ -23,14 +30,15 @@ import SwapRequestI from '../core/SwapRequestI';
 import ResultI from '../core/ResultI';
 import ColumnsWithItemsI from '../core/ColumnsWithItemsI';
 import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
-import { ArrowBackIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, InfoIcon } from '@chakra-ui/icons';
+import SharedWithResponseI from '../core/SharedWithResponseI';
 
 interface ColumnsProps {}
 
 export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
   const [columns, setColumns] = useState<Array<ColumnI> | []>();
   const [filteredColumns, setFilteredColumns] = useState<Array<ColumnI> | []>();
-
+  const [sharedWith, setSharedWith] = useState<SharedWithResponseI>();
   const [dashboardTitle, setDashboardTitle] = useState<string>();
   let navigate = useNavigate();
   const [filter, setFilter] = useState<string>('');
@@ -38,10 +46,10 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
   const { boardId } = useParams();
 
   useEffect(() => {
-    oneCalll();
+    oneCall();
   }, []);
 
-  const oneCalll = () => {
+  const oneCall = () => {
     GenericService.getAll<Result<ColumnsWithItemsI>>(
       boardId ? 'board/get_board_with_all_data/' + boardId : 'column/plus-items'
     ).then((result: Result<ColumnsWithItemsI>) => {
@@ -61,7 +69,16 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
         setColumns(boards);
         setFilteredColumns([...boards]);
         setDashboardTitle(result.result.board.name);
+        updateSharedWith();
       }
+    });
+  };
+
+  const updateSharedWith = () => {
+    GenericService.get<Result<SharedWithResponseI>>(
+      'board/shared_with/' + boardId
+    ).then((data: Result<SharedWithResponseI>) => {
+      setSharedWith(data.result);
     });
   };
 
@@ -316,7 +333,12 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
         height={'44px'}
       >
         <GridItem colSpan={1} colStart={3} colEnd={4} h="10" pb={6}>
-          <Text fontWeight={'bold'} fontSize={'2xl'} color={'green.400'}>
+          <Text
+            as={'span'}
+            fontWeight={'bold'}
+            fontSize={'2xl'}
+            color={'green.400'}
+          >
             <Icon
               onClick={() => goBack()}
               fontSize={'2xl'}
@@ -324,7 +346,51 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
               color={'gray.400'}
               _hover={{ color: 'green.200' }}
             />
-            {dashboardTitle}
+            {dashboardTitle}{' '}
+            <Popover>
+              <PopoverTrigger>
+                <Button>
+                  {' '}
+                  <Icon
+                    // onClick={() => goBack()}
+                    fontSize={'2xl'}
+                    as={InfoIcon}
+                    color={'gray.400'}
+                    _hover={{ color: 'green.200' }}
+                  />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>
+                  <Text
+                    as={'span'}
+                    color={'gray'}
+                    fontWeight={'normal'}
+                    fontSize={'md'}
+                  >
+                    Board information
+                  </Text>
+                </PopoverHeader>
+                <PopoverBody>
+                  {' '}
+                  <Text
+                    as={'span'}
+                    color={'gray'}
+                    fontWeight={'normal'}
+                    fontSize={'md'}
+                  >
+                    Owners:{' '}
+                    {sharedWith &&
+                      sharedWith.users &&
+                      sharedWith.users.map((user) => {
+                        return <Text as={'span'}>[{user.username}] </Text>;
+                      })}
+                  </Text>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
           </Text>
         </GridItem>
         <GridItem colSpan={1} h="10"></GridItem>
