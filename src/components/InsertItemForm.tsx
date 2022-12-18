@@ -19,6 +19,7 @@ import { ColumnResponseI } from '../core/ColumnResponseI';
 import { ItemRequestI } from '../core/ItemRequestI';
 import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
 import { ArrowBackIcon } from '@chakra-ui/icons';
+import { UserResponseI } from '../core/UserResponseI';
 
 export default function InsertItemForm() {
   const { boardId, columnId, itemId } = useParams();
@@ -34,6 +35,8 @@ export default function InsertItemForm() {
     error: new Map<string, boolean>(),
     isInvalid: false,
     columns: Array<ColumnResponseI>(),
+    users: new Array<UserResponseI>(),
+    assignee: 0,
   });
 
   const navigate = useNavigate();
@@ -50,6 +53,11 @@ export default function InsertItemForm() {
               Number(itemId)
             )
           : null;
+
+        const allUsers = await GenericService.getAll<
+          Result<Array<UserResponseI>>
+        >('user/all-for-share');
+
         setStates({
           ...states,
           itemName: fields ? fields.result.name : '',
@@ -60,6 +68,8 @@ export default function InsertItemForm() {
           defaultBoard: columnId || '',
           columns: columns.result,
           order: fields ? fields.result.order : 0,
+          assignee: fields ? fields.result.assignee_id : -1,
+          users: allUsers.result,
         });
       } catch (error) {
         console.log(error);
@@ -97,6 +107,7 @@ export default function InsertItemForm() {
       environment: e.target.elements.environment.value,
       code: e.target.elements.code.value,
       column_id: Number(e.target.elements.defaultBoard.value),
+      assignee_id: Number(e.target.elements.assignee.value),
       order: states.order,
       description: e.target.elements.description.value,
       priority: Number(e.target.elements.itemPriority.value),
@@ -122,6 +133,7 @@ export default function InsertItemForm() {
           environment: e.target.elements.environment.value,
           code: e.target.elements.code.value,
           column_id: Number(e.target.elements.defaultBoard.value),
+          assignee_id: Number(e.target.elements.assignee.value),
           description: e.target.elements.description.value,
           priority: Number(e.target.elements.itemPriority.value),
           order: states.order,
@@ -222,6 +234,25 @@ export default function InsertItemForm() {
                   return (
                     <option value={itm.id} key={itm.id}>
                       {itm.name}
+                    </option>
+                  );
+                })}
+            </Select>
+            <Errors fieldName="board" />
+
+            <FormLabel>Assignee</FormLabel>
+            <Select
+              placeholder="Select option"
+              name="assignee"
+              value={states.assignee}
+              onChange={handleInputChange}
+            >
+              {states.users &&
+                states.users.map((item: any) => {
+                  let itm = item as UserResponseI;
+                  return (
+                    <option value={itm.id} key={itm.id}>
+                      [{itm.username}] {itm.first_name} {item.last_name}
                     </option>
                   );
                 })}

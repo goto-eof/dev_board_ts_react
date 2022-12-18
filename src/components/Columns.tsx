@@ -32,6 +32,7 @@ import ColumnsWithItemsI from '../core/ColumnsWithItemsI';
 import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
 import { ArrowBackIcon, InfoIcon } from '@chakra-ui/icons';
 import SharedWithResponseI from '../core/SharedWithResponseI';
+import { UserResponseI } from '../core/UserResponseI';
 
 interface ColumnsProps {}
 
@@ -42,7 +43,7 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
   const [dashboardTitle, setDashboardTitle] = useState<string>();
   let navigate = useNavigate();
   const [filter, setFilter] = useState<string>('');
-
+  const [users, setUsers] = useState<Array<UserResponseI>>();
   const { boardId } = useParams();
 
   useEffect(() => {
@@ -74,12 +75,24 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
     });
   };
 
+  useEffect(() => {
+    retrieveUsers();
+  }, []);
+
   const updateSharedWith = () => {
     GenericService.get<Result<SharedWithResponseI>>(
       'board/shared_with/' + boardId
     ).then((data: Result<SharedWithResponseI>) => {
       setSharedWith(data.result);
     });
+  };
+
+  const retrieveUsers = () => {
+    GenericService.get<Result<Array<UserResponseI>>>('user/all').then(
+      (result: Result<Array<UserResponseI>>) => {
+        setUsers(result.result);
+      }
+    );
   };
 
   const deleteColumn = (id: number) => {
@@ -410,6 +423,7 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
           filteredColumns={filteredColumns}
           boardId={boardId}
           moveItem={moveItem}
+          users={users || []}
         />
       </Box>
     </Box>
@@ -430,6 +444,7 @@ interface BoardProps {
     boardIdFrom: number,
     boardIdTo: number
   ) => void;
+  users: Array<UserResponseI>;
 }
 
 function Boards(props: BoardProps) {
@@ -466,6 +481,7 @@ function Boards(props: BoardProps) {
             columnId={item.column.id}
             boards={props.columns}
             moveItem={props.moveItem}
+            users={props.users}
           />
         ))}
         {props.columns && (

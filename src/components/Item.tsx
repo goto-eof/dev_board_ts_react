@@ -16,6 +16,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import ColumnI from '../core/Column';
 import { ItemRequestI } from '../core/ItemRequestI';
+import { UserResponseI } from '../core/UserResponseI';
 import { ViewItem } from './ViewItem';
 interface ItemProps {
   boards?: Array<ColumnI>;
@@ -32,6 +33,7 @@ interface ItemProps {
     boardIdFrom: number,
     boardIdTo: number
   ) => void;
+  users: Array<UserResponseI>;
 }
 
 export default function Item({
@@ -45,6 +47,7 @@ export default function Item({
   canMoveDown,
   moveItem,
   boards,
+  users,
 }: ItemProps) {
   console.log('BOARD IS: ', boardId);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -67,7 +70,7 @@ export default function Item({
 
   return (
     <>
-      <ViewItem isOpen={isOpen} onClose={onClose} item={item} />
+      <ViewItem isOpen={isOpen} onClose={onClose} item={item} users={users} />
       <Card maxW="md" boxShadow={'md'} mb={2}>
         <CardHeader>
           <Flex>

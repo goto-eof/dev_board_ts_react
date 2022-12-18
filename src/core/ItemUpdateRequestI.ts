@@ -6,4 +6,5 @@ export interface ItemUpdateRequestI {
   priority?: number;
   description?: string;
   column_id?: number;
+  assignee_id: number;
 }

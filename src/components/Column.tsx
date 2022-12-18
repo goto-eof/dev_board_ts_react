@@ -29,6 +29,7 @@ import { ItemRequestI } from '../core/ItemRequestI';
 import SwapRequestI from '../core/SwapRequestI';
 import ResultI from '../core/ResultI';
 import ColumnI from '../core/Column';
+import { UserResponseI } from '../core/UserResponseI';
 
 interface ColumnProps {
   title: string;
@@ -51,6 +52,7 @@ interface ColumnProps {
     boardIdFrom: number,
     boardIdTo: number
   ) => void;
+  users: Array<UserResponseI>;
 }
 export default function Board(props: ColumnProps) {
   const deleteItem = (id: number) => {
@@ -293,6 +295,7 @@ export default function Board(props: ColumnProps) {
                   canMoveDown={canMoveDown}
                   boards={props.boards}
                   moveItem={props.moveItem}
+                  users={props.users}
                 />
               ))}
             </SimpleGrid>
