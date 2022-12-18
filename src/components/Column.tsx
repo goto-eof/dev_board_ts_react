@@ -157,7 +157,8 @@ export default function Board(props: ColumnProps) {
             boxShadow={'base'}
             width={'full'}
             justify={'space-between'}
-            p={0}
+            pl={2}
+            pr={2}
           >
             {
               <Box
