@@ -35,6 +35,7 @@ interface ColumnProps {
   description: string;
   id: number;
   boardId: string | undefined;
+  columnId: number;
   items: Array<ItemRequestI>;
   _showLeftArrow: boolean;
   _showRightArrow: boolean;
@@ -281,6 +282,7 @@ export default function Board(props: ColumnProps) {
               {props.items.map((itm) => (
                 <Item
                   boardId={props.boardId}
+                  columnId={props.columnId}
                   deleteItem={deleteItem}
                   item={itm}
                   key={(itm as ItemRequestI).id}

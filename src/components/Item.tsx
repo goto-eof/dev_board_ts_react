@@ -20,6 +20,7 @@ import { ViewItem } from './ViewItem';
 interface ItemProps {
   boards?: Array<ColumnI>;
   boardId: string | undefined;
+  columnId: number;
   item: ItemRequestI;
   deleteItem: (id: number) => void;
   moveUp: (id?: number) => void;
@@ -35,6 +36,7 @@ interface ItemProps {
 
 export default function Item({
   boardId,
+  columnId,
   item,
   deleteItem,
   moveUp,
@@ -44,6 +46,7 @@ export default function Item({
   moveItem,
   boards,
 }: ItemProps) {
+  console.log('BOARD IS: ', boardId);
   const { isOpen, onOpen, onClose } = useDisclosure();
   let navigate = useNavigate();
 
@@ -102,20 +105,22 @@ export default function Item({
                 <MenuDivider />
                 {boards &&
                   boards.length > 0 &&
-                  boards.map((board) => {
-                    return board.column.id !== item.column_id ? (
-                      <MenuItem
-                        key={board.column.id}
-                        onClick={() => tryMoveItem(board.column.id)}
-                      >
-                        Move to {board.column.name}
-                      </MenuItem>
-                    ) : (
-                      <MenuItem key={board.column.id}>
-                        Move to {board.column.name}
-                      </MenuItem>
-                    );
-                  })}
+                  boards
+                    .filter((board) => board.column.id != columnId)
+                    .map((board) => {
+                      return board.column.id !== item.column_id ? (
+                        <MenuItem
+                          key={board.column.id}
+                          onClick={() => tryMoveItem(board.column.id)}
+                        >
+                          Move to {board.column.name}
+                        </MenuItem>
+                      ) : (
+                        <MenuItem key={board.column.id}>
+                          Move to {board.column.name}
+                        </MenuItem>
+                      );
+                    })}
                 <MenuDivider />
                 <MenuItem
                   key={'delete'}

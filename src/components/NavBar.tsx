@@ -168,7 +168,7 @@ export default function NavBar({
                   bg: 'blue.400',
                 }}
               >
-                Control panel
+                Dashboard
               </Button>
               <Button
                 display={{ base: 'none', md: 'inline-flex' }}

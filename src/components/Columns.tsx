@@ -397,6 +397,7 @@ function Boards(props: BoardProps) {
             _showRightArrow={item.column._showRigthArrow}
             items={item.items}
             boardId={props.boardId}
+            columnId={item.column.id}
             boards={props.columns}
             moveItem={props.moveItem}
           />
