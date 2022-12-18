@@ -36,7 +36,7 @@ export default function InsertItemForm() {
     isInvalid: false,
     columns: Array<ColumnResponseI>(),
     users: new Array<UserResponseI>(),
-    assignee: 0,
+    assignee: -1,
   });
 
   const navigate = useNavigate();
@@ -68,7 +68,10 @@ export default function InsertItemForm() {
           defaultBoard: columnId || '',
           columns: columns.result,
           order: fields ? fields.result.order : 0,
-          assignee: fields ? fields.result.assignee_id : -1,
+          assignee:
+            fields && fields.result.assignee_id
+              ? fields.result.assignee_id
+              : -1,
           users: allUsers.result,
         });
       } catch (error) {
@@ -107,7 +110,11 @@ export default function InsertItemForm() {
       environment: e.target.elements.environment.value,
       code: e.target.elements.code.value,
       column_id: Number(e.target.elements.defaultBoard.value),
-      assignee_id: Number(e.target.elements.assignee.value),
+      assignee_id:
+        e.target.elements.assignee.value &&
+        e.target.elements.assignee.value != -1
+          ? Number(e.target.elements.assignee.value)
+          : undefined,
       order: states.order,
       description: e.target.elements.description.value,
       priority: Number(e.target.elements.itemPriority.value),
@@ -133,7 +140,11 @@ export default function InsertItemForm() {
           environment: e.target.elements.environment.value,
           code: e.target.elements.code.value,
           column_id: Number(e.target.elements.defaultBoard.value),
-          assignee_id: Number(e.target.elements.assignee.value),
+          assignee_id:
+            e.target.elements.assignee.value &&
+            e.target.elements.assignee.value != -1
+              ? Number(e.target.elements.assignee.value)
+              : undefined,
           description: e.target.elements.description.value,
           priority: Number(e.target.elements.itemPriority.value),
           order: states.order,

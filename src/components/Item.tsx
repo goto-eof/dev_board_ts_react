@@ -12,7 +12,9 @@ import {
   Box,
   useDisclosure,
   MenuDivider,
+  useStatStyles,
 } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ColumnI from '../core/Column';
 import { ItemRequestI } from '../core/ItemRequestI';
@@ -51,6 +53,13 @@ export default function Item({
 }: ItemProps) {
   console.log('BOARD IS: ', boardId);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [assignee, setAssignee] = useState<UserResponseI>();
+
+  useEffect(() => {
+    const assignee = users.filter((user) => user.id === item.assignee_id)[0];
+    setAssignee(assignee);
+  }, []);
+
   let navigate = useNavigate();
 
   const tryMoveItem = (boardIdTo: number) => {
@@ -168,7 +177,7 @@ export default function Item({
               />
             </Box>
           )}
-
+          {assignee && 'Assignee: ' + assignee?.username}
           {canMoveDown(item.id || -1) && (
             <Box
               onClick={() => moveDown(item.id)}
