@@ -101,7 +101,6 @@ export default class GenericService {
     return await customAxios
       .post<T>(`${this.baseUrl}${modelName}`, data, { withCredentials: true })
       .then(async (result: any) => {
-        console.log(result);
         let data = result.data;
         return data;
       })
@@ -191,7 +190,6 @@ export default class GenericService {
         }
       });
     } else {
-      console.log('KO refreshToken()');
     }
   }
 }

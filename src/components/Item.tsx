@@ -51,7 +51,6 @@ export default function Item({
   boards,
   users,
 }: ItemProps) {
-  console.log('BOARD IS: ', boardId);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [assignee, setAssignee] = useState<UserResponseI>();
 

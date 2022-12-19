@@ -27,11 +27,8 @@ export function ViewItem({ isOpen, onClose, item, users }: ViewItemI) {
   );
 
   useEffect(() => {
-    console.log('REFRESHING');
     setAssignee(users.filter((user) => user.id === item.assignee_id)[0]);
   }, []);
-
-  console.log(users, item);
 
   return (
     <>
