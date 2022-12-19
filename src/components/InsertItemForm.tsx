@@ -30,7 +30,7 @@ export default function InsertItemForm() {
     itemName: '',
     environment: '',
     itemPriority: '3',
-    code: '',
+    issueType: 2,
     order: 0,
     description: '',
     defaultBoard: '',
@@ -65,7 +65,7 @@ export default function InsertItemForm() {
           itemName: fields ? fields.result.name : '',
           environment: fields ? fields.result.environment : '',
           itemPriority: fields ? '3' + fields.result.priority : '3',
-          code: fields ? fields.result.code : '',
+          issueType: fields ? fields.result.issue_type : 2,
           description: fields ? fields.result.description : '',
           defaultBoard: columnId || '',
           columns: columns.result,
@@ -110,7 +110,7 @@ export default function InsertItemForm() {
     GenericService.create<ItemRequestI>('item', {
       name: e.target.elements.itemName.value,
       environment: e.target.elements.environment.value,
-      code: e.target.elements.code.value,
+      issue_type: Number(e.target.elements.issueType.value),
       column_id: Number(e.target.elements.defaultBoard.value),
       assignee_id:
         e.target.elements.assignee.value &&
@@ -140,7 +140,7 @@ export default function InsertItemForm() {
         {
           name: e.target.elements.itemName.value,
           environment: e.target.elements.environment.value,
-          code: e.target.elements.code.value,
+          issue_type: Number(e.target.elements.issueType.value),
           column_id: Number(e.target.elements.defaultBoard.value),
           assignee_id:
             e.target.elements.assignee.value &&
@@ -170,7 +170,7 @@ export default function InsertItemForm() {
             _hover={{ color: 'green.200' }}
             onClick={goBack}
           />
-          Task/Bug/Feature
+          Issue
         </Heading>
         <form onSubmit={itemId ? update : save} style={{ width: '100%' }}>
           <FormControl isInvalid={states.isInvalid} w={'100%'}>
@@ -210,14 +210,20 @@ export default function InsertItemForm() {
               </GridItem>
 
               <GridItem w="100%">
-                <FormLabel>Code</FormLabel>
-                <Input
-                  type="text"
-                  name="code"
-                  value={states.code}
+                <FormLabel>Issue type</FormLabel>
+                <Select
+                  placeholder="Select option"
+                  name="issueType"
+                  value={states.issueType}
                   onChange={handleInputChange}
-                />
-                <Errors fieldName="code" />
+                >
+                  <option value="1">Task</option>
+                  <option value="2">Bug fix</option>
+                  <option value="3">Improvement</option>
+                  <option value="4">Epic</option>
+                  <option value="5">Feature</option>
+                </Select>
+                <Errors fieldName="issueType" />
               </GridItem>
 
               <GridItem w="100%">
