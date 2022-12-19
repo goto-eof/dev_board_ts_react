@@ -398,7 +398,11 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
                     {sharedWith &&
                       sharedWith.users &&
                       sharedWith.users.map((user) => {
-                        return <Text as={'span'}>[{user.username}] </Text>;
+                        return (
+                          <Text as={'span'} key={user.username}>
+                            [{user.username}]{' '}
+                          </Text>
+                        );
                       })}
                   </Text>
                 </PopoverBody>
