@@ -107,7 +107,9 @@ export default function Item({
                   </Badge>
                   {item.name.length > 35
                     ? item.name.substring(0, 35) + '...'
-                    : item.name}
+                    : item.name}{' '}
+                  {'('}p.{item.priority}
+                  {')'}
                 </Text>
               </MenuButton>
               <MenuList>
