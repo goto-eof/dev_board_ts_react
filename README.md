@@ -20,20 +20,19 @@ npm run start
 docker-compose up
 ```
 
-### Login
 
-![header](login.png)
+![header](1.png)
 
-### Registration
 
-![header](register.png)
+![header](2.png)
 
-### Dashboards
 
-![header](dashboards.png)
+![header](3.png)
 
-### Kanban board
 
-![header](kanban.png)
+![header](4.png)
+
+
+![header](5.png)
 
 if any problems arise, feel free to [contact me](https://andre-i.dev/#contactme).
