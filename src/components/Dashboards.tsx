@@ -66,6 +66,18 @@ export default function Dashboard() {
     );
   };
 
+  const archive = (dashboardId: number) => {
+    GenericService.patch<Result<boolean>>('board/archive', dashboardId).then(
+      (result: Result<boolean>) => {
+        if (result.success) {
+          let newDashboards =
+            boards?.filter((board: any) => board.id !== dashboardId) || [];
+          setBoards(newDashboards);
+        }
+      }
+    );
+  };
+
   return (
     <>
       <Grid
@@ -100,6 +112,7 @@ export default function Dashboard() {
               clickHandlerDeleteDashboard={deleteDashboard}
               clickHandlerGoToUpdate={goToUpdate}
               clickHandlerGoToShare={goToShare}
+              clickHandlerArchive={archive}
             />
           );
         })}
@@ -129,6 +142,7 @@ interface ItemPropsI {
   clickHandlerDeleteDashboard: (dashboardId: number) => void;
   clickHandlerGoToUpdate: (dashboardId: number) => void;
   clickHandlerGoToShare: (dashboardId: number) => void;
+  clickHandlerArchive: (dashboardId: number) => void;
 }
 
 function Item({
@@ -137,6 +151,7 @@ function Item({
   clickHandlerDeleteDashboard,
   clickHandlerGoToUpdate,
   clickHandlerGoToShare,
+  clickHandlerArchive,
 }: ItemPropsI) {
   return (
     <Box
@@ -179,6 +194,9 @@ function Item({
                 <MenuList>
                   <MenuItem onClick={() => clickHandlerGoToUpdate(item.id)}>
                     Edit
+                  </MenuItem>
+                  <MenuItem onClick={() => clickHandlerArchive(item.id)}>
+                    Archive
                   </MenuItem>
                   <MenuItem onClick={() => clickHandlerGoToShare(item.id)}>
                     Share

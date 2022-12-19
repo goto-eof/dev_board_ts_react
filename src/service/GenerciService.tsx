@@ -169,6 +169,18 @@ export default class GenericService {
       });
   }
 
+  public static async patch<T>(modelName: string, id: number): Promise<T> {
+    return await customAxios
+      .patch(`${this.baseUrl}${modelName}/${id}`, { withCredentials: true })
+      .then(async (result: any) => {
+        let data = result.data;
+        return data;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
   public static refreshToken(result: ResultI<any>) {
     if (result.refresh_token) {
       GenericService.createDifResponse<JwtI, JwtI>('user/refreshToken', {
