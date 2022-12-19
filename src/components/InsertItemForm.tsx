@@ -10,6 +10,8 @@ import {
   Heading,
   Button,
   Icon,
+  Grid,
+  GridItem,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -27,7 +29,7 @@ export default function InsertItemForm() {
   const [states, setStates] = useState({
     itemName: '',
     environment: '',
-    itemPriority: '',
+    itemPriority: '3',
     code: '',
     order: 0,
     description: '',
@@ -62,7 +64,7 @@ export default function InsertItemForm() {
           ...states,
           itemName: fields ? fields.result.name : '',
           environment: fields ? fields.result.environment : '',
-          itemPriority: fields ? '' + fields.result.priority : '',
+          itemPriority: fields ? '3' + fields.result.priority : '3',
           code: fields ? fields.result.code : '',
           description: fields ? fields.result.description : '',
           defaultBoard: columnId || '',
@@ -172,103 +174,121 @@ export default function InsertItemForm() {
         </Heading>
         <form onSubmit={itemId ? update : save} style={{ width: '100%' }}>
           <FormControl isInvalid={states.isInvalid} w={'100%'}>
-            <FormLabel>Id</FormLabel>
-            <Input
-              type="text"
-              value={itemId || ''}
-              name="id"
-              readOnly={true}
-              bg={'gray.100'}
-            />
-            <FormLabel>Name</FormLabel>
-            <Input
-              type="text"
-              value={states.itemName}
-              name="itemName"
-              onChange={handleInputChange}
-              autoFocus
-            />
-            <Errors fieldName={'name'} />
+            {itemId && (
+              <>
+                <FormLabel>Id</FormLabel>
+                <Input
+                  type="text"
+                  value={itemId || ''}
+                  name="id"
+                  readOnly={true}
+                  bg={'gray.100'}
+                />
+              </>
+            )}
+            <Grid templateColumns="repeat(2, 1fr)" gap={6}>
+              <GridItem w="100%">
+                <FormLabel>Name</FormLabel>
+                <Input
+                  type="text"
+                  value={states.itemName}
+                  name="itemName"
+                  onChange={handleInputChange}
+                  autoFocus
+                />
+                <Errors fieldName={'name'} />
+              </GridItem>
+              <GridItem w="100%">
+                <FormLabel>Environment</FormLabel>
+                <Input
+                  type="text"
+                  value={states.environment}
+                  name="environment"
+                  onChange={handleInputChange}
+                />
+                <Errors fieldName="environment" />
+              </GridItem>
 
-            <FormLabel>Environment</FormLabel>
-            <Input
-              type="text"
-              value={states.environment}
-              name="environment"
-              onChange={handleInputChange}
-            />
-            <Errors fieldName="environment" />
+              <GridItem w="100%">
+                <FormLabel>Code</FormLabel>
+                <Input
+                  type="text"
+                  name="code"
+                  value={states.code}
+                  onChange={handleInputChange}
+                />
+                <Errors fieldName="code" />
+              </GridItem>
 
-            <FormLabel>Code</FormLabel>
-            <Input
-              type="text"
-              name="code"
-              value={states.code}
-              onChange={handleInputChange}
-            />
-            <Errors fieldName="code" />
+              <GridItem w="100%">
+                <FormLabel>Priority</FormLabel>
+                <Select
+                  placeholder="Select option"
+                  name="itemPriority"
+                  value={states.itemPriority}
+                  onChange={handleInputChange}
+                >
+                  <option value="1">Highest</option>
+                  <option value="2">Hight</option>
+                  <option value="3">Medium</option>
+                  <option value="4">Low</option>
+                  <option value="5">Lowest</option>
+                </Select>
+                <Errors fieldName="itemPriority" />
+              </GridItem>
 
-            <FormLabel>Priority</FormLabel>
-            <Select
-              placeholder="Select option"
-              name="itemPriority"
-              value={states.itemPriority}
-              onChange={handleInputChange}
-            >
-              <option value="1">Highest</option>
-              <option value="2">Hight</option>
-              <option value="3">Medium</option>
-              <option value="4">Low</option>
-              <option value="5">Lowest</option>
-            </Select>
-            <Errors fieldName="itemPriority" />
+              <GridItem w="100%">
+                <FormLabel>Board</FormLabel>
+                <Select
+                  placeholder="Select option"
+                  name="defaultBoard"
+                  value={states.defaultBoard}
+                  onChange={handleInputChange}
+                >
+                  {states.columns &&
+                    states.columns.map((item: any) => {
+                      let itm = item as ColumnResponseI;
+                      return (
+                        <option value={itm.id} key={itm.id}>
+                          {itm.name}
+                        </option>
+                      );
+                    })}
+                </Select>
+                <Errors fieldName="board" />
+              </GridItem>
+
+              <GridItem w="100%">
+                <FormLabel>Assignee</FormLabel>
+                <Select
+                  placeholder="Select option"
+                  name="assignee"
+                  value={states.assignee}
+                  onChange={handleInputChange}
+                >
+                  {states.users &&
+                    states.users.map((item: any) => {
+                      let itm = item as UserResponseI;
+                      return (
+                        <option value={itm.id} key={itm.id}>
+                          [{itm.username}] {itm.first_name} {item.last_name}
+                        </option>
+                      );
+                    })}
+                </Select>
+                <Errors fieldName="board" />
+              </GridItem>
+            </Grid>
 
             <FormLabel>Description</FormLabel>
             <Textarea
+              rows={10}
               name="description"
               value={states.description}
               placeholder="Here is a sample placeholder"
               onChange={handleInputChange}
             />
             <Errors fieldName="description" />
-
-            <FormLabel>Board</FormLabel>
-            <Select
-              placeholder="Select option"
-              name="defaultBoard"
-              value={states.defaultBoard}
-              onChange={handleInputChange}
-            >
-              {states.columns &&
-                states.columns.map((item: any) => {
-                  let itm = item as ColumnResponseI;
-                  return (
-                    <option value={itm.id} key={itm.id}>
-                      {itm.name}
-                    </option>
-                  );
-                })}
-            </Select>
-            <Errors fieldName="board" />
-
-            <FormLabel>Assignee</FormLabel>
-            <Select
-              placeholder="Select option"
-              name="assignee"
-              value={states.assignee}
-              onChange={handleInputChange}
-            >
-              {states.users &&
-                states.users.map((item: any) => {
-                  let itm = item as UserResponseI;
-                  return (
-                    <option value={itm.id} key={itm.id}>
-                      [{itm.username}] {itm.first_name} {item.last_name}
-                    </option>
-                  );
-                })}
-            </Select>
-            <Errors fieldName="board" />
 
             <Button type="submit" mt={3} w={'100%'} colorScheme="green">
               Save
