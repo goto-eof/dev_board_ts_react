@@ -12,7 +12,6 @@ import {
   Box,
   useDisclosure,
   MenuDivider,
-  useStatStyles,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +29,7 @@ interface ItemProps {
   moveDown: (id?: number) => void;
   canMoveUp: (id: number) => boolean;
   canMoveDown: (id: number) => boolean;
+  updateItem: (item: ItemRequestI) => void;
   moveItem: (
     itemId: number | undefined | null,
     boardIdFrom: number,
@@ -48,6 +48,7 @@ export default function Item({
   canMoveUp,
   canMoveDown,
   moveItem,
+  updateItem: changeItemPriority,
   boards,
   users,
 }: ItemProps) {
@@ -76,6 +77,66 @@ export default function Item({
     );
   };
 
+  const changePriority = (priority: string) => {
+    let p = Number(priority);
+    if (item.id) {
+      item.priority = p;
+
+      changeItemPriority(item);
+    }
+  };
+
+  const issueType = (issueType: number | undefined) => {
+    switch (issueType) {
+      case 1:
+        return 'T';
+      case 2:
+        return 'B';
+      case 3:
+        return 'F';
+      case 4:
+        return 'I';
+      case 5:
+        return 'E';
+      default:
+        return 'U';
+    }
+  };
+
+  const calculateIssueTypeColor = (issueType: number | undefined) => {
+    switch (issueType) {
+      case 1:
+        return 'gray';
+      case 2:
+        return 'red';
+      case 3:
+        return 'blue';
+      case 4:
+        return 'purple';
+      case 5:
+        return 'pink';
+      default:
+        return 'white';
+    }
+  };
+
+  const calculatePriorityColor = (priority: number | undefined) => {
+    switch (priority) {
+      case 1:
+        return 'red';
+      case 2:
+        return 'purple';
+      case 3:
+        return 'green';
+      case 4:
+        return 'yellow';
+      case 5:
+        return 'gray';
+      default:
+        return 'white';
+    }
+  };
+
   return (
     <>
       <ViewItem isOpen={isOpen} onClose={onClose} item={item} users={users} />
@@ -101,14 +162,26 @@ export default function Item({
                   fontSize={'sm'}
                 >
                   <ChevronDownIcon />
-                  <Badge ml="1" colorScheme="green" mr={2}>
+                  <Badge ml="1" colorScheme="green" mr={0}>
                     {item.id}
+                  </Badge>
+                  <Badge
+                    ml="1"
+                    colorScheme={calculateIssueTypeColor(item.issue_type)}
+                    mr={0}
+                  >
+                    {issueType(item.issue_type)}
+                  </Badge>{' '}
+                  <Badge
+                    ml="1"
+                    colorScheme={calculatePriorityColor(item.priority)}
+                    mr={2}
+                  >
+                    p{item.priority}
                   </Badge>
                   {item.name.length > 35
                     ? item.name.substring(0, 35) + '...'
                     : item.name}{' '}
-                  {'('}p.{item.priority}
-                  {')'}
                 </Text>
               </MenuButton>
               <MenuList>
@@ -134,6 +207,22 @@ export default function Item({
                         </MenuItem>
                       );
                     })}
+                <MenuDivider />
+                {[
+                  ...new Map([
+                    ['1', 'Highest'],
+                    ['2', 'Hight'],
+                    ['3', 'Medium'],
+                    ['4', 'Low'],
+                    ['5', 'Lowest'],
+                  ]).entries(),
+                ].map(([key, value]) => {
+                  return (
+                    <MenuItem onClick={() => changePriority(key)} key={key}>
+                      {value}
+                    </MenuItem>
+                  );
+                })}
                 <MenuDivider />
                 <MenuItem
                   key={'delete'}

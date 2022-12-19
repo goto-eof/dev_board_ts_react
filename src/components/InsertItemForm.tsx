@@ -64,7 +64,7 @@ export default function InsertItemForm() {
           ...states,
           itemName: fields ? fields.result.name : '',
           environment: fields ? fields.result.environment : '',
-          itemPriority: fields ? '3' + fields.result.priority : '3',
+          itemPriority: fields ? '' + fields.result.priority : '3',
           issueType: fields ? fields.result.issue_type : 2,
           description: fields ? fields.result.description : '',
           defaultBoard: columnId || '',
@@ -219,9 +219,9 @@ export default function InsertItemForm() {
                 >
                   <option value="1">Task</option>
                   <option value="2">Bug fix</option>
-                  <option value="3">Improvement</option>
-                  <option value="4">Epic</option>
-                  <option value="5">Feature</option>
+                  <option value="3">Feature</option>
+                  <option value="4">Improvement</option>
+                  <option value="5">Epic</option>
                 </Select>
                 <Errors fieldName="issueType" />
               </GridItem>

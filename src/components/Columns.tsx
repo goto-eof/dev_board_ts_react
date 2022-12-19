@@ -312,6 +312,29 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
     }
   };
 
+  const updateItem = (item: ItemRequestI) => {
+    if (item.id) {
+      GenericService.update<ItemUpdateRequestI, ItemRequestI>(
+        'item',
+        item.id,
+        item
+      ).then((result: any) => {
+        if (result.success) {
+          let newBoards;
+          columns?.forEach((board: ColumnI) => {
+            if (board.column.id === item.column_id) {
+              let newBoard = { ...board, items: [...board.items] };
+              newBoards = columns.map((board) =>
+                board.column.id === item.column_id ? newBoard : board
+              );
+            }
+          });
+          setColumns(newBoards);
+        }
+      });
+    }
+  };
+
   const swapUI = (
     indexOfA: number,
     indexOfB: number,
@@ -428,6 +451,7 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
           boardId={boardId}
           moveItem={moveItem}
           users={users || []}
+          updateItem={(item) => updateItem(item)}
         />
       </Box>
     </Box>
@@ -443,6 +467,7 @@ interface BoardProps {
   moveRight: (id: number) => void;
   setItems: (boardId: number, items: Array<ItemRequestI>) => void;
   boardId: string | undefined;
+  updateItem: (item: ItemRequestI) => void;
   moveItem: (
     itemId: number | undefined | null,
     boardIdFrom: number,
@@ -486,6 +511,7 @@ function Boards(props: BoardProps) {
             boards={props.columns}
             moveItem={props.moveItem}
             users={props.users}
+            updateItem={props.updateItem}
           />
         ))}
         {props.columns && (

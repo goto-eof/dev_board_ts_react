@@ -47,6 +47,7 @@ interface ColumnProps {
   setItems: (boardId: number, items: Array<ItemRequestI>) => void;
   goToEdit: (boardId: number) => void;
   updateBoardItems: (boardId: number, items: Array<ItemRequestI>) => void;
+  updateItem: (item: ItemRequestI) => void;
   moveItem: (
     itemId: number | undefined | null,
     boardIdFrom: number,
@@ -296,6 +297,7 @@ export default function Column(props: ColumnProps) {
                   boards={props.boards}
                   moveItem={props.moveItem}
                   users={props.users}
+                  updateItem={props.updateItem}
                 />
               ))}
             </SimpleGrid>
