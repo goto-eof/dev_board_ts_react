@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { FC, useEffect, useState } from 'react';
 import GenericService from '../service/GenerciService';
-import Board from './Column';
+import Column from './Column';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Result from '../core/ResultI';
 import { DeleteResultI } from '../core/DeleteResultI';
@@ -88,11 +88,11 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
   };
 
   const retrieveUsers = () => {
-    GenericService.get<Result<Array<UserResponseI>>>('user/all').then(
-      (result: Result<Array<UserResponseI>>) => {
-        setUsers(result.result);
-      }
-    );
+    GenericService.get<Result<Array<UserResponseI>>>(
+      'board/board_users/' + boardId
+    ).then((result: Result<Array<UserResponseI>>) => {
+      setUsers(result.result);
+    });
   };
 
   const deleteColumn = (id: number) => {
@@ -463,7 +463,7 @@ function Boards(props: BoardProps) {
         fadeDuration={1}
       >
         {props.filteredColumns?.map((item) => (
-          <Board
+          <Column
             moveLeft={props.moveLeft}
             moveRight={props.moveRight}
             deleteColumn={props.deleteColumn}

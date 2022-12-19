@@ -58,7 +58,7 @@ export default function InsertItemForm() {
 
         const allUsers = await GenericService.getAll<
           Result<Array<UserResponseI>>
-        >('user/all-for-share');
+        >('board/board_users/' + boardId);
 
         setStates({
           ...states,

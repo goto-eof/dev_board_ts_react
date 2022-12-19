@@ -54,7 +54,7 @@ interface ColumnProps {
   ) => void;
   users: Array<UserResponseI>;
 }
-export default function Board(props: ColumnProps) {
+export default function Column(props: ColumnProps) {
   const deleteItem = (id: number) => {
     GenericService.delete<DeleteResultI>('item', id).then(
       (result: DeleteResultI) => {
