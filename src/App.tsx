@@ -61,18 +61,21 @@ export const App = () => {
             <Route path="/board/share/:boardId" element={<ShareDashboard />} />
             <Route path="/new-item/:boardId" element={<InsertItemForm />} />
             <Route
-              path="/new-item/:boardId/:columnId"
+              path="/new-item/:boardIdP/:columnIdP"
               element={<InsertItemForm />}
             />
             <Route
-              path="/edit-item/boardId/:boardId/columnId/:columnId/itemid/:itemId"
+              path="/edit-item/boardId/:boardIdP/columnId/:columnIdP/itemid/:itemIdP"
               element={<InsertItemForm />}
             />
             <Route
-              path="/edit-column/:boardId/:columnId"
+              path="/edit-column/:boardIdP/:columnIdP"
               element={<InsertColumnForm />}
             />
-            <Route path="/new-column/:boardId" element={<InsertColumnForm />} />
+            <Route
+              path="/new-column/:boardIdP"
+              element={<InsertColumnForm />}
+            />
             <Route path="/new-dashboard" element={<InsertDashboard />} />
             <Route
               path="/edit-dashboard/:boardId"

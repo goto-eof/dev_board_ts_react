@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  FormLabel,
   Grid,
   GridItem,
   Text,
@@ -9,7 +8,6 @@ import {
   Icon,
   Input,
   Skeleton,
-  VStack,
   PopoverTrigger,
   PopoverContent,
   PopoverArrow,
@@ -37,14 +35,18 @@ import { UserResponseI } from '../core/UserResponseI';
 interface ColumnsProps {}
 
 export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
-  const [columns, setColumns] = useState<Array<ColumnI> | []>();
-  const [filteredColumns, setFilteredColumns] = useState<Array<ColumnI> | []>();
+  const [columnsState, setColumnsState] = useState({
+    columns: new Array<ColumnI>(),
+    filteredColumns: new Array<ColumnI>(),
+  });
+
   const [sharedWith, setSharedWith] = useState<SharedWithResponseI>();
   const [dashboardTitle, setDashboardTitle] = useState<string>();
   let navigate = useNavigate();
   const [filter, setFilter] = useState<string>('');
   const [users, setUsers] = useState<Array<UserResponseI>>();
   const { boardId } = useParams();
+  const [forceUpdate, setForceUpdate] = useState<boolean>(false);
 
   useEffect(() => {
     oneCall();
@@ -67,8 +69,9 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
           };
           boards.push(board);
         });
-        setColumns(boards);
-        setFilteredColumns([...boards]);
+
+        updateColumnsUi(boards);
+
         setDashboardTitle(result.result.board.name);
         updateSharedWith();
       }
@@ -100,10 +103,12 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
       (result: DeleteResultI) => {
         if (result.success) {
           let newBoards =
-            columns?.filter((column: any) => column.column.id !== id) || [];
+            columnsState.columns?.filter(
+              (column: any) => column.column.id !== id
+            ) || [];
           newBoards = recomputeArrows(newBoards);
-          setColumns(newBoards);
-          handleInputChangeFilter(null, newBoards);
+          // newHandleInputChangeFilter(newBoards);
+          updateColumnsUi(newBoards);
         }
       }
     );
@@ -117,7 +122,7 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
     if (!itemId) {
       return;
     }
-    columns?.forEach((column) => {
+    columnsState.columns?.forEach((column) => {
       if (column.column.id === boardIdFrom) {
         let item = column.items.filter((item) => item.id === itemId)[0];
         GenericService.update<ItemUpdateRequestI, ItemRequestI>(
@@ -144,7 +149,7 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
     if (!itemId) {
       return;
     }
-    let newColumns = [...(columns || [])];
+    let newColumns = [...(columnsState.columns || [])];
     // searching item
     let item: ItemRequestI | null = null;
     newColumns?.forEach((column) => {
@@ -171,8 +176,11 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
       }
     });
 
-    setColumns(newColumns);
-    handleInputChangeFilter(null, newColumns);
+    setColumnsState({
+      ...columnsState,
+      columns: newColumns,
+      filteredColumns: newHandleInputChangeFilter(newColumns),
+    });
   };
 
   const recomputeArrows = (newBoards: Array<ColumnI>) => {
@@ -184,37 +192,42 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
   };
 
   const moveLeft = (id: number) => {
-    swapUiAnBe(id, -1);
+    swapColumnUiAnBe(id, -1);
   };
   const moveRight = (id: number) => {
-    swapUiAnBe(id, 1);
+    swapColumnUiAnBe(id, 1);
   };
 
   const setItems = (boardId: number, items: Array<ItemRequestI>) => {
     let newBoards = new Array<ColumnI>();
-    columns?.forEach((board: ColumnI) => {
+    columnsState.columns?.forEach((board: ColumnI) => {
       if (board.column.id === boardId) {
         let newBoard = { ...board, items: items };
-        newBoards = columns.map((board) =>
+        newBoards = columnsState.columns.map((board) =>
           board.column.id === boardId ? newBoard : board
         );
       }
     });
-    setColumns(newBoards);
-    handleInputChangeFilter(null, newBoards);
+
+    // newHandleInputChangeFilter(newBoards);
+    updateColumnsUi(newBoards);
   };
 
-  const handleInputChangeFilter = (
+  const handleInputChangeFilter = (filterNewValue: string) => {
+    setFilter(filterNewValue);
+  };
+
+  const handleInputChangeFilterOld = (
     filterIn?: string | null,
     newColumns?: Array<ColumnI>
   ) => {
     if (
       ((filterIn != filter && filterIn !== undefined) ||
         (filterIn && filterIn.length > 0)) &&
-      (newColumns || columns)
+      (newColumns || columnsState.columns)
     ) {
       let filteredColumns: Array<ColumnI> = [];
-      (newColumns || columns || []).forEach((column) => {
+      (newColumns || columnsState.columns || []).forEach((column) => {
         filteredColumns.push({
           column: { ...column.column },
           items: [...column.items].filter(
@@ -225,20 +238,54 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
         });
       });
 
-      setFilteredColumns(filteredColumns);
+      // setFilteredColumns(filteredColumns);
+      setColumnsState({
+        ...columnsState,
+        filteredColumns: [...filteredColumns],
+      });
     } else {
       let filteredColumns: Array<ColumnI> = [];
-      columns?.forEach((column) => {
+      columnsState.columns?.forEach((column) => {
         filteredColumns.push({
           column: { ...column.column },
           items: [...column.items],
         });
       });
-      console.log(filteredColumns, columns);
-      setFilteredColumns(filteredColumns);
+      console.log(filteredColumns, columnsState.columns);
+      setColumnsState({
+        ...columnsState,
+        filteredColumns: [...filteredColumns],
+      });
     }
     if (filterIn != filter) {
       setFilter(filterIn || '');
+    }
+  };
+
+  const newHandleInputChangeFilter = (newColumns?: Array<ColumnI>) => {
+    if (filter && filter.length) {
+      let filteredColumns: Array<ColumnI> = [];
+      (newColumns || columnsState.columns || []).forEach((column) => {
+        filteredColumns.push({
+          column: { ...column.column },
+          items: [...column.items].filter(
+            (item) =>
+              item.name.indexOf(filter || '') > -1 ||
+              item.description.indexOf(filter || '') > -1
+          ),
+        });
+      });
+      return filteredColumns;
+    } else {
+      let filteredColumns: Array<ColumnI> = [];
+      (newColumns || columnsState.columns).forEach((column) => {
+        filteredColumns.push({
+          column: { ...column.column },
+          items: [...column.items],
+        });
+      });
+      console.log(filteredColumns, columnsState.columns);
+      return filteredColumns;
     }
   };
 
@@ -248,7 +295,10 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
         <Input
           placeholder="filter"
           value={filter}
-          onChange={(e) => handleInputChangeFilter(e.target.value)}
+          onChange={(e: any) => {
+            setFilter(e.target.value);
+            updateColumnsUi(columnsState.columns);
+          }}
         />
       </>
     );
@@ -262,21 +312,21 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
     navigate('/');
   };
 
-  const swapUiAnBe = (idA: number, lorr: number) => {
-    if (columns) {
-      let columnsFinal = [...columns];
-      for (let i = 0; i < columns.length; i++) {
-        if (columns[i].column?.id === idA) {
+  const swapColumnUiAnBe = (idA: number, lorr: number) => {
+    if (columnsState.columns) {
+      let columnsFinal = [...columnsState.columns];
+      for (let i = 0; i < columnsState.columns.length; i++) {
+        if (columnsState.columns[i].column?.id === idA) {
           columnsFinal = swapUI(i, i + lorr, columnsFinal);
           if (
             !(
               i < 0 ||
-              i >= columns.length ||
+              i >= columnsState.columns.length ||
               i + lorr < 0 ||
-              i + lorr >= columns.length
+              i + lorr >= columnsState.columns.length
             )
           ) {
-            let idB = columns[i + lorr].column.id;
+            let idB = columnsState.columns[i + lorr].column.id;
             GenericService.swap<SwapRequestI, ResultI<boolean>>('column', {
               id_a: idA,
               id_b: idB,
@@ -301,8 +351,9 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
                     columnsFinal.length > 1 &&
                     columnsFinal[columnsFinal.length - 1].column.id !== idB;
                 }
-                setColumns(columnsFinal);
-                handleInputChangeFilter(null, columnsFinal);
+
+                // newHandleInputChangeFilter(columnsFinal);
+                updateColumnsUi(columnsFinal);
               }
             });
           }
@@ -312,28 +363,72 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
     }
   };
 
-  const updateItem = (item: ItemRequestI) => {
-    if (item.id) {
+  const updateItem = (oldItem: ItemRequestI) => {
+    if (oldItem.id) {
       GenericService.update<ItemUpdateRequestI, ItemRequestI>(
         'item',
-        item.id,
-        item
+        oldItem.id,
+        oldItem
       ).then((result: any) => {
         if (result.success) {
-          let newBoards;
-          columns?.forEach((board: ColumnI) => {
-            if (board.column.id === item.column_id) {
-              let newBoard = { ...board, items: [...board.items] };
-              newBoards = columns.map((board) =>
-                board.column.id === item.column_id ? newBoard : board
-              );
+          let newItem = result.result;
+          console.log('[saved]', newItem);
+
+          let newColumns: Array<ColumnI> = new Array<ColumnI>();
+          columnsState.columns.forEach((column: ColumnI) => {
+            let items = new Array<ItemRequestI>();
+            for (let i = 0; i < column.items.length; i++) {
+              let oldItemArr = column.items[i];
+              if (oldItemArr.id === newItem.id) {
+                items.push(newItem);
+                console.log('[replaced]', items[i]);
+              } else {
+                items.push(oldItemArr);
+              }
             }
+            newColumns.push({
+              ...column,
+              column: { ...column.column },
+              items: [...items],
+            });
           });
-          setColumns(newBoards);
+          updateColumnsUi(newColumns);
+          // setForceUpdate(!forceUpdate);
+          console.log('[After state set]', columnsState.columns);
         }
       });
     }
   };
+
+  const updateColumnsUi = (newColumns: Array<ColumnI>) => {
+    let filteredColumns = newHandleInputChangeFilter(newColumns);
+    console.log(filteredColumns);
+    setColumnsState({
+      ...columnsState,
+      filteredColumns: filteredColumns,
+      columns: newColumns,
+    });
+    // setForceUpdate(!forceUpdate);
+  };
+
+  // useEffect(() => {
+  //   let newColumns: Array<ColumnI> = new Array<ColumnI>();
+  //   columnsState.columns.forEach((column: ColumnI) => {
+  //     let newColumn = {
+  //       ...column,
+  //       items: column.items.map((it) => {
+  //         return { ...it };
+  //       }),
+  //     };
+  //     newColumns.push(newColumn);
+  //   });
+  //   console.log('setting boards...');
+  //   setColumnsState({
+  //     ...columnsState,
+  //     filteredColumns: newHandleInputChangeFilter(newColumns),
+  //     columns: newColumns,
+  //   });
+  // }, [forceUpdate]);
 
   const swapUI = (
     indexOfA: number,
@@ -446,8 +541,8 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
           deleteColumn={deleteColumn}
           setItems={setItems}
           goToEdit={goToEdit}
-          columns={columns}
-          filteredColumns={filteredColumns}
+          columns={columnsState.columns}
+          filteredColumns={columnsState.filteredColumns}
           boardId={boardId}
           moveItem={moveItem}
           users={users || []}
@@ -488,7 +583,7 @@ function Boards(props: BoardProps) {
         align="flex-start"
         h={'83vh'}
         w="full"
-        isLoaded={!!props.columns}
+        isLoaded={!!props && !!props.columns}
         fadeDuration={1}
       >
         {props.filteredColumns?.map((item) => (
@@ -535,3 +630,11 @@ function Boards(props: BoardProps) {
 }
 
 export default Columns;
+function componentDidUpdate(
+  prevProps: any,
+  any: any,
+  prevState: any,
+  any1: any
+) {
+  throw new Error('Function not implemented.');
+}

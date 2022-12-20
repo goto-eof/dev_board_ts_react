@@ -23,8 +23,26 @@ import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { UserResponseI } from '../core/UserResponseI';
 
-export default function InsertItemForm() {
-  const { boardId, columnId, itemId } = useParams();
+export interface InsertItemFormI {
+  boardIdPr?: number;
+  columnIdPr?: string;
+  itemIdPr?: number;
+  updateItem?: (item: ItemRequestI) => void;
+  onClose?: () => void;
+}
+
+export default function InsertItemForm({
+  boardIdPr,
+  columnIdPr,
+  itemIdPr,
+  updateItem,
+  onClose,
+}: InsertItemFormI) {
+  const { boardIdP, columnIdP, itemIdP } = useParams();
+
+  const boardId = boardIdP ? boardIdP : boardIdPr;
+  const columnId = columnIdP ? columnIdP : columnIdPr;
+  const itemId = itemIdP ? itemIdP : itemIdPr;
 
   const [states, setStates] = useState({
     itemName: '',
@@ -133,35 +151,44 @@ export default function InsertItemForm() {
 
   const update = (e: any) => {
     e.preventDefault();
-    if (itemId) {
+    console.log('updating....');
+    const newItem = {
+      id: Number(itemId),
+      name: e.target.elements.itemName.value,
+      environment: e.target.elements.environment.value,
+      issue_type: Number(e.target.elements.issueType.value),
+      column_id: Number(e.target.elements.defaultBoard.value),
+      assignee_id:
+        e.target.elements.assignee.value &&
+        e.target.elements.assignee.value != -1
+          ? Number(e.target.elements.assignee.value)
+          : undefined,
+      description: e.target.elements.description.value,
+      priority: Number(e.target.elements.itemPriority.value),
+      order: states.order,
+    };
+
+    if (itemId && itemIdP) {
       GenericService.update<ItemUpdateRequestI, ItemRequestI>(
         'item',
         Number(itemId),
-        {
-          name: e.target.elements.itemName.value,
-          environment: e.target.elements.environment.value,
-          issue_type: Number(e.target.elements.issueType.value),
-          column_id: Number(e.target.elements.defaultBoard.value),
-          assignee_id:
-            e.target.elements.assignee.value &&
-            e.target.elements.assignee.value != -1
-              ? Number(e.target.elements.assignee.value)
-              : undefined,
-          description: e.target.elements.description.value,
-          priority: Number(e.target.elements.itemPriority.value),
-          order: states.order,
-        }
+        newItem
       ).then((response) => {
         if (response.success) {
           navigate('/board/' + boardId);
         }
       });
+    } else {
+      if (updateItem && onClose) {
+        updateItem(newItem);
+        onClose();
+      }
     }
   };
 
   return (
     <Center>
-      <VStack w="full" width={'50%'}>
+      <VStack w="full" width={boardIdP ? '50%' : '100%'}>
         <Heading>
           <Icon
             fontSize={'2xl'}

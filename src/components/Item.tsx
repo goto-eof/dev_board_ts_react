@@ -12,13 +12,21 @@ import {
   Box,
   useDisclosure,
   MenuDivider,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Button,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ColumnI from '../core/Column';
 import { ItemRequestI } from '../core/ItemRequestI';
 import { UserResponseI } from '../core/UserResponseI';
-import { ViewItem } from './ViewItem';
+import InsertItemForm from './InsertItemForm';
 interface ItemProps {
   boards?: Array<ColumnI>;
   boardId: string | undefined;
@@ -48,11 +56,11 @@ export default function Item({
   canMoveUp,
   canMoveDown,
   moveItem,
-  updateItem: changeItemPriority,
+  updateItem,
   boards,
   users,
 }: ItemProps) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  // const { isOpen, onOpen, onClose } = useDisclosure();
   const [assignee, setAssignee] = useState<UserResponseI>();
 
   useEffect(() => {
@@ -82,7 +90,7 @@ export default function Item({
     if (item.id) {
       item.priority = p;
 
-      changeItemPriority(item);
+      updateItem(item);
     }
   };
 
@@ -137,9 +145,15 @@ export default function Item({
     }
   };
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const updateItemForm = (item: ItemRequestI) => {
+    updateItem(item);
+  };
+
   return (
     <>
-      <ViewItem isOpen={isOpen} onClose={onClose} item={item} users={users} />
+      {/* <ViewItem isOpen={isOpen} onClose={onClose} item={item} users={users} /> */}
       <Card maxW="md" boxShadow={'md'} mb={2}>
         <CardHeader>
           <Flex>
@@ -185,7 +199,7 @@ export default function Item({
                 </Text>
               </MenuButton>
               <MenuList>
-                <MenuItem key={'edit'} onClick={() => goToEdit(item.id || -1)}>
+                <MenuItem key={'edit-new'} onClick={onOpen}>
                   Edit
                 </MenuItem>
                 <MenuDivider />
@@ -283,6 +297,33 @@ export default function Item({
           )}
         </CardFooter>
       </Card>
+
+      <Modal isOpen={isOpen} onClose={onClose} size={'2xl'}>
+        <ModalOverlay
+          bg="blackAlpha.300"
+          backdropFilter="blur(10px) hue-rotate(90deg)"
+        />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <InsertItemForm
+              boardIdPr={Number(boardId)}
+              columnIdPr={'' + columnId}
+              itemIdPr={item.id}
+              updateItem={updateItemForm}
+              onClose={onClose}
+            />
+          </ModalBody>
+
+          <ModalFooter>
+            {/* <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button variant="ghost">Secondary Action</Button> */}
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }
