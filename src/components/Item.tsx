@@ -268,33 +268,41 @@ export default function Item({
             },
           }}
         >
-          {canMoveUp(item.id || -1) && (
+          {
             <Box
-              onClick={() => moveUp(item.id)}
+              onClick={() => {
+                if (canMoveUp(item.id || -1)) moveUp(item.id);
+              }}
               display="inline"
               cursor={'pointer'}
             >
               <Icon
                 as={ArrowUpIcon}
-                color={'blue.400'}
-                _hover={{ color: 'green.400' }}
+                color={canMoveUp(item.id || -1) ? 'blue.400' : 'gray.200'}
+                _hover={{
+                  color: canMoveUp(item.id || -1) ? 'green.400' : 'gray.200',
+                }}
               />
             </Box>
-          )}
+          }
           {assignee && 'Assignee: ' + assignee?.username}
-          {canMoveDown(item.id || -1) && (
+          {
             <Box
-              onClick={() => moveDown(item.id)}
+              onClick={() => {
+                if (canMoveDown(item.id || -1)) moveDown(item.id);
+              }}
               display="inline"
               cursor={'pointer'}
             >
               <Icon
                 as={ArrowDownIcon}
-                color={'blue.400'}
-                _hover={{ color: 'green.400' }}
+                color={canMoveDown(item.id || -1) ? 'blue.400' : 'gray.200'}
+                _hover={{
+                  color: canMoveDown(item.id || -1) ? 'green.400' : 'gray.200',
+                }}
               />
             </Box>
-          )}
+          }
         </CardFooter>
       </Card>
 
