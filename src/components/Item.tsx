@@ -312,7 +312,7 @@ export default function Item({
           backdropFilter="blur(10px) hue-rotate(90deg)"
         />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Edit Issue</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <InsertItemForm
