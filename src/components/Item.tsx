@@ -285,7 +285,8 @@ export default function Item({
               />
             </Box>
           }
-          {assignee && 'Assignee: ' + assignee?.username}
+          <Text fontSize={'sm'}> {assignee && assignee?.username}</Text>
+
           {
             <Box
               onClick={() => {
