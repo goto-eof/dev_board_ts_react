@@ -262,16 +262,23 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
     }
   };
 
-  const newHandleInputChangeFilter = (newColumns?: Array<ColumnI>) => {
-    if (filter && filter.length) {
+  const newHandleInputChangeFilter = (
+    newColumns?: Array<ColumnI>,
+    filterIn?: string
+  ) => {
+    const processedFilter =
+      (filterIn && filterIn.length) ||
+      (filterIn === undefined && filter && filter.length);
+    if (processedFilter) {
+      console.log('processed filter', processedFilter);
       let filteredColumns: Array<ColumnI> = [];
       (newColumns || columnsState.columns || []).forEach((column) => {
         filteredColumns.push({
           column: { ...column.column },
           items: [...column.items].filter(
             (item) =>
-              item.name.indexOf(filter || '') > -1 ||
-              item.description.indexOf(filter || '') > -1
+              item.name.indexOf(filterIn || filter || '') > -1 ||
+              item.description.indexOf(filterIn || filter || '') > -1
           ),
         });
       });
@@ -297,7 +304,7 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
           value={filter}
           onChange={(e: any) => {
             setFilter(e.target.value);
-            updateColumnsUi(columnsState.columns);
+            updateColumnsUi(columnsState.columns, e.target.value);
           }}
         />
       </>
@@ -400,8 +407,8 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
     }
   };
 
-  const updateColumnsUi = (newColumns: Array<ColumnI>) => {
-    let filteredColumns = newHandleInputChangeFilter(newColumns);
+  const updateColumnsUi = (newColumns: Array<ColumnI>, filter?: string) => {
+    let filteredColumns = newHandleInputChangeFilter(newColumns, filter);
     console.log(filteredColumns);
     setColumnsState({
       ...columnsState,

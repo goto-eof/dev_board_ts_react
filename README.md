@@ -53,4 +53,4 @@ docker-compose up
 if any problems arise, feel free to [contact me](https://andre-i.dev/#contactme).
 
 
-P.s. clean local storage before use.
+P.S. clean local storage before use.
