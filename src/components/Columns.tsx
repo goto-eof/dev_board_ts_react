@@ -15,6 +15,7 @@ import {
   PopoverHeader,
   PopoverBody,
   Popover,
+  Select,
 } from '@chakra-ui/react';
 import { FC, useEffect, useState } from 'react';
 import GenericService from '../service/GenerciService';
@@ -31,6 +32,7 @@ import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
 import { ArrowBackIcon, InfoIcon } from '@chakra-ui/icons';
 import SharedWithResponseI from '../core/SharedWithResponseI';
 import { UserResponseI } from '../core/UserResponseI';
+import { NodeWithTypeArguments } from 'typescript';
 
 interface ColumnsProps {}
 
@@ -40,6 +42,8 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
     filteredColumns: new Array<ColumnI>(),
   });
 
+  const [sortBy, setSortBy] = useState<number>(1);
+  const [ascendingOrder, setAscendingOrder] = useState<number>(1);
   const [sharedWith, setSharedWith] = useState<SharedWithResponseI>();
   const [dashboardTitle, setDashboardTitle] = useState<string>();
   let navigate = useNavigate();
@@ -415,27 +419,7 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
       filteredColumns: filteredColumns,
       columns: newColumns,
     });
-    // setForceUpdate(!forceUpdate);
   };
-
-  // useEffect(() => {
-  //   let newColumns: Array<ColumnI> = new Array<ColumnI>();
-  //   columnsState.columns.forEach((column: ColumnI) => {
-  //     let newColumn = {
-  //       ...column,
-  //       items: column.items.map((it) => {
-  //         return { ...it };
-  //       }),
-  //     };
-  //     newColumns.push(newColumn);
-  //   });
-  //   console.log('setting boards...');
-  //   setColumnsState({
-  //     ...columnsState,
-  //     filteredColumns: newHandleInputChangeFilter(newColumns),
-  //     columns: newColumns,
-  //   });
-  // }, [forceUpdate]);
 
   const swapUI = (
     indexOfA: number,
@@ -461,6 +445,99 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
     return boards;
   };
 
+  const changeSortOrder = (e: any) => {
+    const sortOrder = e.target.value;
+    console.log(sortOrder);
+    setAscendingOrder(sortOrder);
+    sortByValueAndUpdateUi(sortBy, sortOrder);
+  };
+
+  const sortByValue = (e: any) => {
+    const sortByValueIn = Number(e.target.value);
+    setSortBy(sortByValueIn);
+    console.log(sortByValueIn);
+    sortByValueAndUpdateUi(sortByValueIn);
+  };
+
+  const sortByValueAndUpdateUi = (
+    sortByValueIn: number,
+    sortOrderIn?: number
+  ) => {
+    const sortOrder = sortOrderIn || ascendingOrder;
+    const newFilteredColumns: Array<ColumnI> = [];
+    columnsState.filteredColumns.forEach((column: ColumnI) => {
+      const newItems = itemsSorter(column.items, sortByValueIn, sortOrder);
+
+      const newColumn: ColumnI = {
+        column: { ...column.column },
+        items: newItems,
+      };
+
+      newFilteredColumns.push(newColumn);
+    });
+
+    setColumnsState({ ...columnsState, filteredColumns: newFilteredColumns });
+  };
+
+  const itemsSorter = (
+    arr: Array<ItemRequestI>,
+    sortType: number,
+    sortOrder: number
+  ) => {
+    console.log(sortOrder);
+    // manual
+    if (sortType === 1) {
+      return [...arr].sort((a: ItemRequestI, b: ItemRequestI) =>
+        a.order < b.order
+          ? -1 * sortOrder
+          : a.order > b.order
+          ? 1 * sortOrder
+          : 0
+      );
+    }
+    // priorty
+    else if (sortType === 2) {
+      return [...arr].sort((a: ItemRequestI, b: ItemRequestI) =>
+        a.priority < b.priority
+          ? -1 * sortOrder
+          : a.priority > b.priority
+          ? 1 * sortOrder
+          : 0
+      );
+    }
+    // date
+    else if (sortType === 3) {
+      return [...arr].sort((a: ItemRequestI, b: ItemRequestI) => {
+        if (a.created_at && b.created_at) {
+          return a.created_at < b.created_at
+            ? -1 * sortOrder
+            : a.created_at > b.created_at
+            ? 1 * sortOrder
+            : 0;
+        }
+        return 0;
+      });
+    }
+    // alphabetical
+    else if (sortType === 4) {
+      return [...arr].sort((a: ItemRequestI, b: ItemRequestI) =>
+        a.name < b.name ? -1 * sortOrder : a.name > b.name ? 1 * sortOrder : 0
+      );
+    }
+    // by id
+    else if (sortType === 5) {
+      const result = [...arr].sort((a: ItemRequestI, b: ItemRequestI) => {
+        if (a.id && b.id) {
+          return a.id < b.id ? -1 * sortOrder : a.id > b.id ? 1 * sortOrder : 0;
+        }
+        return 0;
+      });
+      return result;
+    }
+
+    return arr;
+  };
+
   return (
     <Box className="Columns">
       <Grid
@@ -470,6 +547,31 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
         boxShadow={'md'}
         height={'44px'}
       >
+        <GridItem colStart={1} colEnd={2}>
+          <Select
+            onChange={sortByValue}
+            value={sortBy}
+            name="sortBy"
+            placeholder="Sort by"
+          >
+            <option value="1">Manual</option>
+            <option value="2">Priority</option>
+            <option value="3">Date</option>
+            <option value="4">Alphabetical</option>
+            <option value="5">ID</option>
+          </Select>
+        </GridItem>
+        <GridItem colStart={2} colEnd={3}>
+          <Select
+            onChange={changeSortOrder}
+            value={ascendingOrder}
+            name="ascendingOrder"
+            placeholder="Order type"
+          >
+            <option value="1">Ascending</option>
+            <option value="-1">Descending</option>
+          </Select>
+        </GridItem>
         <GridItem colSpan={1} colStart={3} colEnd={4} h="10" pb={6}>
           <Text
             as={'span'}
@@ -490,7 +592,6 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
                 <Button>
                   {' '}
                   <Icon
-                    // onClick={() => goBack()}
                     fontSize={'2xl'}
                     as={InfoIcon}
                     color={'gray.400'}
