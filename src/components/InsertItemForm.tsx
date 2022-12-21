@@ -22,6 +22,7 @@ import { ItemRequestI } from '../core/ItemRequestI';
 import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { UserResponseI } from '../core/UserResponseI';
+import Messages from './Messages';
 
 export interface InsertItemFormI {
   boardIdPr?: number;
@@ -39,7 +40,6 @@ export default function InsertItemForm({
   onClose,
 }: InsertItemFormI) {
   const { boardIdP, columnIdP, itemIdP } = useParams();
-
   const boardId = boardIdP ? boardIdP : boardIdPr;
   const columnId = columnIdP ? columnIdP : columnIdPr;
   const itemId = itemIdP ? itemIdP : itemIdPr;
@@ -57,6 +57,7 @@ export default function InsertItemForm({
     columns: Array<ColumnResponseI>(),
     users: new Array<UserResponseI>(),
     assignee: -1,
+    reporter: -1,
   });
 
   const navigate = useNavigate();
@@ -91,6 +92,10 @@ export default function InsertItemForm({
           assignee:
             fields && fields.result.assignee_id
               ? fields.result.assignee_id
+              : -1,
+          reporter:
+            fields && fields.result.reporter_id
+              ? fields.result.reporter_id
               : -1,
           users: allUsers.result,
         });
@@ -135,6 +140,11 @@ export default function InsertItemForm({
         e.target.elements.assignee.value != -1
           ? Number(e.target.elements.assignee.value)
           : undefined,
+      reporter_id:
+        e.target.elements.reporter.value &&
+        e.target.elements.reporter.value != -1
+          ? Number(e.target.elements.reporter.value)
+          : undefined,
       order: states.order,
       description: e.target.elements.description.value,
       priority: Number(e.target.elements.itemPriority.value),
@@ -162,6 +172,11 @@ export default function InsertItemForm({
         e.target.elements.assignee.value &&
         e.target.elements.assignee.value != -1
           ? Number(e.target.elements.assignee.value)
+          : undefined,
+      reporter_id:
+        e.target.elements.reporter.value &&
+        e.target.elements.reporter.value != -1
+          ? Number(e.target.elements.reporter.value)
           : undefined,
       description: e.target.elements.description.value,
       priority: Number(e.target.elements.itemPriority.value),
@@ -195,7 +210,7 @@ export default function InsertItemForm({
             as={ArrowBackIcon}
             color={'gray.400'}
             _hover={{ color: 'green.200' }}
-            onClick={goBack}
+            onClick={() => (boardIdP ? goBack() : onClose && onClose())}
           />
           Issue
         </Heading>
@@ -292,6 +307,27 @@ export default function InsertItemForm({
               </GridItem>
 
               <GridItem w="100%">
+                <FormLabel>Reporter</FormLabel>
+                <Select
+                  placeholder="Select option"
+                  name="reporter"
+                  value={states.reporter}
+                  onChange={handleInputChange}
+                >
+                  {states.users &&
+                    states.users.map((item: any) => {
+                      let itm = item as UserResponseI;
+                      return (
+                        <option value={itm.id} key={itm.id}>
+                          [{itm.username}] {itm.first_name} {item.last_name}
+                        </option>
+                      );
+                    })}
+                </Select>
+                <Errors fieldName="board" />
+              </GridItem>
+
+              <GridItem w="100%">
                 <FormLabel>Assignee</FormLabel>
                 <Select
                   placeholder="Select option"
@@ -328,6 +364,7 @@ export default function InsertItemForm({
             </Button>
           </FormControl>
         </form>
+        <VStack w={'100%'}>{itemId && <Messages itemId={itemId} />}</VStack>
       </VStack>
     </Center>
   );

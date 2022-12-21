@@ -8,4 +8,5 @@ export interface ItemRequestI {
   description: string;
   column_id: number;
   assignee_id?: number;
+  reporter_id?: number;
 }

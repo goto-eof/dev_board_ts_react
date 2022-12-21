@@ -19,10 +19,8 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  Button,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import ColumnI from '../core/Column';
 import { ItemRequestI } from '../core/ItemRequestI';
 import { UserResponseI } from '../core/UserResponseI';
@@ -68,21 +66,8 @@ export default function Item({
     setAssignee(assignee);
   }, []);
 
-  let navigate = useNavigate();
-
   const tryMoveItem = (boardIdTo: number) => {
     moveItem(item.id, Number(item.column_id), boardIdTo);
-  };
-
-  const goToEdit = (id: number) => {
-    navigate(
-      '/edit-item/boardId/' +
-        boardId +
-        '/columnId/' +
-        item.column_id +
-        '/itemid/' +
-        id
-    );
   };
 
   const changePriority = (priority: string) => {
@@ -326,10 +311,6 @@ export default function Item({
           </ModalBody>
 
           <ModalFooter>
-            {/* <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant="ghost">Secondary Action</Button> */}
           </ModalFooter>
         </ModalContent>
       </Modal>
