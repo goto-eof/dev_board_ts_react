@@ -51,3 +51,6 @@ docker-compose up
 ![header](6.png)
 
 if any problems arise, feel free to [contact me](https://andre-i.dev/#contactme).
+
+
+P.s. clean local storage before use.
