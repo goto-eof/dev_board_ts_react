@@ -39,9 +39,6 @@ docker-compose up
 ![header](2.png)
 
 
-![header](3.png)
-
-
 ![header](4.png)
 
 
