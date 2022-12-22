@@ -383,13 +383,13 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
         oldItem
       ).then((result: any) => {
         if (result.success) {
-          let newItem = result.result;
+          let newItem: ItemRequestI = result.result;
           console.log('[saved]', newItem);
 
           if (result.result.id) {
             insertHistoryMessage(result.result.id, 'issue updated');
           }
-
+          let oldColumnId: number = -1;
           let newColumns: Array<ColumnI> = new Array<ColumnI>();
           columnsState.columns.forEach((column: ColumnI) => {
             let items = new Array<ItemRequestI>();
@@ -397,6 +397,7 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
               let oldItemArr = column.items[i];
               if (oldItemArr.id === newItem.id) {
                 items.push(newItem);
+                oldColumnId = oldItemArr.column_id;
                 console.log('[replaced]', items[i]);
               } else {
                 items.push(oldItemArr);
@@ -408,8 +409,11 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
               items: [...items],
             });
           });
-          updateColumnsUi(newColumns);
-          // setForceUpdate(!forceUpdate);
+          if (oldColumnId !== newItem.column_id) {
+            moveItemUI(oldColumnId, newItem.column_id, newItem.id);
+          } else {
+            updateColumnsUi(newColumns);
+          } // setForceUpdate(!forceUpdate);
           console.log('[After state set]', columnsState.columns);
         }
       });
