@@ -15,7 +15,7 @@ import {
   GridItem,
   Select,
 } from '@chakra-ui/react';
-import { DeleteIcon, EditIcon, Icon } from '@chakra-ui/icons';
+import { DeleteIcon, EditIcon, Icon, TimeIcon } from '@chakra-ui/icons';
 
 export interface MessagesProps {
   itemId: number | string;
@@ -68,7 +68,7 @@ export default function Messages({ itemId }: MessagesProps) {
         selectedMessage
       ).then((result) => {
         if (result.success) {
-          // replaceItemInTheList(result.result);
+          setFilterBy('all');
           setSelectedMessage(null);
           setStates({ ...states, message: '' });
         }
@@ -81,6 +81,7 @@ export default function Messages({ itemId }: MessagesProps) {
         user_id: user.id,
       }).then((result) => {
         if (result.success) {
+          setFilterBy('all');
           addItemToTheList(result.result);
         }
       });
@@ -161,9 +162,9 @@ export default function Messages({ itemId }: MessagesProps) {
               <option value="history">History</option>
             </Select>
           </GridItem>
-          <GridItem>ciao</GridItem>
-          <GridItem>ciao</GridItem>
-          <GridItem>ciao</GridItem>
+          <GridItem></GridItem>
+          <GridItem></GridItem>
+          <GridItem></GridItem>
         </Grid>
         {messages &&
           viewedMessages &&
@@ -180,21 +181,29 @@ export default function Messages({ itemId }: MessagesProps) {
               >
                 <CardHeader>
                   <Text fontSize={'sm'} color={'gray.400'}>
-                    {message.user_id === userId && (
-                      <>
-                        <Icon
-                          as={DeleteIcon}
-                          color={'red.500'}
-                          _hover={{ color: 'red.600' }}
-                          onClick={() => deleteItem(message.id)}
-                        />
-                        <Icon
-                          as={EditIcon}
-                          color={'blue.500'}
-                          _hover={{ color: 'blue.600' }}
-                          onClick={() => editMessage(message)}
-                        />
-                      </>
+                    {message.user_id === userId &&
+                      message.message_type === 'comment' && (
+                        <>
+                          <Icon
+                            as={DeleteIcon}
+                            color={'red.500'}
+                            _hover={{ color: 'red.600' }}
+                            onClick={() => deleteItem(message.id)}
+                          />
+                          <Icon
+                            as={EditIcon}
+                            color={'blue.500'}
+                            _hover={{ color: 'blue.600' }}
+                            onClick={() => editMessage(message)}
+                          />
+                        </>
+                      )}
+                    {message.message_type === 'history' && (
+                      <Icon
+                        as={TimeIcon}
+                        color={'orange.500'}
+                        _hover={{ color: 'orange.600' }}
+                      />
                     )}
                     <Badge colorScheme="green">{message.id} </Badge>{' '}
                     {message && message.created_at?.toString()}

@@ -33,6 +33,7 @@ import { ArrowBackIcon, InfoIcon } from '@chakra-ui/icons';
 import SharedWithResponseI from '../core/SharedWithResponseI';
 import { UserResponseI } from '../core/UserResponseI';
 import { NodeWithTypeArguments } from 'typescript';
+import { insertHistoryMessage } from '../core/MessageService';
 
 interface ColumnsProps {}
 
@@ -384,6 +385,10 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
         if (result.success) {
           let newItem = result.result;
           console.log('[saved]', newItem);
+
+          if (result.result.id) {
+            insertHistoryMessage(result.result.id, 'issue updated');
+          }
 
           let newColumns: Array<ColumnI> = new Array<ColumnI>();
           columnsState.columns.forEach((column: ColumnI) => {

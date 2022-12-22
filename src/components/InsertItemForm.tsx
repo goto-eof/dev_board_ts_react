@@ -22,7 +22,9 @@ import { ItemRequestI } from '../core/ItemI';
 import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { UserResponseI } from '../core/UserResponseI';
+import MessageI from '../core/message';
 import Messages from './Messages';
+import { insertHistoryMessage } from '../core/MessageService';
 
 export interface InsertItemFormI {
   boardIdPr?: number;
@@ -150,6 +152,9 @@ export default function InsertItemForm({
       priority: Number(e.target.elements.itemPriority.value),
     }).then((response: Result<ItemRequestI>) => {
       if (response.success) {
+        if (response.result.id) {
+          insertHistoryMessage(response.result.id, 'issue created');
+        }
         navigate('/board/' + boardId);
       }
     });
@@ -190,6 +195,9 @@ export default function InsertItemForm({
         newItem
       ).then((response) => {
         if (response.success) {
+          if (response.result.id) {
+            insertHistoryMessage(response.result.id, 'issue updated');
+          }
           navigate('/board/' + boardId);
         }
       });
