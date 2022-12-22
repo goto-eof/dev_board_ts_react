@@ -78,10 +78,18 @@ export default function LoginForm({
 
   return (
     <Center>
-      <VStack w="full" width={'50%'}>
-        <Heading>Login</Heading>
+      <VStack w="full" width={'50%'} bg={'gray.50'} p={0} borderRadius={'3%'}>
+        <Heading
+          // bg={'green.300'}
+          p={4}
+          // color={'white'}
+          w={'100%'}
+          textAlign={'center'}
+        >
+          Login
+        </Heading>
         <form onSubmit={login} style={{ width: '100%' }}>
-          <FormControl isInvalid={states.isInvalid} w={'100%'}>
+          <FormControl isInvalid={states.isInvalid} w={'100%'} p={4}>
             <FormLabel>username</FormLabel>
             <Input
               type="text"

@@ -12,7 +12,7 @@ import {
   Badge,
   IconButton,
 } from '@chakra-ui/react';
-import { DeleteIcon, Icon } from '@chakra-ui/icons';
+import { DeleteIcon, EditIcon, Icon } from '@chakra-ui/icons';
 
 export interface MessagesProps {
   itemId: number | string;
@@ -23,7 +23,7 @@ export default function Messages({ itemId }: MessagesProps) {
   const [states, setStates] = useState({
     message: '',
   });
-
+  const [selectedMessage, setSelectedMessage] = useState<MessageI | null>();
   const [userId, setUserId] = useState<number>(
     JSON.parse(localStorage.getItem('user') || '{}').id
   );
@@ -54,16 +54,31 @@ export default function Messages({ itemId }: MessagesProps) {
       localStorage.getItem('user') || '{}'
     );
 
-    GenericService.create<MessageI>('message', {
-      item_id: Number(itemId),
-      message: states.message || '',
-      message_type: 'comment',
-      user_id: user.id,
-    }).then((result) => {
-      if (result.success) {
-        addItemToTheList(result.result);
-      }
-    });
+    if (selectedMessage && selectedMessage.id) {
+      selectedMessage.message = states.message;
+      GenericService.update<MessageI, MessageI>(
+        'message',
+        selectedMessage.id,
+        selectedMessage
+      ).then((result) => {
+        if (result.success) {
+          // replaceItemInTheList(result.result);
+          setSelectedMessage(null);
+          setStates({ ...states, message: '' });
+        }
+      });
+    } else {
+      GenericService.create<MessageI>('message', {
+        item_id: Number(itemId),
+        message: states.message || '',
+        message_type: 'comment',
+        user_id: user.id,
+      }).then((result) => {
+        if (result.success) {
+          addItemToTheList(result.result);
+        }
+      });
+    }
   };
 
   const deleteItem = (messageId: number | undefined) => {
@@ -91,6 +106,11 @@ export default function Messages({ itemId }: MessagesProps) {
     setStates({ ...states, message: '' });
   };
 
+  const editMessage = (message: MessageI) => {
+    setSelectedMessage(message);
+    setStates({ ...states, message: message.message });
+  };
+
   return (
     <VStack w={'100%'} bg={'gray.50'}>
       <>
@@ -107,16 +127,32 @@ export default function Messages({ itemId }: MessagesProps) {
         {messages &&
           messages.map((message) => {
             return (
-              <Card key={message.id} w={'100%'}>
+              <Card
+                key={message.id}
+                w={'100%'}
+                bg={
+                  selectedMessage && message.id === selectedMessage.id
+                    ? 'yellow.50'
+                    : 'gray.50'
+                }
+              >
                 <CardHeader>
                   <Text fontSize={'sm'} color={'gray.400'}>
                     {message.user_id === userId && (
-                      <Icon
-                        as={DeleteIcon}
-                        color={'red.500'}
-                        _hover={{ color: 'red.600' }}
-                        onClick={() => deleteItem(message.id)}
-                      />
+                      <>
+                        <Icon
+                          as={DeleteIcon}
+                          color={'red.500'}
+                          _hover={{ color: 'red.600' }}
+                          onClick={() => deleteItem(message.id)}
+                        />
+                        <Icon
+                          as={EditIcon}
+                          color={'blue.500'}
+                          _hover={{ color: 'blue.600' }}
+                          onClick={() => editMessage(message)}
+                        />
+                      </>
                     )}
                     <Badge colorScheme="green">{message.id} </Badge>{' '}
                     {message && message.created_at?.toString()}
