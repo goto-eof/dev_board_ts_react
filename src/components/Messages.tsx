@@ -11,6 +11,9 @@ import {
   VStack,
   Badge,
   IconButton,
+  Grid,
+  GridItem,
+  Select,
 } from '@chakra-ui/react';
 import { DeleteIcon, EditIcon, Icon } from '@chakra-ui/icons';
 
@@ -20,9 +23,11 @@ export interface MessagesProps {
 
 export default function Messages({ itemId }: MessagesProps) {
   const [messages, setMessages] = useState<Array<MessageI>>();
+  const [viewedMessages, setViewedMessages] = useState<Array<MessageI>>();
   const [states, setStates] = useState({
     message: '',
   });
+  const [filterBy, setFilterBy] = useState<string>();
   const [selectedMessage, setSelectedMessage] = useState<MessageI | null>();
   const [userId, setUserId] = useState<number>(
     JSON.parse(localStorage.getItem('user') || '{}').id
@@ -35,6 +40,7 @@ export default function Messages({ itemId }: MessagesProps) {
       if (data.success) {
         console.log(data.result);
         setMessages(data.result);
+        setViewedMessages(data.result);
       }
     });
   }, []);
@@ -81,6 +87,20 @@ export default function Messages({ itemId }: MessagesProps) {
     }
   };
 
+  const filterByItems = (e: any) => {
+    const newFilterBy = e.target.value;
+    setFilterBy(newFilterBy);
+    if ('all' === newFilterBy || !newFilterBy) {
+      updateViewedMessages(messages || []);
+    } else {
+      updateViewedMessages(
+        (messages || []).filter(
+          (message) => message.message_type === newFilterBy
+        )
+      );
+    }
+  };
+
   const deleteItem = (messageId: number | undefined) => {
     if (!messageId) {
       return;
@@ -94,9 +114,15 @@ export default function Messages({ itemId }: MessagesProps) {
     );
   };
 
+  const updateViewedMessages = (newMessages: Array<MessageI>) => {
+    // filter
+    setViewedMessages(newMessages);
+  };
+
   const deleteItemFromList = (messageId: number) => {
     const newMessages = messages?.filter((message) => message.id !== messageId);
     setMessages(newMessages);
+    updateViewedMessages(newMessages || []);
   };
 
   const addItemToTheList = (item: MessageI) => {
@@ -104,6 +130,7 @@ export default function Messages({ itemId }: MessagesProps) {
     newMessages.unshift(item);
     setMessages(newMessages);
     setStates({ ...states, message: '' });
+    updateViewedMessages(newMessages);
   };
 
   const editMessage = (message: MessageI) => {
@@ -124,8 +151,23 @@ export default function Messages({ itemId }: MessagesProps) {
         <Button onClick={saveMessage} w={'100%'}>
           Save comment
         </Button>
+        <Grid templateColumns="repeat(4, 1fr)" gap={6}>
+          <GridItem>
+            <Select onChange={filterByItems} value={filterBy} name="filterBy">
+              <option selected={true} value="all">
+                All
+              </option>
+              <option value="comment">Comments</option>
+              <option value="history">History</option>
+            </Select>
+          </GridItem>
+          <GridItem>ciao</GridItem>
+          <GridItem>ciao</GridItem>
+          <GridItem>ciao</GridItem>
+        </Grid>
         {messages &&
-          messages.map((message) => {
+          viewedMessages &&
+          viewedMessages.map((message) => {
             return (
               <Card
                 key={message.id}
