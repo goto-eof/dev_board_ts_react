@@ -25,7 +25,7 @@ import { Link } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
 import Item from './Item';
 import { DeleteResultI } from '../core/DeleteResultI';
-import { ItemRequestI } from '../core/ItemRequestI';
+import { ItemRequestI } from '../core/ItemI';
 import SwapRequestI from '../core/SwapRequestI';
 import ResultI from '../core/ResultI';
 import ColumnI from '../core/Column';

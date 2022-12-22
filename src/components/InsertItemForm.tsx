@@ -18,7 +18,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
 import Result from '../core/ResultI';
 import { ColumnResponseI } from '../core/ColumnResponseI';
-import { ItemRequestI } from '../core/ItemRequestI';
+import { ItemRequestI } from '../core/ItemI';
 import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { UserResponseI } from '../core/UserResponseI';

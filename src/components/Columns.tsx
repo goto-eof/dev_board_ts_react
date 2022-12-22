@@ -23,7 +23,7 @@ import Column from './Column';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Result from '../core/ResultI';
 import { DeleteResultI } from '../core/DeleteResultI';
-import { ItemRequestI } from '../core/ItemRequestI';
+import { ItemRequestI } from '../core/ItemI';
 import ColumnI from '../core/Column';
 import SwapRequestI from '../core/SwapRequestI';
 import ResultI from '../core/ResultI';

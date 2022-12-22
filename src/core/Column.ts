@@ -1,5 +1,5 @@
 import { ColumnResponseI } from './ColumnResponseI';
-import { ItemRequestI } from './ItemRequestI';
+import { ItemRequestI } from './ItemI';
 
 export default interface ColumnI {
   column: ColumnResponseI;

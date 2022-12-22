@@ -22,7 +22,7 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import ColumnI from '../core/Column';
-import { ItemRequestI } from '../core/ItemRequestI';
+import { ItemRequestI } from '../core/ItemI';
 import { UserResponseI } from '../core/UserResponseI';
 import InsertItemForm from './InsertItemForm';
 interface ItemProps {
@@ -310,8 +310,7 @@ export default function Item({
             />
           </ModalBody>
 
-          <ModalFooter>
-          </ModalFooter>
+          <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
     </>

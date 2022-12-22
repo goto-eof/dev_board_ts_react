@@ -11,7 +11,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { ItemRequestI } from '../core/ItemRequestI';
+import { ItemRequestI } from '../core/ItemI';
 import { UserResponseI } from '../core/UserResponseI';
 
 export interface ViewItemI {
