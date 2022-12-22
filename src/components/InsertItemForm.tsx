@@ -212,16 +212,18 @@ export default function InsertItemForm({
   return (
     <Center>
       <VStack w="full" width={boardIdP ? '50%' : '100%'}>
-        <Heading>
-          <Icon
-            fontSize={'2xl'}
-            as={ArrowBackIcon}
-            color={'gray.400'}
-            _hover={{ color: 'green.200' }}
-            onClick={() => (boardIdP ? goBack() : onClose && onClose())}
-          />
-          Issue
-        </Heading>
+        {boardIdP && (
+          <Heading>
+            <Icon
+              fontSize={'2xl'}
+              as={ArrowBackIcon}
+              color={'gray.400'}
+              _hover={{ color: 'green.200' }}
+              onClick={() => (boardIdP ? goBack() : onClose && onClose())}
+            />
+            Issue
+          </Heading>
+        )}
         <form onSubmit={itemId ? update : save} style={{ width: '100%' }}>
           <FormControl isInvalid={states.isInvalid} w={'100%'}>
             {itemId && (
