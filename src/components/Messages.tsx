@@ -154,10 +154,13 @@ export default function Messages({ itemId }: MessagesProps) {
         </Button>
         <Grid templateColumns="repeat(4, 1fr)" gap={6}>
           <GridItem>
-            <Select onChange={filterByItems} value={filterBy} name="filterBy">
-              <option selected={true} value="all">
-                All
-              </option>
+            <Select
+              defaultValue={'all'}
+              onChange={filterByItems}
+              value={filterBy}
+              name="filterBy"
+            >
+              <option value="all">All</option>
               <option value="comment">Comments</option>
               <option value="history">History</option>
             </Select>
