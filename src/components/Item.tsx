@@ -19,6 +19,9 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  Grid,
+  GridItem,
+  VStack,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import ColumnI from '../core/Column';
@@ -60,10 +63,14 @@ export default function Item({
 }: ItemProps) {
   // const { isOpen, onOpen, onClose } = useDisclosure();
   const [assignee, setAssignee] = useState<UserResponseI>();
-
+  const [creationDate, setCreationDate] = useState<string>();
   useEffect(() => {
     const assignee = users.filter((user) => user.id === item.assignee_id)[0];
     setAssignee(assignee);
+    if (item.created_at) {
+      const dateString = new Date(item.created_at).toISOString().slice(0, 10);
+      setCreationDate(dateString);
+    }
   }, []);
 
   const tryMoveItem = (boardIdTo: number) => {
@@ -139,7 +146,7 @@ export default function Item({
   return (
     <>
       {/* <ViewItem isOpen={isOpen} onClose={onClose} item={item} users={users} /> */}
-      <Card maxW="md" boxShadow={'md'} mb={2}>
+      <Card maxW="md" boxShadow={'md'} h={'155px'} mb={2}>
         <CardHeader>
           <Flex>
             <Menu>
@@ -243,52 +250,73 @@ export default function Item({
           </Text>
         </CardBody>
 
-        <CardFooter
-          justify="space-between"
-          flexWrap="wrap"
-          p={2}
-          sx={{
-            '& > button': {
-              minW: '136px',
-            },
-          }}
-        >
-          {
+        <CardFooter>
+          <VStack>
             <Box
-              onClick={() => {
-                if (canMoveUp(item.id || -1)) moveUp(item.id);
-              }}
-              display="inline"
-              cursor={'pointer'}
+              textAlign={'right'}
+              fontSize={'sm'}
+              as={'div'}
+              w={'100%'}
+              h={'22px'}
             >
-              <Icon
-                as={ArrowUpIcon}
-                color={canMoveUp(item.id || -1) ? 'blue.400' : 'gray.200'}
-                _hover={{
-                  color: canMoveUp(item.id || -1) ? 'green.400' : 'gray.200',
-                }}
-              />
+              {creationDate}
             </Box>
-          }
-          <Text fontSize={'sm'}> {assignee && assignee?.username}</Text>
-
-          {
-            <Box
-              onClick={() => {
-                if (canMoveDown(item.id || -1)) moveDown(item.id);
-              }}
-              display="inline"
-              cursor={'pointer'}
+            <Grid
+              h={'22px'}
+              templateColumns="repeat(3, 1fr)"
+              as={'div'}
+              w={'100%'}
+              gap={6}
             >
-              <Icon
-                as={ArrowDownIcon}
-                color={canMoveDown(item.id || -1) ? 'blue.400' : 'gray.200'}
-                _hover={{
-                  color: canMoveDown(item.id || -1) ? 'green.400' : 'gray.200',
-                }}
-              />
-            </Box>
-          }
+              <GridItem textAlign={'center'}>
+                {
+                  <Box
+                    onClick={() => {
+                      if (canMoveUp(item.id || -1)) moveUp(item.id);
+                    }}
+                    display="inline"
+                    cursor={'pointer'}
+                  >
+                    <Icon
+                      as={ArrowUpIcon}
+                      color={canMoveUp(item.id || -1) ? 'blue.400' : 'gray.200'}
+                      _hover={{
+                        color: canMoveUp(item.id || -1)
+                          ? 'green.400'
+                          : 'gray.200',
+                      }}
+                    />
+                  </Box>
+                }
+              </GridItem>
+              <GridItem>
+                <Text fontSize={'sm'}> {assignee && assignee?.username}</Text>
+              </GridItem>
+              <GridItem textAlign={'center'}>
+                {
+                  <Box
+                    onClick={() => {
+                      if (canMoveDown(item.id || -1)) moveDown(item.id);
+                    }}
+                    display="inline"
+                    cursor={'pointer'}
+                  >
+                    <Icon
+                      as={ArrowDownIcon}
+                      color={
+                        canMoveDown(item.id || -1) ? 'blue.400' : 'gray.200'
+                      }
+                      _hover={{
+                        color: canMoveDown(item.id || -1)
+                          ? 'green.400'
+                          : 'gray.200',
+                      }}
+                    />
+                  </Box>
+                }
+              </GridItem>
+            </Grid>
+          </VStack>
         </CardFooter>
       </Card>
 
