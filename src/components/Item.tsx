@@ -292,7 +292,7 @@ export default function Item({
         </CardFooter>
       </Card>
 
-      <Modal isOpen={isOpen} onClose={onClose} size={'2xl'}>
+      <Modal isOpen={isOpen} onClose={onClose} size={'5xl'}>
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"

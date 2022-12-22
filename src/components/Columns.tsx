@@ -33,7 +33,7 @@ import { ArrowBackIcon, InfoIcon } from '@chakra-ui/icons';
 import SharedWithResponseI from '../core/SharedWithResponseI';
 import { UserResponseI } from '../core/UserResponseI';
 import { NodeWithTypeArguments } from 'typescript';
-import { insertHistoryMessage } from '../core/MessageService';
+import { insertHistoryMessage } from '../service/MessageService';
 
 interface ColumnsProps {}
 

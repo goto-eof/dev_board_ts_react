@@ -1,6 +1,6 @@
-import GenericService from '../service/GenerciService';
-import MessageI from './message';
-import { UserResponseI } from './UserResponseI';
+import GenericService from './GenerciService';
+import MessageI from '../core/MessageI';
+import { UserResponseI } from '../core/UserResponseI';
 
 export const insertHistoryMessage = (itemId: number, message: string) => {
   const user: UserResponseI = JSON.parse(localStorage.getItem('user') || '{}');

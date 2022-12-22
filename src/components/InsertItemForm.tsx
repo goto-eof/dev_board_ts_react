@@ -22,9 +22,9 @@ import { ItemRequestI } from '../core/ItemI';
 import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { UserResponseI } from '../core/UserResponseI';
-import MessageI from '../core/message';
+import MessageI from '../core/MessageI';
 import Messages from './Messages';
-import { insertHistoryMessage } from '../core/MessageService';
+import { insertHistoryMessage } from '../service/MessageService';
 
 export interface InsertItemFormI {
   boardIdPr?: number;
@@ -211,7 +211,7 @@ export default function InsertItemForm({
 
   return (
     <Center>
-      <VStack w="full" width={boardIdP ? '50%' : '100%'}>
+      <VStack w="full" width={boardIdP ? '70%' : '100%'}>
         {boardIdP && (
           <Heading>
             <Icon
@@ -226,19 +226,19 @@ export default function InsertItemForm({
         )}
         <form onSubmit={itemId ? update : save} style={{ width: '100%' }}>
           <FormControl isInvalid={states.isInvalid} w={'100%'}>
-            {itemId && (
-              <>
-                <FormLabel>Id</FormLabel>
-                <Input
-                  type="text"
-                  value={itemId || ''}
-                  name="id"
-                  readOnly={true}
-                  bg={'gray.100'}
-                />
-              </>
-            )}
-            <Grid templateColumns="repeat(2, 1fr)" gap={6}>
+            <Grid templateColumns="repeat(4, 1fr)" gap={6}>
+              {itemId && (
+                <GridItem>
+                  <FormLabel>Id</FormLabel>
+                  <Input
+                    type="text"
+                    value={itemId || ''}
+                    name="id"
+                    readOnly={true}
+                    bg={'gray.100'}
+                  />
+                </GridItem>
+              )}
               <GridItem w="100%">
                 <FormLabel>Name</FormLabel>
                 <Input

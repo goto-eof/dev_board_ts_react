@@ -1,6 +1,6 @@
 import GenericService from '../service/GenerciService';
 import Result from '../core/ResultI';
-import MessageI from '../core/message';
+import MessageI from '../core/MessageI';
 import { useEffect, useState } from 'react';
 import { UserResponseI } from '../core/UserResponseI';
 import { Card, CardBody, CardFooter, CardHeader } from '@chakra-ui/card';
