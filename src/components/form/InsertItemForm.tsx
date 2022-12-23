@@ -59,7 +59,7 @@ export default function InsertItemForm({
     users: new Array<UserResponseI>(),
     assignee: -1,
     reporter: -1,
-    publisherId: -1
+    publisherId: -1,
   });
 
   const navigate = useNavigate();
@@ -100,9 +100,9 @@ export default function InsertItemForm({
               ? fields.result.reporter_id
               : -1,
           publisherId:
-              fields && fields.result.publisher_id
-                ? fields.result.publisher_id
-                : -1,
+            fields && fields.result.publisher_id
+              ? fields.result.publisher_id
+              : 0,
           users: allUsers.result,
         });
       } catch (error) {
@@ -110,7 +110,7 @@ export default function InsertItemForm({
       }
     };
     fetchDetails();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleInputChange = (e: any) => {
@@ -144,12 +144,12 @@ export default function InsertItemForm({
       column_id: Number(e.target.elements.defaultBoard.value),
       assignee_id:
         e.target.elements.assignee.value &&
-        Number(e.target.elements.assignee.value) !== -1
+        Number(e.target.elements.assignee.value) !== 0
           ? Number(e.target.elements.assignee.value)
           : undefined,
       reporter_id:
         e.target.elements.reporter.value &&
-        Number(e.target.elements.reporter.value) !== -1
+        Number(e.target.elements.reporter.value) !== 0
           ? Number(e.target.elements.reporter.value)
           : undefined,
       order: states.order,
@@ -169,8 +169,8 @@ export default function InsertItemForm({
     navigate('/board/' + boardId);
   };
 
-  const calculatePublisher=(publisherId: number): UserResponseI=>{
-    const publisher = states.users.filter(item => item.id === publisherId)[0];
+  const calculatePublisher = (publisherId: number): UserResponseI => {
+    const publisher = states.users.filter((item) => item.id === publisherId)[0];
     return publisher;
   };
 
@@ -190,19 +190,17 @@ export default function InsertItemForm({
           : undefined,
       reporter_id:
         e.target.elements.reporter.value &&
-       Number( e.target.elements.reporter.value) !== -1
+        Number(e.target.elements.reporter.value) !== -1
           ? Number(e.target.elements.reporter.value)
           : undefined,
       publisher_id:
-          e.target.elements.publisherId.value &&
-          Number(e.target.elements.publisherId.value) !== -1
-            ? Number(e.target.elements.publisherId.value)
-            : undefined,   
+        e.target.elements.publisherId.value &&
+        Number(e.target.elements.publisherId.value) !== -1
+          ? Number(e.target.elements.publisherId.value)
+          : undefined,
       description: e.target.elements.description.value,
       priority: Number(e.target.elements.itemPriority.value),
       order: states.order,
-
-
     };
 
     if (itemId && itemIdP) {
@@ -254,6 +252,20 @@ export default function InsertItemForm({
                     readOnly={true}
                     bg={'gray.100'}
                   />
+                </GridItem>
+              )}
+              {!!states.publisherId && (
+                <GridItem w="100%">
+                  <FormLabel>Publisher ID</FormLabel>
+                  <Input
+                    readOnly={true}
+                    type="text"
+                    bg={'gray.50'}
+                    value={calculatePublisher(states.publisherId)?.username}
+                    name="publisherId"
+                    onChange={handleInputChange}
+                  />
+                  <Errors fieldName="publisherId" />
                 </GridItem>
               )}
               <GridItem w="100%">
@@ -332,19 +344,6 @@ export default function InsertItemForm({
                 </Select>
                 <Errors fieldName="board" />
               </GridItem>
-
-              <GridItem w="100%">
-                <FormLabel>Publisher ID</FormLabel>
-                <Input
-                readOnly={true}
-                  type="text"
-                  value={calculatePublisher(states.publisherId).username}
-                  name="publisherId"
-                  onChange={handleInputChange}
-                />
-                <Errors fieldName="environment" />
-              </GridItem>
-
 
               <GridItem w="100%">
                 <FormLabel>Reporter</FormLabel>
