@@ -92,13 +92,9 @@ export default function InsertItemForm({
           columns: columns.result,
           order: fields ? fields.result.order : 0,
           assignee:
-            fields && fields.result.assignee_id
-              ? fields.result.assignee_id
-              : -1,
+            fields && fields.result.assignee_id ? fields.result.assignee_id : 0,
           reporter:
-            fields && fields.result.reporter_id
-              ? fields.result.reporter_id
-              : -1,
+            fields && fields.result.reporter_id ? fields.result.reporter_id : 0,
           publisherId:
             fields && fields.result.publisher_id
               ? fields.result.publisher_id
@@ -192,11 +188,6 @@ export default function InsertItemForm({
         e.target.elements.reporter.value &&
         Number(e.target.elements.reporter.value) !== -1
           ? Number(e.target.elements.reporter.value)
-          : undefined,
-      publisher_id:
-        e.target.elements.publisherId.value &&
-        Number(e.target.elements.publisherId.value) !== -1
-          ? Number(e.target.elements.publisherId.value)
           : undefined,
       description: e.target.elements.description.value,
       priority: Number(e.target.elements.itemPriority.value),
