@@ -24,7 +24,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import Result from '../core/ResultI';
 import { DeleteResultI } from '../core/DeleteResultI';
 import { ItemRequestI } from '../core/ItemI';
-import ColumnI from '../core/Column';
+import ColumnI from '../core/ColumnI';
 import SwapRequestI from '../core/SwapRequestI';
 import ResultI from '../core/ResultI';
 import ColumnsWithItemsI from '../core/ColumnsWithItemsI';
@@ -32,7 +32,6 @@ import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
 import { ArrowBackIcon, InfoIcon } from '@chakra-ui/icons';
 import SharedWithResponseI from '../core/SharedWithResponseI';
 import { UserResponseI } from '../core/UserResponseI';
-import { NodeWithTypeArguments } from 'typescript';
 import { insertHistoryMessage } from '../service/MessageService';
 
 interface ColumnsProps {}
@@ -51,10 +50,10 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
   const [filter, setFilter] = useState<string>('');
   const [users, setUsers] = useState<Array<UserResponseI>>();
   const { boardId } = useParams();
-  const [forceUpdate, setForceUpdate] = useState<boolean>(false);
 
   useEffect(() => {
     oneCall();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const oneCall = () => {
@@ -85,6 +84,7 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
 
   useEffect(() => {
     retrieveUsers();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const updateSharedWith = () => {
@@ -218,54 +218,54 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
     updateColumnsUi(newBoards);
   };
 
-  const handleInputChangeFilter = (filterNewValue: string) => {
-    setFilter(filterNewValue);
-  };
+  // const handleInputChangeFilter = (filterNewValue: string) => {
+  //   setFilter(filterNewValue);
+  // };
 
-  const handleInputChangeFilterOld = (
-    filterIn?: string | null,
-    newColumns?: Array<ColumnI>
-  ) => {
-    if (
-      ((filterIn != filter && filterIn !== undefined) ||
-        (filterIn && filterIn.length > 0)) &&
-      (newColumns || columnsState.columns)
-    ) {
-      let filteredColumns: Array<ColumnI> = [];
-      (newColumns || columnsState.columns || []).forEach((column) => {
-        filteredColumns.push({
-          column: { ...column.column },
-          items: [...column.items].filter(
-            (item) =>
-              item.name.indexOf(filterIn || '') > -1 ||
-              item.description.indexOf(filterIn || '') > -1
-          ),
-        });
-      });
+  // const handleInputChangeFilterOld = (
+  //   filterIn?: string | null,
+  //   newColumns?: Array<ColumnI>
+  // ) => {
+  //   if (
+  //     ((filterIn != filter && filterIn !== undefined) ||
+  //       (filterIn && filterIn.length > 0)) &&
+  //     (newColumns || columnsState.columns)
+  //   ) {
+  //     let filteredColumns: Array<ColumnI> = [];
+  //     (newColumns || columnsState.columns || []).forEach((column) => {
+  //       filteredColumns.push({
+  //         column: { ...column.column },
+  //         items: [...column.items].filter(
+  //           (item) =>
+  //             item.name.indexOf(filterIn || '') > -1 ||
+  //             item.description.indexOf(filterIn || '') > -1
+  //         ),
+  //       });
+  //     });
 
-      // setFilteredColumns(filteredColumns);
-      setColumnsState({
-        ...columnsState,
-        filteredColumns: [...filteredColumns],
-      });
-    } else {
-      let filteredColumns: Array<ColumnI> = [];
-      columnsState.columns?.forEach((column) => {
-        filteredColumns.push({
-          column: { ...column.column },
-          items: [...column.items],
-        });
-      });
-      console.log(filteredColumns, columnsState.columns);
-      setColumnsState({
-        ...columnsState,
-        filteredColumns: [...filteredColumns],
-      });
-    }
-    if (filterIn != filter) {
-      setFilter(filterIn || '');
-    }
-  };
+  //     // setFilteredColumns(filteredColumns);
+  //     setColumnsState({
+  //       ...columnsState,
+  //       filteredColumns: [...filteredColumns],
+  //     });
+  //   } else {
+  //     let filteredColumns: Array<ColumnI> = [];
+  //     columnsState.columns?.forEach((column) => {
+  //       filteredColumns.push({
+  //         column: { ...column.column },
+  //         items: [...column.items],
+  //       });
+  //     });
+  //     console.log(filteredColumns, columnsState.columns);
+  //     setColumnsState({
+  //       ...columnsState,
+  //       filteredColumns: [...filteredColumns],
+  //     });
+  //   }
+  //   if (filterIn !== filter) {
+  //     setFilter(filterIn || '');
+  //   }
+  // };
 
   const newHandleInputChangeFilter = (
     newColumns?: Array<ColumnI>,
@@ -326,10 +326,11 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
 
   const swapColumnUiAnBe = (idA: number, lorr: number) => {
     if (columnsState.columns) {
-      let columnsFinal = [...columnsState.columns];
+      let columnsFinalMutable = [...columnsState.columns];
       for (let i = 0; i < columnsState.columns.length; i++) {
         if (columnsState.columns[i].column?.id === idA) {
-          columnsFinal = swapUI(i, i + lorr, columnsFinal);
+          columnsFinalMutable = swapUI(i, i + lorr, columnsFinalMutable);
+          const columnsFinal= columnsFinalMutable;
           if (
             !(
               i < 0 ||
@@ -747,11 +748,3 @@ function Boards(props: BoardProps) {
 }
 
 export default Columns;
-function componentDidUpdate(
-  prevProps: any,
-  any: any,
-  prevState: any,
-  any1: any
-) {
-  throw new Error('Function not implemented.');
-}

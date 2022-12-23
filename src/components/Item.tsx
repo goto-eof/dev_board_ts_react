@@ -24,10 +24,10 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import ColumnI from '../core/Column';
+import ColumnI from '../core/ColumnI';
 import { ItemRequestI } from '../core/ItemI';
 import { UserResponseI } from '../core/UserResponseI';
-import InsertItemForm from './InsertItemForm';
+import InsertItemForm from './form/InsertItemForm';
 interface ItemProps {
   boards?: Array<ColumnI>;
   boardId: string | undefined;
@@ -71,6 +71,7 @@ export default function Item({
       const dateString = new Date(item.created_at).toISOString().slice(0, 10);
       setCreationDate(dateString);
     }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const tryMoveItem = (boardIdTo: number) => {
@@ -198,7 +199,7 @@ export default function Item({
                 {boards &&
                   boards.length > 0 &&
                   boards
-                    .filter((board) => board.column.id != columnId)
+                    .filter((board) => board.column.id !== columnId)
                     .map((board) => {
                       return board.column.id !== item.column_id ? (
                         <MenuItem

@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import GenericService from '../service/GenerciService';
 import Result from '../core/ResultI';
 import { UserResponseI } from '../core/UserResponseI';
-import ResultI from '../core/ResultI';
 
 export default function ShareDashboard() {
   const [states, setStates] = useState({
@@ -16,6 +15,7 @@ export default function ShareDashboard() {
 
   useEffect(() => {
     loadUsers();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadUsers = () => {

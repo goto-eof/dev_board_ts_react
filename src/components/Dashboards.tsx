@@ -12,8 +12,6 @@ import {
   MenuItem,
   MenuList,
   VStack,
-  Heading,
-  Center,
   Skeleton,
   Grid,
   GridItem,

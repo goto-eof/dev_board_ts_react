@@ -15,16 +15,15 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import GenericService from '../service/GenerciService';
-import Result from '../core/ResultI';
-import { ColumnResponseI } from '../core/ColumnResponseI';
-import { ItemRequestI } from '../core/ItemI';
-import { ItemUpdateRequestI } from '../core/ItemUpdateRequestI';
+import GenericService from '../../service/GenerciService';
+import Result from '../../core/ResultI';
+import { ColumnResponseI } from '../../core/ColumnResponseI';
+import { ItemRequestI } from '../../core/ItemI';
+import { ItemUpdateRequestI } from '../../core/ItemUpdateRequestI';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { UserResponseI } from '../core/UserResponseI';
-import MessageI from '../core/MessageI';
-import Messages from './Messages';
-import { insertHistoryMessage } from '../service/MessageService';
+import { UserResponseI } from '../../core/UserResponseI';
+import Messages from '../Messages';
+import { insertHistoryMessage } from '../../service/MessageService';
 
 export interface InsertItemFormI {
   boardIdPr?: number;
@@ -60,6 +59,7 @@ export default function InsertItemForm({
     users: new Array<UserResponseI>(),
     assignee: -1,
     reporter: -1,
+    publisherId: -1
   });
 
   const navigate = useNavigate();
@@ -99,6 +99,10 @@ export default function InsertItemForm({
             fields && fields.result.reporter_id
               ? fields.result.reporter_id
               : -1,
+          publisherId:
+              fields && fields.result.publisher_id
+                ? fields.result.publisher_id
+                : -1,
           users: allUsers.result,
         });
       } catch (error) {
@@ -106,6 +110,7 @@ export default function InsertItemForm({
       }
     };
     fetchDetails();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleInputChange = (e: any) => {
@@ -139,12 +144,12 @@ export default function InsertItemForm({
       column_id: Number(e.target.elements.defaultBoard.value),
       assignee_id:
         e.target.elements.assignee.value &&
-        e.target.elements.assignee.value != -1
+        Number(e.target.elements.assignee.value) !== -1
           ? Number(e.target.elements.assignee.value)
           : undefined,
       reporter_id:
         e.target.elements.reporter.value &&
-        e.target.elements.reporter.value != -1
+        Number(e.target.elements.reporter.value) !== -1
           ? Number(e.target.elements.reporter.value)
           : undefined,
       order: states.order,
@@ -164,6 +169,11 @@ export default function InsertItemForm({
     navigate('/board/' + boardId);
   };
 
+  const calculatePublisher=(publisherId: number): UserResponseI=>{
+    const publisher = states.users.filter(item => item.id === publisherId)[0];
+    return publisher;
+  };
+
   const update = (e: any) => {
     e.preventDefault();
     console.log('updating....');
@@ -175,17 +185,24 @@ export default function InsertItemForm({
       column_id: Number(e.target.elements.defaultBoard.value),
       assignee_id:
         e.target.elements.assignee.value &&
-        e.target.elements.assignee.value != -1
+        Number(e.target.elements.assignee.value) !== -1
           ? Number(e.target.elements.assignee.value)
           : undefined,
       reporter_id:
         e.target.elements.reporter.value &&
-        e.target.elements.reporter.value != -1
+       Number( e.target.elements.reporter.value) !== -1
           ? Number(e.target.elements.reporter.value)
           : undefined,
+      publisher_id:
+          e.target.elements.publisherId.value &&
+          Number(e.target.elements.publisherId.value) !== -1
+            ? Number(e.target.elements.publisherId.value)
+            : undefined,   
       description: e.target.elements.description.value,
       priority: Number(e.target.elements.itemPriority.value),
       order: states.order,
+
+
     };
 
     if (itemId && itemIdP) {
@@ -315,6 +332,19 @@ export default function InsertItemForm({
                 </Select>
                 <Errors fieldName="board" />
               </GridItem>
+
+              <GridItem w="100%">
+                <FormLabel>Publisher ID</FormLabel>
+                <Input
+                readOnly={true}
+                  type="text"
+                  value={calculatePublisher(states.publisherId).username}
+                  name="publisherId"
+                  onChange={handleInputChange}
+                />
+                <Errors fieldName="environment" />
+              </GridItem>
+
 
               <GridItem w="100%">
                 <FormLabel>Reporter</FormLabel>

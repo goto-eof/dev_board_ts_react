@@ -1,5 +1,5 @@
 import { JwtI } from '../core/JwtI';
-import customAxios from '../core/LoginInterceptor';
+import customAxios from '../interceptor/LoginInterceptor';
 import ResultI from '../core/ResultI';
 
 export default class GenericService {

@@ -39,6 +39,7 @@ export default function NavBar({
   const [token, setToken] = useState<String | null>(
     localStorage.getItem('token')
   );
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [user, setUser] = useState<UserResponseI>(
     JSON.parse(localStorage.getItem('user') || '{}')
   );

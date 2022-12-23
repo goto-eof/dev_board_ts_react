@@ -12,10 +12,10 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import GenericService from '../service/GenerciService';
-import { DashboardUpdateI } from '../core/DashboardUpdateI';
-import ResultI from '../core/ResultI';
-import { ColumnResponseI } from '../core/ColumnResponseI';
+import GenericService from '../../service/GenerciService';
+import { DashboardUpdateI } from '../../core/DashboardUpdateI';
+import ResultI from '../../core/ResultI';
+import { ColumnResponseI } from '../../core/ColumnResponseI';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 
 export default function InsertColumnForm() {
@@ -52,6 +52,7 @@ export default function InsertColumnForm() {
         });
       });
     }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const goBack = () => {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { customInterceptor } from '../core/LoginInterceptor';
+import { customInterceptor } from '../interceptor/LoginInterceptor';
 interface NavigateFunctionComponentProps {
   toggleChangedLocalStorage: (updatedLocalStorage: boolean) => void;
 }

@@ -36,25 +36,18 @@ npm run start
 docker-compose up
 ```
 
+![header](screenshots/1.png)
 
-![header](1.png)
+![header](screenshots/2.png)
 
+![header](screenshots/4.png)
 
-![header](2.png)
+![header](screenshots/5.png)
 
+![header](screenshots/6.png)
 
-![header](4.png)
-
-
-![header](5.png)
-
-
-![header](6.png)
-
-
-![header](7.png)
+![header](screenshots/7.png)
 
 if any problems arise, feel free to [contact me](https://andre-i.dev/#contactme).
-
 
 P.S. clean local storage before use.

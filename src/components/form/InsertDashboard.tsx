@@ -12,10 +12,10 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import GenericService from '../service/GenerciService';
-import { DashboardUpdateI } from '../core/DashboardUpdateI';
-import ResultI from '../core/ResultI';
-import { DashboardResponseI } from '../core/DashboardResponseI';
+import GenericService from '../../service/GenerciService';
+import { DashboardUpdateI } from '../../core/DashboardUpdateI';
+import ResultI from '../../core/ResultI';
+import { DashboardResponseI } from '../../core/DashboardResponseI';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 
 export default function InsertColumnForm() {
@@ -43,7 +43,7 @@ export default function InsertColumnForm() {
       GenericService.getById<ResultI<DashboardResponseI>>(
         'board',
         Number(boardId)
-      ).then((result) => {
+      ).then((result: any) => {
         console.log(result, boardId);
         setStates({
           ...states,
@@ -53,6 +53,7 @@ export default function InsertColumnForm() {
         });
       });
     }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   interface ErrorsProps {

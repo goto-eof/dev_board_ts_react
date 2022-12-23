@@ -10,10 +10,10 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import GenericService from '../service/GenerciService';
-import Result from '../core/ResultI';
-import { ColumnResponseI } from '../core/ColumnResponseI';
-import { RegisterRequestI } from '../core/RegisterRequestI';
+import GenericService from '../../service/GenerciService';
+import Result from '../../core/ResultI';
+import { ColumnResponseI } from '../../core/ColumnResponseI';
+import { RegisterRequestI } from '../../core/RegisterRequestI';
 
 interface RegistrationFormProps {
   toggleChangedLocalStorage: () => void;
@@ -79,7 +79,7 @@ export default function RegistrationForm({
 
   return (
     <Center>
-      <VStack w="full" width={'50%'}>
+      <VStack w="full" width={'50%'}  bg={'gray.50'} p={4} borderRadius={'3%'}>
         <Heading>Registration</Heading>
         <form onSubmit={save} style={{ width: '100%' }}>
           <FormControl isInvalid={states.isInvalid} w={'100%'}>

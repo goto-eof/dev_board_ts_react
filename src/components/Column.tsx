@@ -28,7 +28,7 @@ import { DeleteResultI } from '../core/DeleteResultI';
 import { ItemRequestI } from '../core/ItemI';
 import SwapRequestI from '../core/SwapRequestI';
 import ResultI from '../core/ResultI';
-import ColumnI from '../core/Column';
+import ColumnI from '../core/ColumnI';
 import { UserResponseI } from '../core/UserResponseI';
 
 interface ColumnProps {

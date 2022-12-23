@@ -10,7 +10,6 @@ import {
   Text,
   VStack,
   Badge,
-  IconButton,
   Grid,
   GridItem,
   Select,
@@ -29,6 +28,7 @@ export default function Messages({ itemId }: MessagesProps) {
   });
   const [filterBy, setFilterBy] = useState<string>();
   const [selectedMessage, setSelectedMessage] = useState<MessageI | null>();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userId, setUserId] = useState<number>(
     JSON.parse(localStorage.getItem('user') || '{}').id
   );
@@ -43,6 +43,7 @@ export default function Messages({ itemId }: MessagesProps) {
         setViewedMessages(data.result);
       }
     });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleInputChange = (e: any) => {

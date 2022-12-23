@@ -10,12 +10,12 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import GenericService from '../service/GenerciService';
-import Result from '../core/ResultI';
-import { ColumnResponseI } from '../core/ColumnResponseI';
-import { LoginRequestI } from '../core/LoginRequestI';
-import { JwtI } from '../core/JwtI';
-import { UserResponseI } from '../core/UserResponseI';
+import GenericService from '../../service/GenerciService';
+import Result from '../../core/ResultI';
+import { ColumnResponseI } from '../../core/ColumnResponseI';
+import { LoginRequestI } from '../../core/LoginRequestI';
+import { JwtI } from '../../core/JwtI';
+import { UserResponseI } from '../../core/UserResponseI';
 
 interface LoginFormProps {
   toggleChangedLocalStorage: () => void;
@@ -80,9 +80,7 @@ export default function LoginForm({
     <Center>
       <VStack w="full" width={'50%'} bg={'gray.50'} p={0} borderRadius={'3%'}>
         <Heading
-          // bg={'green.300'}
           p={4}
-          // color={'white'}
           w={'100%'}
           textAlign={'center'}
         >

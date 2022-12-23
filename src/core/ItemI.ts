@@ -9,6 +9,7 @@ export interface ItemRequestI {
   column_id: number;
   assignee_id?: number;
   reporter_id?: number;
+  publisher_id?: number;
 
   created_at?: Date;
 }
