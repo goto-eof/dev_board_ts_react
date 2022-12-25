@@ -147,7 +147,7 @@ export default function Item({
   return (
     <>
       {/* <ViewItem isOpen={isOpen} onClose={onClose} item={item} users={users} /> */}
-      <Card maxW="md" boxShadow={'md'} h={'155px'} mb={2}>
+      <Card maxW="md" boxShadow={'md'} h={'175px'} mb={2}>
         <CardHeader>
           <Flex>
             <Menu>
@@ -243,7 +243,7 @@ export default function Item({
             </Menu>
           </Flex>
         </CardHeader>
-        <CardBody cursor="pointer" onClick={onOpen} _hover={{ color: 'gray' }}>
+        <CardBody cursor="pointer" _hover={{ color: 'gray' }} onClick={onOpen}>
           <Text p={2} align={'left'} overflow="hidden" fontSize="sm">
             {item.description.length > 60
               ? item.description.substring(0, 60) + '...'
@@ -251,7 +251,7 @@ export default function Item({
           </Text>
         </CardBody>
 
-        <CardFooter>
+        <CardFooter onClick={onOpen} cursor={'pointer'}>
           <VStack>
             <Box
               textAlign={'right'}
@@ -297,7 +297,9 @@ export default function Item({
                 }
               </GridItem>
               <GridItem>
-                <Text fontSize={'sm'}> {assignee && assignee?.username}</Text>
+                <Badge borderRadius={'5%'} bg={'gray.100'} fontSize={'sm'}>
+                  {assignee && assignee?.username}
+                </Badge>
               </GridItem>
               <GridItem textAlign={'center'}>
                 {
