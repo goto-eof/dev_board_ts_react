@@ -225,7 +225,12 @@ export default function Item({
                   ]).entries(),
                 ].map(([key, value]) => {
                   return (
-                    <MenuItem onClick={() => changePriority(key)} key={key}>
+                    <MenuItem
+                      onClick={(e) => {
+                        changePriority(key);
+                      }}
+                      key={key}
+                    >
                       {value}
                     </MenuItem>
                   );
@@ -251,9 +256,10 @@ export default function Item({
           </Text>
         </CardBody>
 
-        <CardFooter onClick={onOpen} cursor={'pointer'}>
+        <CardFooter cursor={'pointer'}>
           <VStack>
             <Box
+              onClick={onOpen}
               textAlign={'right'}
               fontSize={'sm'}
               as={'div'}
@@ -278,7 +284,8 @@ export default function Item({
               <GridItem textAlign={'center'}>
                 {
                   <Box
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
                       if (canMoveUp(item.id || -1)) moveUp(item.id);
                     }}
                     display="inline"
@@ -304,7 +311,8 @@ export default function Item({
               <GridItem textAlign={'center'}>
                 {
                   <Box
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
                       if (canMoveDown(item.id || -1)) moveDown(item.id);
                     }}
                     display="inline"

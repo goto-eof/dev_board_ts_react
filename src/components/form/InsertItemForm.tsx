@@ -381,19 +381,18 @@ export default function InsertItemForm({
                 </Select>
                 <Errors fieldName="board" />
               </GridItem>
-            </Grid>
 
-            <GridItem w="100%">
-              <FormLabel>Estimated time</FormLabel>
-              <Input
-                type="text"
-                value={states.estimatedTime}
-                name="estimatedTime"
-                onChange={handleInputChange}
-                autoFocus
-              />
-              <Errors fieldName={'estimatedTime'} />
-            </GridItem>
+              <GridItem w="100%">
+                <FormLabel>Estimated time</FormLabel>
+                <Input
+                  type="text"
+                  value={states.estimatedTime}
+                  name="estimatedTime"
+                  onChange={handleInputChange}
+                />
+                <Errors fieldName={'estimatedTime'} />
+              </GridItem>
+            </Grid>
 
             <FormLabel>Description</FormLabel>
             <Textarea
