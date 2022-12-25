@@ -71,7 +71,7 @@ export default function Item({
       const dateString = new Date(item.created_at).toISOString().slice(0, 10);
       setCreationDate(dateString);
     }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const tryMoveItem = (boardIdTo: number) => {
@@ -260,7 +260,13 @@ export default function Item({
               w={'100%'}
               h={'22px'}
             >
-              {creationDate}
+              <Badge borderRadius={'5%'} bg={'gray.100'}>
+                {item.estimated_time}
+              </Badge>{' '}
+              <Badge borderRadius={'5%'} bg={'gray.100'}>
+                {' '}
+                {creationDate}
+              </Badge>
             </Box>
             <Grid
               h={'22px'}

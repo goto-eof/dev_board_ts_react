@@ -60,6 +60,7 @@ export default function InsertItemForm({
     assignee: -1,
     reporter: -1,
     publisherId: -1,
+    estimatedTime: '',
   });
 
   const navigate = useNavigate();
@@ -100,6 +101,7 @@ export default function InsertItemForm({
               ? fields.result.publisher_id
               : 0,
           users: allUsers.result,
+          estimatedTime: fields ? fields.result.estimated_time : '',
         });
       } catch (error) {
         console.log(error);
@@ -151,6 +153,7 @@ export default function InsertItemForm({
       order: states.order,
       description: e.target.elements.description.value,
       priority: Number(e.target.elements.itemPriority.value),
+      estimated_time: e.target.elements.estimatedTime.value,
     }).then((response: Result<ItemRequestI>) => {
       if (response.success) {
         if (response.result.id) {
@@ -192,6 +195,7 @@ export default function InsertItemForm({
       description: e.target.elements.description.value,
       priority: Number(e.target.elements.itemPriority.value),
       order: states.order,
+      estimated_time: e.target.elements.estimatedTime.value,
     };
 
     if (itemId && itemIdP) {
@@ -247,7 +251,7 @@ export default function InsertItemForm({
               )}
               {!!states.publisherId && (
                 <GridItem w="100%">
-                  <FormLabel>Publisher ID</FormLabel>
+                  <FormLabel>Publisher</FormLabel>
                   <Input
                     readOnly={true}
                     type="text"
@@ -378,6 +382,18 @@ export default function InsertItemForm({
                 <Errors fieldName="board" />
               </GridItem>
             </Grid>
+
+            <GridItem w="100%">
+              <FormLabel>Estimated time</FormLabel>
+              <Input
+                type="text"
+                value={states.estimatedTime}
+                name="estimatedTime"
+                onChange={handleInputChange}
+                autoFocus
+              />
+              <Errors fieldName={'estimatedTime'} />
+            </GridItem>
 
             <FormLabel>Description</FormLabel>
             <Textarea

@@ -10,6 +10,7 @@ export interface ItemRequestI {
   assignee_id?: number;
   reporter_id?: number;
   publisher_id?: number;
+  estimated_time: string;
 
   created_at?: Date;
 }
