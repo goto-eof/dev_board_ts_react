@@ -24,6 +24,8 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 import { UserResponseI } from '../../core/UserResponseI';
 import Messages from '../Messages';
 import { insertHistoryMessage } from '../../service/MessageService';
+import { resolve } from 'path';
+import { isNumericLiteral } from 'typescript';
 
 export interface InsertItemFormI {
   boardIdPr?: number;
@@ -62,6 +64,8 @@ export default function InsertItemForm({
     publisherId: -1,
     estimatedTime: '',
   });
+
+  const [filesList, setFilesList] = useState<Array<any>>([]);
 
   const navigate = useNavigate();
 
@@ -118,6 +122,32 @@ export default function InsertItemForm({
     });
   };
 
+  // const handleFileEvent = (e: any) => {
+  //   const file: File = e.target.files[0];
+  //   console.log(file);
+  //   const newFiles: any[] = [...filesList];
+  //   newFiles.push([file]);
+  //   console.log('Files list', newFiles);
+  //   setFilesList(newFiles);
+  // };
+
+  const handleFileEvent = (e: any) => {
+    const files: any[] = e.target.files;
+    console.log(files);
+    const newFiles: any[] = [...filesList];
+
+    for (const file in files) {
+      console.log('Yahooo', file, Number(file));
+      if (!isNaN(Number(file))) {
+        newFiles.push(files[file]);
+        console.log('FIIII', files[file]);
+      }
+    }
+
+    console.log('Files list', newFiles);
+    setFilesList(newFiles);
+  };
+
   interface ErrorsProps {
     fieldName: string;
   }
@@ -133,9 +163,24 @@ export default function InsertItemForm({
     return !!states.error.get(field);
   };
 
-  const save = (e: any) => {
+  const convert_files_to_base64 = async () => {
+    let filesTmp: any = [];
+
+    for (let i = 0; i < filesList.length; i++) {
+      let file = filesList[i];
+      const toPush = {
+        content: await toBase64(file),
+        name: file.name,
+      };
+      filesTmp.push(toPush);
+    }
+    return filesTmp;
+  };
+
+  const save = async (e: any) => {
     e.preventDefault();
-    GenericService.create<ItemRequestI>('item', {
+
+    const toInsert = {
       name: e.target.elements.itemName.value,
       environment: e.target.elements.environment.value,
       issue_type: Number(e.target.elements.issueType.value),
@@ -154,14 +199,19 @@ export default function InsertItemForm({
       description: e.target.elements.description.value,
       priority: Number(e.target.elements.itemPriority.value),
       estimated_time: e.target.elements.estimatedTime.value,
-    }).then((response: Result<ItemRequestI>) => {
-      if (response.success) {
-        if (response.result.id) {
-          insertHistoryMessage(response.result.id, 'issue created');
+      files: await convert_files_to_base64(),
+    };
+
+    GenericService.create<ItemRequestI>('item', toInsert).then(
+      (response: Result<ItemRequestI>) => {
+        if (response.success) {
+          if (response.result.id) {
+            insertHistoryMessage(response.result.id, 'issue created');
+          }
+          navigate('/board/' + boardId);
         }
-        navigate('/board/' + boardId);
       }
-    });
+    );
   };
 
   const goBack = () => {
@@ -173,9 +223,22 @@ export default function InsertItemForm({
     return publisher;
   };
 
-  const update = (e: any) => {
+  const toBase64 = (file: File) => {
+    return new Promise((resolve, reject) => {
+      console.log('1 - baseTo64 - FILE', file);
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => {
+        console.log(error);
+        reject(error);
+      };
+    });
+  };
+
+  const update = async (e: any) => {
     e.preventDefault();
-    console.log('updating....');
+
     const newItem = {
       id: Number(itemId),
       name: e.target.elements.itemName.value,
@@ -196,6 +259,7 @@ export default function InsertItemForm({
       priority: Number(e.target.elements.itemPriority.value),
       order: states.order,
       estimated_time: e.target.elements.estimatedTime.value,
+      files: await convert_files_to_base64(),
     };
 
     if (itemId && itemIdP) {
@@ -234,7 +298,12 @@ export default function InsertItemForm({
             Issue
           </Heading>
         )}
-        <form onSubmit={itemId ? update : save} style={{ width: '100%' }}>
+        <form
+          onSubmit={async (e) => {
+            itemId ? update(e) : await save(e);
+          }}
+          style={{ width: '100%' }}
+        >
           <FormControl isInvalid={states.isInvalid} w={'100%'}>
             <Grid templateColumns="repeat(4, 1fr)" gap={6}>
               {itemId && (
@@ -392,6 +461,19 @@ export default function InsertItemForm({
                 />
                 <Errors fieldName={'estimatedTime'} />
               </GridItem>
+
+              <GridItem w="100%">
+                <FormLabel>Attachments</FormLabel>
+                <input
+                  id="filesList"
+                  name="filesList"
+                  type="file"
+                  multiple
+                  accept="application/pdf, image/png, image/jpg"
+                  onChange={handleFileEvent}
+                />
+                <Errors fieldName={'filesList'} />
+              </GridItem>
             </Grid>
 
             <FormLabel>Description</FormLabel>
@@ -399,7 +481,7 @@ export default function InsertItemForm({
               rows={10}
               name="description"
               value={states.description}
-              placeholder="Here is a sample placeholder"
+              placeholder=""
               onChange={handleInputChange}
             />
             <Errors fieldName="description" />

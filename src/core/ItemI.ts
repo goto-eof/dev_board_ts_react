@@ -11,6 +11,7 @@ export interface ItemRequestI {
   reporter_id?: number;
   publisher_id?: number;
   estimated_time: string;
+  files?: any;
 
   created_at?: Date;
 }
