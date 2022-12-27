@@ -281,9 +281,8 @@ export default function InsertItemForm({
           borderRadius="full"
           variant="solid"
           colorScheme={item.id ? 'blue' : 'green'}
-          onClick={() => download_file(item)}
         >
-          <TagLabel>{item.name}</TagLabel>
+          <TagLabel onClick={() => download_file(item)}>{item.name}</TagLabel>
           <TagCloseButton onClick={(e) => removeFile(e, item)} />
         </Tag>
       </Box>
