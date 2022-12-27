@@ -32,6 +32,8 @@ import { insertHistoryMessage } from '../../service/MessageService';
 import { GuiFileI } from '../../core/GuiFileI';
 import { ItemAttachmentsI } from '../../core/ItemAttachmentsI';
 import { DeleteResultI } from '../../core/DeleteResultI';
+import { FaWindows } from 'react-icons/fa';
+import FullAttachmentI from '../../core/FullAttachmentI';
 
 export interface InsertItemFormI {
   boardIdPr?: number;
@@ -205,6 +207,56 @@ export default function InsertItemForm({
     }
   };
 
+  const download_file = (item: GuiFileI) => {
+    GenericService.simple_get<Result<FullAttachmentI>>(
+      'attachment/download_attachment/' + item.id + '/' + itemId
+    ).then((data) => {
+      function downloadFile(data: any): void {
+        const blob: Blob = new Blob([data], { type: 'image/png' });
+        const fileName: string = 'my-test.png';
+        const objectUrl: string = URL.createObjectURL(blob);
+        const a: HTMLAnchorElement = document.createElement(
+          'a'
+        ) as HTMLAnchorElement;
+
+        a.href = objectUrl;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+
+        document.body.removeChild(a);
+        URL.revokeObjectURL(objectUrl);
+      }
+
+      function convertBase64ToBlob(base64Image: string) {
+        // Split into two parts
+        const parts = base64Image.split(';base64,');
+
+        // Hold the content type
+        const imageType = parts[0].split(':')[1];
+
+        // Decode Base64 string
+        console.log(parts[1]);
+        const decodedData = window.atob(parts[1]);
+
+        // Create UNIT8ARRAY of size same as row data length
+        const uInt8Array = new Uint8Array(decodedData.length);
+
+        // Insert all character code into uInt8Array
+        for (let i = 0; i < decodedData.length; ++i) {
+          uInt8Array[i] = decodedData.charCodeAt(i);
+        }
+
+        // Return BLOB image after conversion
+        return new Blob([uInt8Array], { type: imageType });
+      }
+
+      downloadFile(
+        convertBase64ToBlob('data:image/png;base64,' + data.result.content)
+      );
+    });
+  };
+
   const printFiles = () => {
     return guiFileList.map((item) => (
       <Box key={item.hashcode}>
@@ -212,11 +264,11 @@ export default function InsertItemForm({
           size={'sm'}
           borderRadius="full"
           variant="solid"
-          onClick={() => removeFile(item)}
           colorScheme={item.id ? 'blue' : 'green'}
+          onClick={() => download_file(item)}
         >
           <TagLabel>{item.name}</TagLabel>
-          <TagCloseButton />
+          <TagCloseButton onClick={() => removeFile(item)} />
         </Tag>
       </Box>
     ));
