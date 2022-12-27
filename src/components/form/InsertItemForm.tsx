@@ -31,6 +31,7 @@ import Messages from '../Messages';
 import { insertHistoryMessage } from '../../service/MessageService';
 import { GuiFileI } from '../../core/GuiFileI';
 import { ItemAttachmentsI } from '../../core/ItemAttachmentsI';
+import { DeleteResultI } from '../../core/DeleteResultI';
 
 export interface InsertItemFormI {
   boardIdPr?: number;
@@ -142,11 +143,23 @@ export default function InsertItemForm({
     });
   };
 
+  const deleteAttachment = (id: number) => {
+    GenericService.delete<DeleteResultI>('attachment', id).then(
+      (result: DeleteResultI) => {
+        if (result.success) {
+          let newGuiFilesList = guiFileList.filter(
+            (item: any) => item.id !== id
+          );
+          setGuiFileList(newGuiFilesList);
+        }
+      }
+    );
+  };
+
   const handleFileEvent = async (e: any) => {
     const files: any[] = e.target.files;
     setStates({ ...states, filesListValue: e.target.value });
     const newFiles: Array<GuiFileI> = [...guiFileList];
-    console.log('FILESSSSSSSSSS', files);
     for (const file in files) {
       if (!isNaN(Number(file))) {
         const b64 = await toBase64(files[file]);
@@ -184,6 +197,14 @@ export default function InsertItemForm({
     );
   };
 
+  const removeFile = (item: GuiFileI) => {
+    if (item.id) {
+      deleteAttachment(item.id);
+    } else {
+      removeGuiFile(item);
+    }
+  };
+
   const printFiles = () => {
     return guiFileList.map((item) => (
       <Box key={item.hashcode}>
@@ -191,8 +212,8 @@ export default function InsertItemForm({
           size={'sm'}
           borderRadius="full"
           variant="solid"
-          onClick={() => removeGuiFile(item)}
-          colorScheme="green"
+          onClick={() => removeFile(item)}
+          colorScheme={item.id ? 'blue' : 'green'}
         >
           <TagLabel>{item.name}</TagLabel>
           <TagCloseButton />

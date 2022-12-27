@@ -53,7 +53,7 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
 
   useEffect(() => {
     oneCall();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const oneCall = () => {
@@ -84,7 +84,7 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
 
   useEffect(() => {
     retrieveUsers();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const updateSharedWith = () => {
@@ -330,7 +330,7 @@ export const Columns: FC<ColumnsProps> = (props: ColumnsProps) => {
       for (let i = 0; i < columnsState.columns.length; i++) {
         if (columnsState.columns[i].column?.id === idA) {
           columnsFinalMutable = swapUI(i, i + lorr, columnsFinalMutable);
-          const columnsFinal= columnsFinalMutable;
+          const columnsFinal = columnsFinalMutable;
           if (
             !(
               i < 0 ||
