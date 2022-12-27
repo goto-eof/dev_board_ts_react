@@ -213,7 +213,7 @@ export default function InsertItemForm({
     ).then((data) => {
       function downloadFile(data: any): void {
         const blob: Blob = new Blob([data], { type: 'image/png' });
-        const fileName: string = 'my-test.png';
+        const fileName: string = item.name;
         const objectUrl: string = URL.createObjectURL(blob);
         const a: HTMLAnchorElement = document.createElement(
           'a'
