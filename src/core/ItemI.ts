@@ -1,3 +1,5 @@
+import { GuiFileI } from './GuiFileI';
+
 export interface ItemRequestI {
   id?: number;
   name: string;
@@ -11,7 +13,7 @@ export interface ItemRequestI {
   reporter_id?: number;
   publisher_id?: number;
   estimated_time: string;
-  files?: any;
+  files?: Array<GuiFileI>;
 
   created_at?: Date;
 }

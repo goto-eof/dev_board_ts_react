@@ -8,24 +8,16 @@ import {
   Textarea,
   VStack,
   Heading,
-  Text,
   Button,
   Icon,
   Grid,
   GridItem,
   Box,
-  Badge,
-  CloseButton,
   Tag,
   TagLabel,
   TagCloseButton,
 } from '@chakra-ui/react';
-import {
-  hashRandom,
-  hashString,
-  hashObject,
-  hashArray,
-} from 'react-hash-string';
+import { hashString } from 'react-hash-string';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import GenericService from '../../service/GenerciService';
@@ -37,6 +29,7 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 import { UserResponseI } from '../../core/UserResponseI';
 import Messages from '../Messages';
 import { insertHistoryMessage } from '../../service/MessageService';
+import { GuiFileI } from '../../core/GuiFileI';
 
 export interface InsertItemFormI {
   boardIdPr?: number;
@@ -44,12 +37,6 @@ export interface InsertItemFormI {
   itemIdPr?: number;
   updateItem?: (item: ItemRequestI) => void;
   onClose?: () => void;
-}
-
-interface GuiFileI {
-  name: string;
-  content: any;
-  hashcode: number;
 }
 
 export default function InsertItemForm({
@@ -127,6 +114,9 @@ export default function InsertItemForm({
           users: allUsers.result,
           estimatedTime: fields ? fields.result.estimated_time : '',
         });
+        setGuiFileList(
+          fields && fields.result.files ? fields.result.files : []
+        );
       } catch (error) {
         console.log(error);
       }
@@ -141,15 +131,6 @@ export default function InsertItemForm({
       [e.target.name]: e.target.value,
     });
   };
-
-  // const handleFileEvent = (e: any) => {
-  //   const file: File = e.target.files[0];
-  //   console.log(file);
-  //   const newFiles: any[] = [...filesList];
-  //   newFiles.push([file]);
-  //   console.log('Files list', newFiles);
-  //   setFilesList(newFiles);
-  // };
 
   const handleFileEvent = async (e: any) => {
     const files: any[] = e.target.files;
