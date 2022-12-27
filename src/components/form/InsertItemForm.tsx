@@ -8,11 +8,24 @@ import {
   Textarea,
   VStack,
   Heading,
+  Text,
   Button,
   Icon,
   Grid,
   GridItem,
+  Box,
+  Badge,
+  CloseButton,
+  Tag,
+  TagLabel,
+  TagCloseButton,
 } from '@chakra-ui/react';
+import {
+  hashRandom,
+  hashString,
+  hashObject,
+  hashArray,
+} from 'react-hash-string';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import GenericService from '../../service/GenerciService';
@@ -24,8 +37,6 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 import { UserResponseI } from '../../core/UserResponseI';
 import Messages from '../Messages';
 import { insertHistoryMessage } from '../../service/MessageService';
-import { resolve } from 'path';
-import { isNumericLiteral } from 'typescript';
 
 export interface InsertItemFormI {
   boardIdPr?: number;
@@ -33,6 +44,12 @@ export interface InsertItemFormI {
   itemIdPr?: number;
   updateItem?: (item: ItemRequestI) => void;
   onClose?: () => void;
+}
+
+interface GuiFileI {
+  name: string;
+  content: any;
+  hashcode: number;
 }
 
 export default function InsertItemForm({
@@ -65,7 +82,10 @@ export default function InsertItemForm({
     estimatedTime: '',
   });
 
-  const [filesList, setFilesList] = useState<Array<any>>([]);
+  // const [filesList, setFilesList] = useState<Array<any>>([]);
+  const [guiFileList, setGuiFileList] = useState<Array<GuiFileI>>(
+    new Array<GuiFileI>()
+  );
 
   const navigate = useNavigate();
 
@@ -131,21 +151,27 @@ export default function InsertItemForm({
   //   setFilesList(newFiles);
   // };
 
-  const handleFileEvent = (e: any) => {
+  const handleFileEvent = async (e: any) => {
     const files: any[] = e.target.files;
-    console.log(files);
-    const newFiles: any[] = [...filesList];
-
+    const newFiles: Array<GuiFileI> = [...guiFileList];
     for (const file in files) {
-      console.log('Yahooo', file, Number(file));
       if (!isNaN(Number(file))) {
-        newFiles.push(files[file]);
-        console.log('FIIII', files[file]);
+        const b64 = await toBase64(files[file]);
+        const hashcode = hashString(b64);
+        if (
+          guiFileList.filter((item) => item.hashcode === hashcode).length === 0
+        ) {
+          const toPush: GuiFileI = {
+            content: b64,
+            name: files[file].name,
+            hashcode: hashcode,
+          };
+          newFiles.push(toPush);
+        }
       }
     }
-
-    console.log('Files list', newFiles);
-    setFilesList(newFiles);
+    e.target.value = '';
+    setGuiFileList(newFiles);
   };
 
   interface ErrorsProps {
@@ -159,22 +185,32 @@ export default function InsertItemForm({
     );
   }
 
-  const hasError = (field: string) => {
-    return !!states.error.get(field);
+  const removeGuiFile = (file: GuiFileI) => {
+    setGuiFileList(
+      guiFileList.filter((item) => item.hashcode !== file.hashcode)
+    );
   };
 
-  const convert_files_to_base64 = async () => {
-    let filesTmp: any = [];
+  const printFiles = () => {
+    return guiFileList.map((item) => (
+      <Box>
+        <Tag
+          size={'sm'}
+          key={item.hashcode}
+          borderRadius="full"
+          variant="solid"
+          onClick={() => removeGuiFile(item)}
+          colorScheme="green"
+        >
+          <TagLabel>{item.name}</TagLabel>
+          <TagCloseButton />
+        </Tag>
+      </Box>
+    ));
+  };
 
-    for (let i = 0; i < filesList.length; i++) {
-      let file = filesList[i];
-      const toPush = {
-        content: await toBase64(file),
-        name: file.name,
-      };
-      filesTmp.push(toPush);
-    }
-    return filesTmp;
+  const hasError = (field: string) => {
+    return !!states.error.get(field);
   };
 
   const save = async (e: any) => {
@@ -199,7 +235,7 @@ export default function InsertItemForm({
       description: e.target.elements.description.value,
       priority: Number(e.target.elements.itemPriority.value),
       estimated_time: e.target.elements.estimatedTime.value,
-      files: await convert_files_to_base64(),
+      files: guiFileList,
     };
 
     GenericService.create<ItemRequestI>('item', toInsert).then(
@@ -259,7 +295,7 @@ export default function InsertItemForm({
       priority: Number(e.target.elements.itemPriority.value),
       order: states.order,
       estimated_time: e.target.elements.estimatedTime.value,
-      files: await convert_files_to_base64(),
+      files: await guiFileList,
     };
 
     if (itemId && itemIdP) {
@@ -470,9 +506,12 @@ export default function InsertItemForm({
                   type="file"
                   multiple
                   accept="application/pdf, image/png, image/jpg"
-                  onChange={handleFileEvent}
+                  onChange={async (e) => {
+                    await handleFileEvent(e);
+                  }}
                 />
                 <Errors fieldName={'filesList'} />
+                {printFiles()}
               </GridItem>
             </Grid>
 
