@@ -17,7 +17,7 @@ import {
   TagLabel,
   TagCloseButton,
 } from '@chakra-ui/react';
-import { hashString } from 'react-hash-string';
+import { Md5 } from 'md5-typescript';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import GenericService from '../../service/GenerciService';
@@ -30,6 +30,7 @@ import { UserResponseI } from '../../core/UserResponseI';
 import Messages from '../Messages';
 import { insertHistoryMessage } from '../../service/MessageService';
 import { GuiFileI } from '../../core/GuiFileI';
+import { ItemAttachmentsI } from '../../core/ItemAttachmentsI';
 
 export interface InsertItemFormI {
   boardIdPr?: number;
@@ -66,6 +67,7 @@ export default function InsertItemForm({
     assignee: -1,
     reporter: -1,
     publisherId: -1,
+    filesListValue: '',
     estimatedTime: '',
   });
 
@@ -83,7 +85,7 @@ export default function InsertItemForm({
           Result<Array<ColumnResponseI>>
         >('column/all/' + boardId);
         const fields = itemId
-          ? await GenericService.getById<Result<ItemRequestI>>(
+          ? await GenericService.getById<Result<ItemAttachmentsI>>(
               'item',
               Number(itemId)
             )
@@ -93,30 +95,38 @@ export default function InsertItemForm({
           Result<Array<UserResponseI>>
         >('board/board_users/' + boardId);
 
+        setGuiFileList(fields?.result.attachments || []);
+        const itemOld = fields?.result.item || {
+          id: 0,
+          name: '',
+          environment: '',
+          issue_type: 0,
+          order: 0,
+          priority: '3',
+          description: '',
+          assignee_id: 0,
+          reporter_id: 0,
+          publisher_id: 0,
+          estimated_time: '',
+          files: [],
+          created_at: null,
+        };
         setStates({
           ...states,
-          itemName: fields ? fields.result.name : '',
-          environment: fields ? fields.result.environment : '',
-          itemPriority: fields ? '' + fields.result.priority : '3',
-          issueType: fields ? fields.result.issue_type : 0,
-          description: fields ? fields.result.description : '',
+          itemName: itemOld.name,
+          environment: itemOld.environment,
+          itemPriority: '' + itemOld.priority,
+          issueType: itemOld.issue_type,
+          description: itemOld.description,
           defaultBoard: columnId || '',
           columns: columns.result,
-          order: fields ? fields.result.order : 0,
-          assignee:
-            fields && fields.result.assignee_id ? fields.result.assignee_id : 0,
-          reporter:
-            fields && fields.result.reporter_id ? fields.result.reporter_id : 0,
-          publisherId:
-            fields && fields.result.publisher_id
-              ? fields.result.publisher_id
-              : 0,
+          order: itemOld.order,
+          assignee: itemOld.assignee_id || 0,
+          reporter: itemOld.reporter_id || 0,
+          publisherId: itemOld.publisher_id || 0,
           users: allUsers.result,
-          estimatedTime: fields ? fields.result.estimated_time : '',
+          estimatedTime: itemOld.estimated_time,
         });
-        setGuiFileList(
-          fields && fields.result.files ? fields.result.files : []
-        );
       } catch (error) {
         console.log(error);
       }
@@ -134,11 +144,13 @@ export default function InsertItemForm({
 
   const handleFileEvent = async (e: any) => {
     const files: any[] = e.target.files;
+    setStates({ ...states, filesListValue: e.target.value });
     const newFiles: Array<GuiFileI> = [...guiFileList];
+    console.log('FILESSSSSSSSSS', files);
     for (const file in files) {
       if (!isNaN(Number(file))) {
         const b64 = await toBase64(files[file]);
-        const hashcode = hashString(b64);
+        const hashcode = Md5.init(b64);
         if (
           guiFileList.filter((item) => item.hashcode === hashcode).length === 0
         ) {
@@ -151,7 +163,7 @@ export default function InsertItemForm({
         }
       }
     }
-    e.target.value = '';
+    setStates({ ...states, filesListValue: '' });
     setGuiFileList(newFiles);
   };
 
@@ -174,10 +186,9 @@ export default function InsertItemForm({
 
   const printFiles = () => {
     return guiFileList.map((item) => (
-      <Box>
+      <Box key={item.hashcode}>
         <Tag
           size={'sm'}
-          key={item.hashcode}
           borderRadius="full"
           variant="solid"
           onClick={() => removeGuiFile(item)}
@@ -485,6 +496,7 @@ export default function InsertItemForm({
                   id="filesList"
                   name="filesList"
                   type="file"
+                  value={states.filesListValue}
                   multiple
                   accept="application/pdf, image/png, image/jpg"
                   onChange={async (e) => {
