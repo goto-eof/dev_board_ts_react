@@ -14,8 +14,12 @@ import {
   GridItem,
   Box,
   Tag,
+  Image,
   TagLabel,
   TagCloseButton,
+  CloseButton,
+  Stack,
+  Flex,
 } from '@chakra-ui/react';
 import { Md5 } from 'md5-typescript';
 import { useEffect, useState } from 'react';
@@ -74,8 +78,8 @@ export default function InsertItemForm({
   });
 
   // const [filesList, setFilesList] = useState<Array<any>>([]);
-  const [guiFileList, setGuiFileList] = useState<Array<GuiFileI>>(
-    new Array<GuiFileI>()
+  const [guiFileList, setGuiFileList] = useState<Array<FullAttachmentI>>(
+    new Array<FullAttachmentI>()
   );
 
   const navigate = useNavigate();
@@ -149,7 +153,7 @@ export default function InsertItemForm({
       (result: DeleteResultI) => {
         if (result.success) {
           let newGuiFilesList = guiFileList.filter(
-            (item: any) => item.id !== id
+            (item: FullAttachmentI) => item.meta_information.id !== id
           );
           setGuiFileList(newGuiFilesList);
         }
@@ -160,19 +164,23 @@ export default function InsertItemForm({
   const handleFileEvent = async (e: any) => {
     const files: any[] = e.target.files;
     setStates({ ...states, filesListValue: e.target.value });
-    const newFiles: Array<GuiFileI> = [...guiFileList];
+    const newFiles: Array<FullAttachmentI> = [...guiFileList];
     for (const file in files) {
       if (!isNaN(Number(file))) {
-        const b64 = await toBase64(files[file]);
+        const b64 = (await toBase64(files[file])) as string;
         const hashcode = Md5.init(b64);
         if (
-          guiFileList.filter((item) => item.hashcode === hashcode).length === 0
+          guiFileList.filter(
+            (item) => item.meta_information.hashcode === hashcode
+          ).length === 0
         ) {
-          const toPush: GuiFileI = {
+          const toPush: FullAttachmentI = {
             content: b64,
-            name: files[file].name,
-            hashcode: hashcode,
-            file_type: calculateFileType(files[file].name),
+            meta_information: {
+              name: files[file].name,
+              hashcode: hashcode,
+              file_type: calculateFileType(files[file].name),
+            },
           };
           newFiles.push(toPush);
         }
@@ -208,28 +216,34 @@ export default function InsertItemForm({
     );
   }
 
-  const removeGuiFile = (file: GuiFileI) => {
+  const removeGuiFile = (file: FullAttachmentI) => {
     setGuiFileList(
-      guiFileList.filter((item) => item.hashcode !== file.hashcode)
+      guiFileList.filter(
+        (item) =>
+          item.meta_information.hashcode !== file.meta_information.hashcode
+      )
     );
   };
 
-  const removeFile = (e: any, item: GuiFileI) => {
+  const removeFile = (e: any, item: FullAttachmentI) => {
     e.preventDefault();
-    if (item.id) {
-      deleteAttachment(item.id);
+    if (item.meta_information.id) {
+      deleteAttachment(item.meta_information.id);
     } else {
       removeGuiFile(item);
     }
   };
 
-  const download_file = (item: GuiFileI) => {
+  const downloadFile = (item: FullAttachmentI) => {
     GenericService.simple_get<Result<FullAttachmentI>>(
-      'attachment/download_attachment/' + item.id + '/' + itemId
+      'attachment/download_attachment/' +
+        item.meta_information.id +
+        '/' +
+        itemId
     ).then((data) => {
       function downloadFile(data: any): void {
         const blob: Blob = new Blob([data], { type: 'image/png' });
-        const fileName: string = item.name;
+        const fileName: string = item.meta_information.name;
         const objectUrl: string = URL.createObjectURL(blob);
         const a: HTMLAnchorElement = document.createElement(
           'a'
@@ -245,48 +259,61 @@ export default function InsertItemForm({
       }
 
       function convertBase64ToBlob(base64Image: string) {
-        // Split into two parts
         const parts = base64Image.split(';base64,');
-
-        // Hold the content type
         const imageType = parts[0].split(':')[1];
-
-        // Decode Base64 string
         console.log(parts[1]);
         const decodedData = window.atob(parts[1]);
-
-        // Create UNIT8ARRAY of size same as row data length
         const uInt8Array = new Uint8Array(decodedData.length);
-
-        // Insert all character code into uInt8Array
         for (let i = 0; i < decodedData.length; ++i) {
           uInt8Array[i] = decodedData.charCodeAt(i);
         }
-
-        // Return BLOB image after conversion
         return new Blob([uInt8Array], { type: imageType });
       }
 
-      downloadFile(
-        convertBase64ToBlob('data:image/png;base64,' + data.result.content)
-      );
+      downloadFile(convertBase64ToBlob(data.result.content));
     });
   };
 
-  const printFiles = () => {
-    return guiFileList.map((item) => (
-      <Box key={item.hashcode}>
-        <Tag
-          size={'sm'}
-          borderRadius="full"
-          variant="solid"
-          colorScheme={item.id ? 'blue' : 'green'}
-        >
-          <TagLabel onClick={() => download_file(item)}>{item.name}</TagLabel>
-          <TagCloseButton onClick={(e) => removeFile(e, item)} />
-        </Tag>
-      </Box>
-    ));
+  const printPDFFiles = () => {
+    return guiFileList
+      .filter((item) => item.meta_information.file_type === 'application/pdf')
+      .map((item) => (
+        <Box key={item.meta_information.hashcode}>
+          <Tag
+            size={'sm'}
+            borderRadius="full"
+            variant="solid"
+            colorScheme={item.meta_information.id ? 'blue' : 'green'}
+          >
+            <TagLabel onClick={() => downloadFile(item)}>
+              {item.meta_information.name}
+            </TagLabel>
+            <TagCloseButton onClick={(e) => removeFile(e, item)} />
+          </Tag>
+        </Box>
+      ));
+  };
+
+  const printImageFiles = () => {
+    return guiFileList
+      .filter(
+        (item) =>
+          item.meta_information.file_type === 'image/png' ||
+          item.meta_information.file_type === 'image/jpg' ||
+          item.meta_information.file_type === 'image/jpeg'
+      )
+      .map((item) => (
+        <Box w={'150px'} h={'150px'}>
+          <CloseButton bg={'gray.400'} onClick={(e) => removeFile(e, item)} />
+          <Image
+            key={item.meta_information.hashcode}
+            boxSize="150px"
+            src={item.content}
+            alt={item.meta_information.name}
+            onClick={() => downloadFile(item)}
+          />
+        </Box>
+      ));
   };
 
   const hasError = (field: string) => {
@@ -315,7 +342,15 @@ export default function InsertItemForm({
       description: e.target.elements.description.value,
       priority: Number(e.target.elements.itemPriority.value),
       estimated_time: e.target.elements.estimatedTime.value,
-      files: guiFileList,
+      files: guiFileList.map((file) => {
+        return {
+          id: file.meta_information.id,
+          name: file.meta_information.name,
+          content: file.content,
+          hashcode: file.meta_information.hashcode,
+          file_type: file.meta_information.file_type,
+        };
+      }),
     };
 
     GenericService.create<ItemRequestI>('item', toInsert).then(
@@ -375,7 +410,15 @@ export default function InsertItemForm({
       priority: Number(e.target.elements.itemPriority.value),
       order: states.order,
       estimated_time: e.target.elements.estimatedTime.value,
-      files: await guiFileList,
+      files: guiFileList.map((file) => {
+        return {
+          id: file.meta_information.id,
+          name: file.meta_information.name,
+          content: file.content,
+          hashcode: file.meta_information.hashcode,
+          file_type: file.meta_information.file_type,
+        };
+      }),
     };
 
     if (itemId && itemIdP) {
@@ -592,10 +635,12 @@ export default function InsertItemForm({
                   }}
                 />
                 <Errors fieldName={'filesList'} />
-                {printFiles()}
+                {printPDFFiles()}
               </GridItem>
+              <GridItem w="100%"></GridItem>
+              <GridItem w="100%" colStart={1} colEnd={5} p={8}></GridItem>
             </Grid>
-
+            <Flex color="white">{printImageFiles()}</Flex>
             <FormLabel>Description</FormLabel>
             <Textarea
               rows={10}
