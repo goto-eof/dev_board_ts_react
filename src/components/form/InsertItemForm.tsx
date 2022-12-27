@@ -32,7 +32,6 @@ import { insertHistoryMessage } from '../../service/MessageService';
 import { GuiFileI } from '../../core/GuiFileI';
 import { ItemAttachmentsI } from '../../core/ItemAttachmentsI';
 import { DeleteResultI } from '../../core/DeleteResultI';
-import { FaWindows } from 'react-icons/fa';
 import FullAttachmentI from '../../core/FullAttachmentI';
 
 export interface InsertItemFormI {
@@ -173,6 +172,7 @@ export default function InsertItemForm({
             content: b64,
             name: files[file].name,
             hashcode: hashcode,
+            file_type: calculateFileType(files[file].name),
           };
           newFiles.push(toPush);
         }
@@ -180,6 +180,21 @@ export default function InsertItemForm({
     }
     setStates({ ...states, filesListValue: '' });
     setGuiFileList(newFiles);
+  };
+
+  const calculateFileType = (filename: string) => {
+    const extension = filename.substring(
+      filename.lastIndexOf('.') + 1,
+      filename.length
+    );
+
+    if ('png' === extension || 'jpg' === extension || 'jpeg' === extension) {
+      return 'image/' + extension;
+    }
+    if ('pdf' === extension) {
+      return 'application/pdf';
+    }
+    return '';
   };
 
   interface ErrorsProps {
@@ -199,7 +214,8 @@ export default function InsertItemForm({
     );
   };
 
-  const removeFile = (item: GuiFileI) => {
+  const removeFile = (e: any, item: GuiFileI) => {
+    e.preventDefault();
     if (item.id) {
       deleteAttachment(item.id);
     } else {
@@ -268,7 +284,7 @@ export default function InsertItemForm({
           onClick={() => download_file(item)}
         >
           <TagLabel>{item.name}</TagLabel>
-          <TagCloseButton onClick={() => removeFile(item)} />
+          <TagCloseButton onClick={(e) => removeFile(e, item)} />
         </Tag>
       </Box>
     ));

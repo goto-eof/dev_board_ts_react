@@ -3,4 +3,5 @@ export interface GuiFileI {
   name: string;
   content: any;
   hashcode: string;
+  file_type: string;
 }
