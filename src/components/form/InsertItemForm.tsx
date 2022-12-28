@@ -18,7 +18,6 @@ import {
   TagLabel,
   TagCloseButton,
   CloseButton,
-  Stack,
   Flex,
 } from '@chakra-ui/react';
 import { Md5 } from 'md5-typescript';
