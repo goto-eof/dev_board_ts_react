@@ -33,7 +33,6 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 import { UserResponseI } from '../../core/UserResponseI';
 import Messages from '../Messages';
 import { insertHistoryMessage } from '../../service/MessageService';
-import { GuiFileI } from '../../core/GuiFileI';
 import { ItemAttachmentsI } from '../../core/ItemAttachmentsI';
 import { DeleteResultI } from '../../core/DeleteResultI';
 import FullAttachmentI from '../../core/FullAttachmentI';
