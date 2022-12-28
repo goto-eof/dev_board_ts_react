@@ -638,9 +638,12 @@ export default function InsertItemForm({
                 {printPDFFiles()}
               </GridItem>
               <GridItem w="100%"></GridItem>
-              <GridItem w="100%" colStart={1} colEnd={5} p={8}></GridItem>
+              <GridItem w="100%" colStart={1} colEnd={5} p={8}>
+                {' '}
+                <Flex color="white">{printImageFiles()}</Flex>
+              </GridItem>
             </Grid>
-            <Flex color="white">{printImageFiles()}</Flex>
+
             <FormLabel>Description</FormLabel>
             <Textarea
               rows={10}
