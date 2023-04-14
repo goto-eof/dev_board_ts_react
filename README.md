@@ -48,6 +48,6 @@ docker-compose up
 
 ![header](screenshots/7.png)
 
-if any problems arise, feel free to [contact me](https://andre-i.dev/#contactme).
+if any problems arise, feel free to [contact me](http://andre-i.eu/#contactme).
 
 P.S. clean local storage before use.
